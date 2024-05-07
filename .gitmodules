@@ -1,0 +1,3 @@
+[submodule "42-MEGALIBFT"]
+	path = 42-MEGALIBFT
+	url = git@github.com:lekix-lekix/42-MEGALIBFT.git
