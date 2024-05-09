@@ -6,13 +6,14 @@
 #    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/26 17:19:05 by kipouliq          #+#    #+#              #
-#    Updated: 2024/05/07 17:39:42 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/05/09 16:08:16 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRCS = ./srcs/minishell.c
+SRCS = ./srcs/minishell.c \
+	./srcs/garbage_collector.c
 
 OBJ = $(SRCS:.c=.o)
 

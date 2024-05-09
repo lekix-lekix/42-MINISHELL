@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/08 18:23:35 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/09 16:12:32 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*get_path(char **envp)
 		if (!ft_strncmp(envp[i], "PATH=", 5))
 		{
 			str = ft_strtrim(envp[i], "PATH=");
-			if (!str)
+			if (!str || gbg_coll(str, ENV, ADD) == -1)
 				return (NULL);
 		}
 	}
@@ -75,15 +75,15 @@ t_env	*create_env_node(char *str, char *sep)
 	t_env	*new_node;
 
 	new_node = malloc(sizeof(t_env));
-	if (!new_node)
+	if (!new_node || gbg_coll(new_node, ENV, ADD) == -1)
 		return (NULL);
 	new_node->field = malloc(sizeof(char) * (ft_strlen_sep(str, sep) + 1));
-	if (!new_node->field)
-		return (free(new_node), NULL);
+	if (!new_node->field || gbg_coll(new_node->field, ENV, ADD) == -1)
+		return (NULL);
 	ft_strlcpy(new_node->field, str, ft_strlen_sep(str, sep) + 1);
 	new_node->content = malloc(sizeof(char) * (ft_strlen(sep + 1) + 1));
-	if (!new_node->content)
-		return (free(new_node->content), free(new_node), NULL);
+	if (!new_node->content || gbg_coll(new_node->content, ENV, ADD) == -1)
+		return (NULL);
 	ft_strlcpy(new_node->content, sep + 1, ft_strlen(sep));
 	new_node->next = NULL;
 	return (new_node);
@@ -102,7 +102,7 @@ t_env	*get_env_lst(char **envp)
 		sep = ft_strchr(envp[i], '=');
 		node = create_env_node(envp[i], sep);
 		if (!node)
-			return (free_env_lst(&lst), NULL); // free lst
+			return (NULL);
 		if (i == 0)
 		{
 			lst = node;
@@ -183,19 +183,28 @@ char	**env_lst_to_arr(t_env **lst)
 
 	node = *lst;
 	env_arr = malloc(sizeof(char *) * (env_lst_size(lst) + 1));
-	if (!env_arr)
+	if (!env_arr || gbg_coll(env_arr, ENV, ADD) == -1)
 		return (NULL);
 	i = 0;
 	while (node)
 	{
 		env_arr[i] = ft_strjoin(node->field, node->content);
-		if (!env_arr[i])
-			return (free_tab_index(env_arr, i), NULL);
+		if (!env_arr[i] || gbg_coll(env_arr[i], ENV, ADD) == -1)
+			return (NULL);
 		node = node->next;
 		i++;
 	}
 	env_arr[i] = NULL;
 	return (env_arr);
+}
+
+int main(int argc, char **argv, char **env)
+{
+    (void) argc;
+    (void) argv;
+    char *path;
+
+    path = get_path(env);
 }
 
 // int	main(int argc, char **argv, char **envp)
@@ -216,82 +225,42 @@ char	**env_lst_to_arr(t_env **lst)
 // 	free(data.path);
 // }
 
-t_lst	*ft_find_node(t_lst **list, void *mem_addr)
-{
-	t_lst	*node;
+// int	main(int argc, char **argv, char **envp)
+// {
+// 	(void)argc;
+// 	(void)argv;
+// 	(void)envp;
+// 	t_env *lst;
+// 	char **env;
+// 	int i = -1;
 
-	node = *list;
-	while (node)
-	{
-		if (node->content == mem_addr)
-			return (node);
-		node = node->next;
-	}
-	return (NULL);
-}
-
-void	add_node_gbg(int which_lst, t_gbg *all_lsts, t_lst *node)
-{
-	if (which_lst == ENV)
-		ft_lstadd_back(&all_lsts->mlc_env, node);
-	if (which_lst == PARSING)
-		ft_lstadd_back(&all_lsts->mlc_parsing, node);
-}
-
-void	remove_free_mem_node(int which_lst, t_gbg *all_lsts, void *mem_addr)
-{
-	t_lst	*to_remove;
-
-	if (which_lst == ENV)
-		to_remove = ft_find_node(&all_lsts->mlc_env, mem_addr);
-	if (which_lst == PARSING)
-		to_remove = ft_find_node(&all_lsts->mlc_parsing, mem_addr);
-	free(to_remove->content);
-	free(to_remove);
-}
-
-void	flush_lst(t_gbg *all_lsts, int which_list)
-{
-	if (which_list == ENV)
-		ft_lstclear(&all_lsts->mlc_env, free);
-	if (which_list == PARSING)
-		ft_lstclear(&all_lsts->mlc_parsing, free);
-}
-
-int	garbage_collector(void *mem_addr, int which_list, int rule)
-{
-	static t_gbg	*all_gbg_lsts;
-	t_lst			*node;
-
-	node = NULL;
-	if (rule == ADD)
-	{
-		node = ft_lstnew(mem_addr);
-		// if (!node) // to do
-		// return (garbage_collector(NULL, FLUSH), -1);
-		add_node_gbg(which_list, all_gbg_lsts, node);
-	}
-	if (rule == FREE)
-		remove_free_mem_node(which_list, all_gbg_lsts, mem_addr);
-	if (rule == FLUSH_ONE)
-		flush_lst(all_gbg_lsts, which_list);
-	return (0);
-}
-
-int	main(int argc, char **argv, char **envp)
-{
-	(void)argc;
-	(void)argv;
-	t_env *lst;
-	char **env;
-	int i = -1;
-
-	lst = get_env_lst(envp);
-	print_real_env(envp);
-	print_env(&lst);
-	env = env_lst_to_arr(&lst);
-	free_env_lst(&lst);
-	while (env[++i])
-		free(env[i]);
-	free(env);
-}
+// 	lst = get_env_lst(envp);
+// 	print_real_env(envp);
+// 	print_env(&lst);
+// 	env = env_lst_to_arr(&lst);
+// 	free_env_lst(&lst);
+// 	while (env[++i])
+// 		free(env[i]);
+// 	free(env);
+// 	int *a = malloc(sizeof(int));
+// 	if (!a || garbage_collector(a, ENV, ADD))
+// 		return (-1);
+// 	garbage_collector(a, ENV, FREE);
+// 	int *b = malloc(sizeof(int));
+// 	if (!b || garbage_collector(b, ENV, ADD))
+// 		return (-1);
+// 	garbage_collector(b, ENV, FREE);
+// 	int i = 0;
+// 	while (i < 10)
+// 	{
+// 		int *a = malloc(sizeof(int));
+// 		if (!a || garbage_collector(a, ENV, ADD))
+// 			return (-1);
+// 		i++;
+// 	}
+//     int *x = malloc(sizeof(int));
+//     char *f = garbage_collector(ft_strdup ("hello"), PARSING, ADD);
+//     if (!x || garbage_collector(x, PARSING, ADD) == -1)
+//         return (-1);
+// 	garbage_collector(NULL, ALL, FLUSH_ALL);
+// }

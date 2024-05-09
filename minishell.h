@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/08 18:06:41 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/09 16:07:46 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <readline/readline.h>
 # include <stdio.h>
 # include <stdlib.h>
+
+int	gbg_coll(void *mem_addr, int which_list, int rule);
 
 typedef struct s_env
 {
