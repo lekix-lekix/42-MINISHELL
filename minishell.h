@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/10 16:22:50 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/13 16:39:20 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,24 @@ typedef struct s_gbg
 	t_lst			*mlc_env;
 	t_lst			*mlc_parsing;
 }					t_gbg;
+
+typedef enum e_token_type
+{
+	CMD,
+	PIPE,
+	AND,
+	OR,
+	PAR_LEFT,
+	PAR_RIGHT
+}					t_token_type;
+
+typedef struct s_token
+{
+	t_token_type	type;
+	char			*content;
+	struct s_token	*left;
+	struct s_token	*right;
+}					t_token;
 
 typedef enum e_gbg_rules
 {

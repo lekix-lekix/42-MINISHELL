@@ -6,13 +6,11 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/10 17:36:56 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/13 18:08:48 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-char	check_syntax_errors(char *str);
 
 char	*get_path(char **envp)
 {
@@ -87,16 +85,90 @@ int	bash_syntax_error(char *error)
 	return (0);
 }
 
-int	start_parsing(char *prompt)
+int check_syntax_errors(char *str)
 {
 	int		i;
-	char	error;
+	char	c;
 
-	i = 0;
-	error = check_syntax_errors(prompt);
-	if (error)
-		printf("bash: syntax error near unexpected token `%c'\n", error);
-	return (0);
+	i = -1;
+	while (str[++i])
+	{
+		if (str[i] == '\'' || str[i] == '\"')
+		{
+            c = str[i];
+			str = ft_strchr(str + i + 1, c);
+			if (!str)
+            {
+				printf("bash: syntax error near unexpected token `%c'\n", c);
+                return (-1);
+            }
+            i = 0;
+			continue ;
+		}
+    }
+    return (0);
+}
+
+int is_an_operator(char c)
+{
+    int i;
+
+    i = -1;
+    if (c == '|' || c == '&' || c == '(' || c == ')') // need to add && ||
+            return (1);
+    return (0);
+}
+
+t_token *create_cmd_node(char *input, int op_idx)
+{
+    t_token *node;
+
+    node = malloc(sizeof(t_token));
+    if (!node || gbg_coll(node, PARSING, ADD))
+        return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+    node->content = malloc(sizeof(char) * (op_idx + 1));
+    if (!node->content || gbg_coll(node->content, PARSING, ADD))
+        return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+    ft_strlcpy(node->content, input, op_idx + 1);
+    node->type = CMD;
+    node->left = NULL;
+    node->right = NULL;
+    return (node);
+}
+
+t_token *tokenize_input(char *prompt)
+{
+    t_token *root;
+    t_token *node;
+    int i;
+
+    i = 0;
+    root = NULL;
+    while (prompt[i])
+    {
+        if (is_an_operator(prompt[i]))
+        {
+            create_operator_node(prompt + i);
+            node = create_cmd_node(prompt, i);
+            if (!node || gbg_coll(node, PARSING, ADD))
+                return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+            // insert_token_node(node, root);
+            printf("node->content = %s\n", node->content);
+        }
+        i++;
+    }
+    return (root);
+}
+
+int start_parsing(char *prompt)
+{
+    t_token     *input;
+    
+    if (check_syntax_errors(prompt))
+        return (-1);
+    input = tokenize_input(prompt);
+        return (-1);
+    return (0);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -113,70 +185,10 @@ int	main(int argc, char **argv, char **env)
 	{
 		prompt = readline("./minishell$");
 		start_parsing(prompt);
+        tokenize_input(prompt);
+        free(prompt);
 	}
 	gbg_coll(NULL, ENV, FLUSH_ONE);
 	gbg_coll(NULL, ALL, FLUSH_ALL);
 	gbg_coll(NULL, ENV, FREE);
-}
-
-int	check_quotes_nb(char *str, char to_check)
-{
-	int	quote;
-	int	i;
-
-	quote = 0;
-	i = -1;
-	while (str[++i])
-	{
-		if (str[i] == to_check)
-			quote++;
-	}
-	if (quote % 2 == 0)
-		return (0);
-	return (1);
-}
-
-int	check_parenthesis_before(char *str, int i)
-{
-	while (i >= 0)
-	{
-		if (str[i] == '(')
-			return (1);
-		i--;
-	}
-	return (0);
-}
-
-char	check_syntax_errors(char *str)
-{
-	int	x;
-	int	parenthesis;
-
-	x = -1;
-	parenthesis = 0;
-	while (str[++x])
-	{
-		if (str[x] == '\'' && check_quotes_nb(str, '\''))
-			return ('\'');
-		if (str[x] == '\"' && check_quotes_nb(str, '\"'))
-			return ('\"');
-		if (str[x] == '(')
-		{
-			parenthesis++;
-			if (!ft_strchr(str + x + 1, ')')) // need to check parenthesis nb
-				return ('(');
-		}
-		if (str[x] == ')')
-		{
-			parenthesis--;
-			if (!check_parenthesis_before(str, x))
-				// need to check parenthesis nb
-				return (')');
-		}
-	}
-	if (parenthesis > 0)
-		return ('(');
-	else if (parenthesis < 0)
-		return (')');
-	return (0);
 }
