@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:04:20 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/13 14:39:59 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/05/09 17:29:43 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,15 @@
 
 void	remove_mem_node(t_lst **lst, void *mem_addr)
 {
-	t_lst	*to_remove = NULL;
+	t_lst	*to_remove;
 	int		nullify;
 
-	(void)mem_addr;
 	nullify = 0;
 	if (!*lst)
 		return ;
 	if (ft_lstsize(*lst) == 1)
 		nullify = 1;
-	// to_remove = ft_lstfind_one(lst, mem_addr);
+	to_remove = ft_lstfind_one(lst, mem_addr);
 	if (to_remove)
 	{
 		free(to_remove->content);
