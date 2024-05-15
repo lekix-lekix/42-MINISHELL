@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/14 18:33:38 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/15 17:49:05 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,35 +157,41 @@ t_token	*create_operator_node(char **input)
 	if (!node->content || gbg_coll(node->content, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	ft_strlcpy(node->content, input_copy, operator_len + 1);
-	// node->type = get_token_type(node->content);
+	node->type = OPERATOR;
 	node->left = NULL;
 	node->right = NULL;
 	*input += operator_len;
 	return (node);
 }
 
-void    parse_insert_cmd(t_token *root, t_token *node)
+int parse_insert_cmd(t_token *root, t_token *node)
 {
     if (root->left)
-        parse_insert_cmd(root->left, node);
-    if (!root->left)
+    {
+        if (parse_insert_cmd(root->left, node) == 0)
+            return (0);
+    }
+    if (root->type == OPERATOR && !root->left)
     {
         root->left = node;
-        return ;
+        return (0);
     }
     if (root->right)
-        parse_insert_cmd(root->right, node);
-    if (!root->right)
+    {
+        if (parse_insert_cmd(root->right, node) == 0)
+            return (0);
+    }
+    if (root->type == OPERATOR && !root->right)
     {
         root->right = node;
-        return ;
+        return (0);
     }
+    return (1);
 }
 
 void    insert_cmd_node(t_token **tree, t_token *node)
 {
     t_token *root;
-    // t_token *last_node;
 
     root = *tree;
     if (!root)
@@ -201,6 +207,7 @@ void    insert_operator_node(t_token **tree, t_token *node)
     t_token *root;
     t_token *next;
 
+    printf("node content add = %s\n", node->content);
     root = *tree;
     if (!root)
     {
@@ -209,7 +216,29 @@ void    insert_operator_node(t_token **tree, t_token *node)
     }
     next = root;
     *tree = node;
-    node->left = next;
+    if (!node->left)
+    {
+        node->left = next;
+        return ;
+    }
+    if (!node->right)
+    {
+        node->right = next;
+        return ;
+    }
+}
+
+int    ft_strcpy_sep(char *dest, char *input, char *sep)
+{
+    int i;
+
+    i = -1;
+    if (!sep)
+        return (ft_strlcpy(dest, input, ft_strlen(input) + 1));
+    while (input[++i] && input[i] != sep[0])
+        dest[i] = input[i];
+    dest[i] = '\0';
+    return (i);
 }
 
 t_token	*create_cmd_node(char *input, char *sep)
@@ -218,13 +247,16 @@ t_token	*create_cmd_node(char *input, char *sep)
 	int		cmd_len;
 
 	cmd_len = ft_strlen_sep(input, sep);
+    // printf("input = %s\n", input);
+    // printf("cmd len = %d\n", cmd_len);
+    // printf("sep = %s\n", sep);
 	node = malloc(sizeof(t_token));
 	if (!node || gbg_coll(node, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	node->content = malloc(sizeof(char) * (cmd_len + 1));
 	if (!node->content || gbg_coll(node->content, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-	ft_strlcpy(node->content, input, cmd_len + 1);
+	ft_strcpy_sep(node->content, input, sep);
 	node->type = CMD;
 	node->left = NULL;
 	node->right = NULL;
@@ -247,14 +279,14 @@ t_token	*tokenize_input(char *input)
 		if (!operator)
 		{
 			cmd_node = create_cmd_node(input_parse, NULL);
+            // printf("cmd node = %s\n", cmd_node->content);
 			insert_cmd_node(&root, cmd_node);
-            input_parse = NULL;
 			break ;
 		}
-		cmd_node = create_cmd_node(input_parse, operator);
-        printf("cmd node = %s\n", cmd_node->content);
 		op_node = create_operator_node(&operator);
-        printf("op node = %s\n", op_node->content);
+		cmd_node = create_cmd_node(input_parse, op_node->content);
+        // printf("cmd node = %s\n", cmd_node->content);
+        // printf("op node = %s\n", op_node->content);
 		insert_operator_node(&root, op_node);
 		insert_cmd_node(&root, cmd_node);
 		input_parse = operator;
@@ -262,13 +294,17 @@ t_token	*tokenize_input(char *input)
 	return (root);
 }
 
-void    traverse_print(t_token *node)
+void    traverse_print(t_token *node, int level)
 {
-    printf("%s\n", node->content);
+    printf("content = %s, type = %d level = %d\n", node->content, node->type, level);
     if (node->left)
-        traverse_print(node->left);
+        printf("node left = %s\n", node->left->content);
     if (node->right)
-        traverse_print(node->right);
+        printf("node->right = %s\n", node->right->content);
+    if (node->left)
+        traverse_print(node->left, level + 1);
+    if (node->right)
+        traverse_print(node->right, level + 1);
 }
 
 void    print_tree(t_token **tree)
@@ -278,7 +314,7 @@ void    print_tree(t_token **tree)
     node = *tree;
     // printf("print tree initial item = %d\n", *(int *)node->item);
     // printf("initial left = %d\n", *(int *)node->left->item);
-    traverse_print(node);
+    traverse_print(node, 0);
 }
  
 int	start_parsing(char *prompt)
@@ -294,17 +330,20 @@ int	start_parsing(char *prompt)
 
 int	main(int argc, char **argv, char **env)
 {
-	char	*path;
+	// char	*path;
 	char	*prompt;
-	t_env	*lst;
+	// t_env	*lst;
 
 	(void)argc;
 	(void)argv;
-	path = get_path(env);
-	lst = get_env_lst(env);
+    (void)env;
+	// path = get_path(env);
+	// lst = get_env_lst(env);
 	while (1)
 	{
 		prompt = readline("./minishell$ ");
+        if (!*prompt)
+            continue ;
 		start_parsing(prompt);
 		free(prompt);
 	}
