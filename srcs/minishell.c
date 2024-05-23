@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/16 16:37:10 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/23 19:16:24 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,17 +89,62 @@ int	check_syntax_errors(char *str)
 	return (0);
 }
 
+void	print_lst(t_token **lst)
+{
+	t_token	*root;
+
+	root = *lst;
+	while (root)
+	{
+		printf("content = '%s'\n", root->content);
+		printf("type = %u\n", root->type);
+		root = root->next;
+	}
+}
+
+void	clean_lst(t_token **lst)
+{
+	t_token	*current;
+	t_token	*prev;
+
+	if (!*lst)
+		return ;
+	current = *lst;
+	if (!ft_strlen(current->content))
+	{
+		prev = current->next;
+		gbg_coll(current->content, PARSING, FREE);
+		gbg_coll(current, PARSING, FREE);
+		*lst = prev;
+	}
+	current = *lst;
+	while (current)
+	{
+		if (!ft_strlen(current->content))
+		{
+			prev->next = current->next;
+			gbg_coll(current->content, PARSING, FREE);
+			gbg_coll(current, PARSING, FREE);
+		}
+		prev = current;
+		current = current->next;
+	}
+}
+
 int	start_parsing(char *prompt)
 {
 	t_token	*input;
+	t_ast	*tree;
 
 	if (check_syntax_errors(prompt))
 		return (-1);
 	input = tokenize_input(prompt);
-	if (!input)
-		clear_tree(&input);
-	else
-		print_tree(&input);
+	// print_lst(&input);
+    // printf("------\n");
+	clean_lst(&input);
+	// print_lst(&input);
+	tree = build_ast(&input);
+	print_tree(&tree);
 	return (0);
 }
 

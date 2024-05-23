@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:04:20 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/16 14:37:40 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/22 14:58:36 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	remove_mem_node(t_lst **lst, void *mem_addr)
 {
-	t_lst	*to_remove;
+    t_lst   *current;
+    t_lst   *prev;
 	int		nullify;
 
 	nullify = 0;
@@ -22,14 +23,19 @@ void	remove_mem_node(t_lst **lst, void *mem_addr)
 		return ;
 	if (ft_lstsize(*lst) == 1)
 		nullify = 1;
-	to_remove = ft_lstfind_one(lst, mem_addr);
-	if (to_remove)
-	{
-		free(to_remove->content);
-		free(to_remove);
-		if (nullify)
-			*lst = NULL;
-	}
+	current = *lst;
+    while (current)
+    {
+        if (current->content == mem_addr)
+        {
+            prev->next = current->next;
+            free(current);
+            current = prev;
+            continue ;
+        }
+        prev = current;
+        current = current->next;
+    }
 }
 
 void	flush_lst(int which_list, t_gbg *all_lsts)

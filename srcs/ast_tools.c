@@ -6,35 +6,35 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:53:14 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/16 18:17:48 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/22 14:43:02 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	parse_clear_tree(t_token *root)
-{
-	if (!root)
-		return ;
-	if (root->left)
-		parse_clear_tree(root->left);
-	if (root->right)
-		parse_clear_tree(root->right);
-	if (root->content)
-		gbg_coll(root->content, PARSING, FREE);
-	if (root)
-		gbg_coll(root, PARSING, FREE);
-}
+// void	parse_clear_tree(t_token *root)
+// {
+// 	if (!root)
+// 		return ;
+// 	if (root->left)
+// 		parse_clear_tree(root->left);
+// 	if (root->right)
+// 		parse_clear_tree(root->right);
+// 	if (root->content)
+// 		gbg_coll(root->content, PARSING, FREE);
+// 	if (root)
+// 		gbg_coll(root, PARSING, FREE);
+// }
 
-void	clear_tree(t_token **root)
-{
-	t_token	*node;
+// void	clear_tree(t_token **root)
+// {
+// 	t_token	*node;
 
-	if (!root || !*root)
-		return ;
-	node = *root;
-	parse_clear_tree(node);
-}
+// 	if (!root || !*root)
+// 		return ;
+// 	node = *root;
+// 	parse_clear_tree(node);
+// }
 
 int	ft_strlen_sep(char *str, char *sep)
 {
@@ -60,7 +60,6 @@ char	*find_operator(char *str)
 	i = -1;
 	if (!str | !str[0])
 		return (NULL);
-	printf("'%s'\n", str);
 	while (str[++i])
 	{
 		if (is_an_operator(str[i]))
