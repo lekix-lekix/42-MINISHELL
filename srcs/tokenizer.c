@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/22 18:25:21 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/24 15:44:20 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,36 +82,6 @@ t_token	*create_cmd_node(char *input, char *sep)
 	node->next = NULL;
 	return (node);
 }
-
-// t_token	*tokenize_input(char *input)
-// {
-// 	t_token	*root;
-// 	t_token	*cmd_node;
-// 	t_token	*op_node;
-// 	char	*input_parse;
-// 	char	*operator;
-
-// 	root = NULL;
-// 	input_parse = input;
-// 	while (input_parse)
-// 	{
-// 		operator = find_operator(input_parse);
-// 		if (!operator)
-// 		{
-// 			cmd_node = create_cmd_node(input_parse, NULL);
-// 			insert_cmd_node(&root, cmd_node);
-// 			break ;
-// 		}
-// 		op_node = create_operator_node(&operator);
-// 		if (!op_node)
-// 			return (NULL);
-// 		cmd_node = create_cmd_node(input_parse, op_node->content);
-// 		insert_operator_node(&root, op_node);
-// 		insert_cmd_node(&root, cmd_node);
-// 		input_parse = operator;
-// 	}
-// 	return (root);
-// }
 
 void	insert_node_lst(t_token **lst, t_token *node)
 {
