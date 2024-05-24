@@ -6,13 +6,11 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/10 17:36:56 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/23 19:16:24 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-char	check_syntax_errors(char *str);
 
 char	*get_path(char **envp)
 {
@@ -30,16 +28,6 @@ char	*get_path(char **envp)
 		}
 	}
 	return (str);
-}
-
-int	ft_strlen_sep(char *str, char *sep)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && str[i] != *sep)
-		i++;
-	return (i + 1);
 }
 
 int	init_data(t_minishell *data, char **envp)
@@ -77,106 +65,110 @@ int	print_real_env(char **env)
 	return (0);
 }
 
-int	bash_syntax_error(char *error)
+int	check_syntax_errors(char *str)
 {
-	char	*str;
+	int		i;
+	char	c;
 
-	str = malloc(sizeof(char) * (27 + ft_strlen(error)));
-	if (!str)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
+	i = -1;
+	while (str[++i])
+	{
+		if (str[i] == '\'' || str[i] == '\"')
+		{
+			c = str[i];
+			str = ft_strchr(str + i + 1, c);
+			if (!str)
+			{
+				printf("bash: syntax error near unexpected token `%c'\n", c);
+				return (-1);
+			}
+			i = 0;
+			continue ;
+		}
+	}
 	return (0);
+}
+
+void	print_lst(t_token **lst)
+{
+	t_token	*root;
+
+	root = *lst;
+	while (root)
+	{
+		printf("content = '%s'\n", root->content);
+		printf("type = %u\n", root->type);
+		root = root->next;
+	}
+}
+
+void	clean_lst(t_token **lst)
+{
+	t_token	*current;
+	t_token	*prev;
+
+	if (!*lst)
+		return ;
+	current = *lst;
+	if (!ft_strlen(current->content))
+	{
+		prev = current->next;
+		gbg_coll(current->content, PARSING, FREE);
+		gbg_coll(current, PARSING, FREE);
+		*lst = prev;
+	}
+	current = *lst;
+	while (current)
+	{
+		if (!ft_strlen(current->content))
+		{
+			prev->next = current->next;
+			gbg_coll(current->content, PARSING, FREE);
+			gbg_coll(current, PARSING, FREE);
+		}
+		prev = current;
+		current = current->next;
+	}
 }
 
 int	start_parsing(char *prompt)
 {
-	int		i;
-	char	error;
+	t_token	*input;
+	t_ast	*tree;
 
-	i = 0;
-	error = check_syntax_errors(prompt);
-	if (error)
-		printf("bash: syntax error near unexpected token `%c'\n", error);
+	if (check_syntax_errors(prompt))
+		return (-1);
+	input = tokenize_input(prompt);
+	// print_lst(&input);
+    // printf("------\n");
+	clean_lst(&input);
+	// print_lst(&input);
+	tree = build_ast(&input);
+	print_tree(&tree);
 	return (0);
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	char	*path;
 	char	*prompt;
-	t_env	*lst;
 
+	// char	*path;
+	// t_env	*lst;
 	(void)argc;
 	(void)argv;
-	path = get_path(env);
-	lst = get_env_lst(env);
+	(void)env;
+	// path = get_path(env);
+	// lst = get_env_lst(env);
 	while (1)
 	{
-		prompt = readline("./minishell$");
+		prompt = readline("./minishell$ ");
+		if (!prompt | !*prompt)
+			break ;
 		start_parsing(prompt);
+		free(prompt);
 	}
-	gbg_coll(NULL, ENV, FLUSH_ONE);
-	gbg_coll(NULL, ALL, FLUSH_ALL);
+	free(prompt);
+	gbg_coll(NULL, ENV, FLUSH_ALL);
+	gbg_coll(NULL, PARSING, FLUSH_ALL);
 	gbg_coll(NULL, ENV, FREE);
-}
-
-int	check_quotes_nb(char *str, char to_check)
-{
-	int	quote;
-	int	i;
-
-	quote = 0;
-	i = -1;
-	while (str[++i])
-	{
-		if (str[i] == to_check)
-			quote++;
-	}
-	if (quote % 2 == 0)
-		return (0);
-	return (1);
-}
-
-int	check_parenthesis_before(char *str, int i)
-{
-	while (i >= 0)
-	{
-		if (str[i] == '(')
-			return (1);
-		i--;
-	}
-	return (0);
-}
-
-char	check_syntax_errors(char *str)
-{
-	int	x;
-	int	parenthesis;
-
-	x = -1;
-	parenthesis = 0;
-	while (str[++x])
-	{
-		if (str[x] == '\'' && check_quotes_nb(str, '\''))
-			return ('\'');
-		if (str[x] == '\"' && check_quotes_nb(str, '\"'))
-			return ('\"');
-		if (str[x] == '(')
-		{
-			parenthesis++;
-			if (!ft_strchr(str + x + 1, ')')) // need to check parenthesis nb
-				return ('(');
-		}
-		if (str[x] == ')')
-		{
-			parenthesis--;
-			if (!check_parenthesis_before(str, x))
-				// need to check parenthesis nb
-				return (')');
-		}
-	}
-	if (parenthesis > 0)
-		return ('(');
-	else if (parenthesis < 0)
-		return (')');
-	return (0);
 }
