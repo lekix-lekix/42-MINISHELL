@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/23 17:04:35 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/24 17:43:52 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,7 @@ void				insert_cmd_node(t_token **tree, t_token *node);
 int					ft_strcpy_sep(char *dest, char *input, char *sep);
 void				clear_tree(t_token **tree);
 t_ast				*build_ast(t_token **lst);
+void				insert_node_lst(t_token **lst, t_token *node);
+void				print_lst(t_token **lst);
 
 #endif

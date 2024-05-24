@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/24 15:43:43 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/24 18:14:38 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,12 +120,28 @@ void    consume_node(t_token **lst, t_token *node)
     }
 }
 
+t_token *find_par_right(t_token **lst)
+{
+    t_token *current;
+
+    current = *lst;
+    if (!current)
+        return (NULL);
+    while (current->type != PAR_RIGHT)
+    {
+        printf("current = %s\n", current->content);
+        current = current->next;
+    }
+    printf("current end = %s\n", current->content);
+    return (current);
+}
+
 t_ast	*build_operator_tree(t_token **lst)
 {
 	t_ast	*tree;
     t_ast   *right;
-	t_token	*current;
 	t_ast	*new_node;
+	t_token	*current;
 
 	tree = NULL;
     right = NULL;
@@ -134,6 +150,12 @@ t_ast	*build_operator_tree(t_token **lst)
 		current = find_operator_token(lst);
 		if (!current)
 			break ;
+        if (current->type == PAR_LEFT)
+        {
+            current = find_par_right(lst)->next;
+            if (!current)
+                break;
+        }
 		new_node = create_ast_node(current);
         consume_node(lst, new_node->token_node);
         if (tree && new_node->node_type < tree->node_type)
@@ -182,6 +204,55 @@ void    insert_command_node(t_ast **tree, t_token *cmd_node)
     // printf("insert cmd = %d\n", parse_insert_cmd_node(root, new_cmd_node, 0));
 }
 
+t_token *lst_dup(t_token **lst, t_token *node)
+{
+    t_token *lst_cpy;
+    t_token *current_cpy;
+    t_token *current;
+
+    current = *lst;
+    lst_cpy = NULL;
+    while (current != node)
+    {
+        current_cpy = malloc(sizeof(t_token));
+        if (!current_cpy || gbg_coll(current_cpy, PARSING, ADD))
+            return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+        current_cpy->type = current->type;
+        current_cpy->content = current->content;
+        current_cpy->next = NULL;
+        insert_node_lst(&lst_cpy, current_cpy);
+        current = current->next;
+    }
+    return (lst_cpy);
+}
+
+t_token *create_par_lst(t_token **lst)
+{
+    t_token *current;
+    t_token *dup_lst;
+
+    current = *lst;
+    while (current->type != PAR_RIGHT)
+        current = current->next;
+    if (current == NULL)
+        return (NULL);
+    dup_lst = lst_dup(lst, current);
+    return (dup_lst);
+}
+
+int    handle_par(t_ast **tree, t_token **lst)
+{
+    t_token *par_lst;
+
+    (void) tree;
+    par_lst = create_par_lst(lst);
+    if (!par_lst)
+        return (-1);
+    printf("---\n");
+    print_lst(&par_lst);
+    return (0);
+}
+
 void    build_cmd_tree(t_ast **tree, t_token **lst)
 {
     t_token *current;
@@ -189,6 +260,8 @@ void    build_cmd_tree(t_ast **tree, t_token **lst)
     current = *lst;
     while (current)
     {
+        if (current->type == PAR_LEFT)
+            handle_par(tree, &current->next);
         insert_command_node(tree, current);
         current = current->next;
     }
