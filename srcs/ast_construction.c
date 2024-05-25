@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_construction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/24 18:14:38 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/25 23:17:13 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,16 +193,38 @@ int    parse_insert_cmd_node(t_ast *root, t_ast *cmd_node, int level)
     return (-1);
 }
 
-void    insert_command_node(t_ast **tree, t_token *cmd_node)
+int parse_insert_par_cmd_node(t_ast *root, t_ast *cmd_node, int level)
 {
-    t_ast *root;
-    t_ast *new_cmd_node;
-
-    root = *tree;
-    new_cmd_node = create_ast_node(cmd_node);
-    parse_insert_cmd_node(root, new_cmd_node, 0);
-    // printf("insert cmd = %d\n", parse_insert_cmd_node(root, new_cmd_node, 0));
+    if (root->left)
+    {
+        if (parse_insert_par_cmd_node(root->left, cmd_node, level + 1) == 0)
+            return (0);
+    }
+    if (!root->left)
+    {
+        root->left = cmd_node;
+        return (0);
+    }
+    if (root->right)
+    {
+        if (parse_insert_par_cmd_node(root->right, cmd_node, level + 1) == 0)
+            return (0);
+    }
+    if (!root->right)
+    {
+        root->right = cmd_node;
+        return (0);
+    }
+    return (-1);
 }
+// void    insert_command_node(t_ast **tree, t_ast *cmd_node)
+// {
+//     t_ast *root;
+
+//     root = *tree;
+//     parse_insert_cmd_node(root, new_cmd_node, 0);
+//     // printf("insert cmd = %d\n", parse_insert_cmd_node(root, new_cmd_node, 0));
+// }
 
 t_token *lst_dup(t_token **lst, t_token *node)
 {
@@ -240,29 +262,55 @@ t_token *create_par_lst(t_token **lst)
     return (dup_lst);
 }
 
-int    handle_par(t_ast **tree, t_token **lst)
+t_token *find_right_par(t_token **lst)
+{
+    t_token *current;
+
+    current = *lst;
+    while (current->type != PAR_RIGHT)
+        current = current->next;
+    return (current);
+}
+
+t_ast    *handle_par(t_ast **tree, t_token **lst)
 {
     t_token *par_lst;
+    t_ast *par_tree;
 
     (void) tree;
     par_lst = create_par_lst(lst);
     if (!par_lst)
-        return (-1);
-    printf("---\n");
-    print_lst(&par_lst);
-    return (0);
+        return (NULL);
+    par_tree = build_ast(&par_lst);
+    printf("----\n");
+    print_tree(&par_tree);
+    *lst = find_right_par(lst);
+    return (par_tree);
 }
 
 void    build_cmd_tree(t_ast **tree, t_token **lst)
 {
     t_token *current;
+    t_ast   *cmd_node;
+    t_ast   *root;
 
     current = *lst;
+    root = *tree;
     while (current)
     {
+        print_tree(tree);
+        printf("---\n");
         if (current->type == PAR_LEFT)
-            handle_par(tree, &current->next);
-        insert_command_node(tree, current);
+        {
+            cmd_node = handle_par(tree, &current->next);
+            printf("return par = %d\n", parse_insert_par_cmd_node(root, cmd_node, 0));
+            
+        }
+        else
+        {
+            cmd_node = create_ast_node(current);
+            printf("return = %d current = %s\n", parse_insert_cmd_node(root, cmd_node, 0), current->content);
+        }
         current = current->next;
     }
 }

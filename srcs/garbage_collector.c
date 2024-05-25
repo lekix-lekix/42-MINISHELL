@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:04:20 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/22 14:58:36 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/25 21:53:57 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void	remove_mem_node(t_lst **lst, void *mem_addr)
         prev = current;
         current = current->next;
     }
+    if (nullify)
+        *lst = NULL;
 }
 
 void	flush_lst(int which_list, t_gbg *all_lsts)
