@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/24 17:43:52 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/27 13:42:10 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ typedef struct s_ast
 {
 	t_token			*token_node;
 	t_token_type	node_type;
+    int             is_in_par;
 	struct s_ast	*left;
 	struct s_ast	*right;
 }					t_ast;

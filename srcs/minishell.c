@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/23 19:16:24 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/27 18:09:01 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ int	start_parsing(char *prompt)
 	// print_lst(&input);
     // printf("------\n");
 	clean_lst(&input);
-	// print_lst(&input);
+	print_lst(&input);
 	tree = build_ast(&input);
 	print_tree(&tree);
 	return (0);
