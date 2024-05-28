@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/27 18:15:07 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/28 17:04:44 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int	check_operator_len(char *str, int *op_len)
 	i = 0;
 	while (str[i] == str[0])
 		i++;
-	if (i > 2)
-		return (0);
+	// if (i > 2)
+	// 	return (0);
 	*op_len = i;
 	return (1);
 }
@@ -49,9 +49,10 @@ t_token	*create_operator_node(char **input)
 	char	*input_copy;
 
 	input_copy = *input;
-	if (!check_operator_len(input_copy, &operator_len))
-		return (printf("bash: syntax error near unexpected token `%c'\n",
-				*input_copy), NULL);
+    check_operator_len(input_copy, &operator_len);
+	// if (!check_operator_len(input_copy, &operator_len))
+	// 	return (printf("bash: syntax error near unexpected token `%c'\n",
+	// 			*input_copy), NULL);
 	node = malloc(sizeof(t_token));
 	if (!node || gbg_coll(node, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);

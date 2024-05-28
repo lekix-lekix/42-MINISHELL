@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/27 19:05:35 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/28 18:17:58 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,10 @@ void	print_tree(t_ast **tree)
 
 int	parse_insert_op_token_node(t_ast *root, t_ast *node, int level)
 {
-	// printf("node = %s\n level = %d\n", node->token_node->content, level);
 	if (root->left)
 		parse_insert_op_token_node(root->left, node, level + 1);
 	if (root->right)
 		parse_insert_op_token_node(root->right, node, level + 1);
-	// printf("root = %s type = %d, node = %s type = %d\n",
-	// root->token_node->content, root->node_type, node->token_node->content,
-	// node->node_type);
 	if (root->node_type > node->node_type)
 	{
 		if (!root->left)
@@ -79,6 +75,23 @@ t_token	*find_operator_token(t_token **lst)
 		return (NULL);
 	while (current)
 	{
+		if (current->type > 0 && current->type < 5)
+			return (current);
+		current = current->next;
+	}
+	return (NULL);
+}
+
+t_token	*find_next_operator_token(t_token **lst)
+{
+	t_token	*current;
+
+	current = *lst;
+	if (!current)
+		return (NULL);
+    current = current->next;
+	while (current)
+	{
 		if (current->type > 0)
 			return (current);
 		current = current->next;
@@ -109,12 +122,8 @@ void	consume_node(t_token **lst, t_token *node)
 	current = *lst;
 	if (!current || !node)
 		return ;
-	printf("_______\n");
-	print_lst(lst);
-	printf("_______\n");
 	while (current)
 	{
-		// printf("current = %s\n", current->content);
 		if (current == node)
 		{
 			prev->next = current->next;
@@ -131,9 +140,6 @@ t_token	*find_last_par(t_token **lst)
 	t_token	*current;
 	t_token	*par;
 
-	printf("=====\n");
-	print_lst(lst);
-	printf("=====\n");
 	current = *lst;
 	par = NULL;
 	if (!current)
@@ -144,57 +150,68 @@ t_token	*find_last_par(t_token **lst)
 			par = current;
 		current = current->next;
 	}
-	// printf("par = %s\n", par->content);
 	return (par);
+}
+
+t_token *find_closing_par(t_token **lst)
+{
+    t_token *current;
+
+    current = (*lst)->next;
+    if (!current)
+        return (NULL);
+    while (current)
+    {
+        if (current->type == PAR_LEFT)
+            return (find_last_par(lst));
+        if (current->type == PAR_RIGHT)
+            return (current);
+        current = current->next;
+    }
+    return (NULL);
+}
+
+void    create_consume_insert_node(t_token **lst, t_token *node, t_ast **tree, t_ast **tree_right)
+{
+	t_ast	*new_node;
+    
+    new_node = create_ast_node(node);
+    consume_node(lst, new_node->token_node);
+    if (*tree && new_node->node_type < (*tree)->node_type)
+    	insert_operator_token_node(tree_right, new_node);
+    else
+    	insert_operator_token_node(tree, new_node);
 }
 
 t_ast	*build_operator_tree(t_token **lst)
 {
 	t_ast	*tree;
 	t_ast	*right;
-	t_ast	*new_node;
 	t_token	*current;
-	t_token	*last_par;
 
 	tree = NULL;
 	right = NULL;
-	last_par = NULL;
 	current = *lst;
 	while (current)
 	{
-		printf("------\n");
-		print_lst(lst);
-		printf("------\n");
 		current = find_operator_token(&current);
 		if (current && current->type == PAR_LEFT)
 		{
-			last_par = find_last_par(&current);
-			current = find_operator_token(&last_par->next);
-			if (current)
-				printf("last par = %s\n", last_par->content);
+			current = find_closing_par(&current)->next;
+            continue ;
 		}
 		if (!current)
 			break ;
-		printf("currrrrent= %s\n", current->content);
-		new_node = create_ast_node(current);
-		consume_node(lst, new_node->token_node);
-		if (tree && new_node->node_type < tree->node_type)
-			insert_operator_token_node(&right, new_node);
-		else
-			insert_operator_token_node(&tree, new_node);
+        create_consume_insert_node(lst, current, &tree, &right);
 		current = current->next;
 	}
-	tree->right = right;
+    if (tree && right)
+	    tree->right = right;
 	return (tree);
 }
 
-// (1 && 2) || (3 && 4)
-// ((1 && 2) || 4) | 4
-
 int	parse_insert_cmd_node(t_ast *root, t_ast *cmd_node, int level)
 {
-	// printf("root = %s, cmd-node = %s level = %d\n",
-	// root->token_node->content, cmd_node->token_node->content, level);
 	if (root->left)
 	{
 		if (parse_insert_cmd_node(root->left, cmd_node, level + 1) == 0)
@@ -242,30 +259,13 @@ t_token	*lst_dup(t_token **lst, t_token *node)
 	return (lst_cpy);
 }
 
-t_token	*create_par_lst(t_token **lst)
-{
-	t_token	*par;
-	t_token	*dup_lst;
-
-	if (!*lst)
-        return (NULL);
-    par = find_last_par(lst);
-    dup_lst = lst_dup(lst, par);
-	return (dup_lst);
-}
-
 t_token	*find_right_par(t_token **lst)
 {
 	t_token	*current;
 
 	current = *lst;
-	// printf("====\n");
-	// print_lst(lst);
-	// printf("====\n");
 	while (current)
 	{
-		// printf("find right par current = %s, next = %s\n", current->content,
-		// current->next->content);
 		if (current->type == PAR_RIGHT)
 			return (current);
 		current = current->next;
@@ -273,19 +273,37 @@ t_token	*find_right_par(t_token **lst)
 	return (current);
 }
 
-t_ast	*handle_par(t_token **lst)
+t_token	*create_par_lst(t_token **lst)
+{
+	t_token	*par;
+	t_token	*dup_lst;
+
+	if (!*lst)
+        return (NULL);
+    dup_lst = (*lst)->next;
+    if (!dup_lst)
+        return (NULL);
+    par = find_closing_par(lst);
+    dup_lst = lst_dup(&dup_lst, par);
+	return (dup_lst);
+}
+
+t_ast	*handle_par(t_token **lst, t_ast **tree, t_ast **root)
 {
 	t_token	*par_lst;
 	t_ast	*par_tree;
 
-    printf("par lst =====\n");
 	par_lst = create_par_lst(lst);
+    print_lst(&par_lst);
 	if (!par_lst)
 		return (NULL);
-    printf("par lst =====\n");
 	par_tree = build_ast(&par_lst);
 	par_tree->is_in_par = 1;
-	print_tree(&par_tree);
+    if (!*root)
+    {
+        *root = par_tree;
+        *tree = par_tree;
+    }
 	return (par_tree);
 }
 
@@ -299,15 +317,14 @@ void	build_cmd_tree(t_ast **tree, t_token **lst)
 	root = *tree;
 	while (current)
 	{
-		printf("current = %s\n", current->content);
 		if (current->type == PAR_LEFT)
 		{
-			cmd_node = handle_par(&current->next);
-			parse_insert_cmd_node(root, cmd_node, 0);
-			current = find_right_par(&current);
-			// printf("---\n");
-			// print_lst(&current);
-			// printf("---\n");
+			cmd_node = handle_par(&current, tree, &root);
+            if (!cmd_node) // handle unclosed par here ?
+                return ;
+            else
+			    parse_insert_cmd_node(root, cmd_node, 0);
+			current = find_closing_par(&current);
 			continue ;
 		}
 		else
@@ -321,11 +338,17 @@ t_ast	*build_ast(t_token **lst)
 {
 	t_ast	*tree;
 
-	// printf("******\n");
-	// print_lst(lst);
-	// printf("******\n");
+    tree = NULL;
+    printf("******\n");
+    print_lst(lst);
+    printf("******\n");
+    printf("coucou\n");
 	tree = build_operator_tree(lst);
+    printf("=====\n");
 	printf("operator tree built\n");
+    if (tree)
+        print_tree(&tree);  
+    printf("=====\n");
 	// printf("******\n");
 	// print_lst(lst);
 	// printf("******\n");
@@ -335,3 +358,7 @@ t_ast	*build_ast(t_token **lst)
 
 // cmd1 | cmd2 || cmd3 | cmd4
 // (1 && 2) | (3 && 4)
+// (1 && 2) || (3 && 4) 
+// ((1 && 2) || 4) | 4
+// ((1 && 2) || (3 && 4) || 5) SIGSEV
+// (((1 || 2) || 3) || 4)
