@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/27 13:42:10 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/29 17:34:19 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ typedef struct s_ast
 {
 	t_token			*token_node;
 	t_token_type	node_type;
-    int             is_in_par;
+	int				is_in_par;
 	struct s_ast	*left;
 	struct s_ast	*right;
 }					t_ast;
@@ -99,5 +99,13 @@ void				clear_tree(t_token **tree);
 t_ast				*build_ast(t_token **lst);
 void				insert_node_lst(t_token **lst, t_token *node);
 void				print_lst(t_token **lst);
+t_token				*find_closing_par(t_token **lst);
+void				insert_operator_token_node(t_ast **tree, t_ast *node);
+int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
+						int level);
+t_ast				*handle_par(t_token **lst, t_ast **tree, t_ast **root);
+t_token				*lst_dup(t_token **lst, t_token *node);
+t_ast	*create_ast_node(t_token *node);
+t_token	*find_operator_token(t_token **lst);
 
 #endif

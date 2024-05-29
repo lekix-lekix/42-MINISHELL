@@ -6,7 +6,7 @@
 #    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/26 17:19:05 by kipouliq          #+#    #+#              #
-#    Updated: 2024/05/16 14:05:26 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/05/29 17:34:57 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,9 +15,12 @@ NAME = minishell
 SRCS = ./srcs/minishell.c \
 	./srcs/garbage_collector.c \
 	./srcs/env.c \
-	./srcs/ast_tools.c \
+	./srcs/tokenizer.c \
+	./srcs/parsing_tools.c \
 	./srcs/ast_construction.c \
-	./srcs/tokenizer.c
+	./srcs/ast_parenthesis.c \
+	./srcs/ast_insert_node.c \
+	./srcs/ast_tools.c
 
 OBJ = $(SRCS:.c=.o)
 
