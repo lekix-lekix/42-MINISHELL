@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/28 17:00:35 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/31 16:48:22 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,112 @@ void	clean_lst(t_token **lst)
 	}
 }
 
+int	check_par_syntax(t_token **lst)
+{
+	t_token	*current;
+	size_t	par;
+
+	current = *lst;
+	if (!current)
+		return (-1);
+	par = 0;
+	while (current)
+	{
+		if (current->type == PAR_LEFT)
+			par--;
+		else if (current->type == PAR_RIGHT)
+			par++;
+		current = current->next;
+	}
+	if (par > 0)
+		return (printf("syntax_error : '('\n"), -1);
+	if (par < 0)
+		return (printf("syntax_error : ')'\n"), -1);
+	return (0);
+}
+
+void    parse_tree_size(t_ast *root, int *size)
+{
+    if (root->left)
+        parse_tree_size(root->left, size);
+    *size += 1;
+    if (root->right)
+        parse_tree_size(root->right, size);
+}
+
+t_ast *get_first_node_tree(t_ast *root)
+{
+    if (root->left)
+        return (get_first_node_tree(root->left));
+    return (root);
+    if (root->right)
+        return (get_first_node_tree(root->right));
+}
+
+void    get_last_node_tree(t_ast *root, t_ast **node)
+{
+    if (root->left)
+        get_last_node_tree(root->left, node);
+    *node = root;
+    if (root->right)
+        get_last_node_tree(root->right, node);
+}
+
+int tree_size(t_ast **tree)
+{
+    t_ast *root;
+    int size;
+
+    root = *tree;
+    size = 0;
+    parse_tree_size(root, &size);
+    return (size);
+}
+
+void check_tree_syntax_recursive(t_ast *root, t_ast **syntax_node, int *syntax_flag, int *node_nb)
+{
+    if (root->left)
+        check_tree_syntax_recursive(root->left, syntax_node, syntax_flag, node_nb);
+    if (root->node_type == CMD)
+        *syntax_flag += 1;
+    if (root->node_type > CMD)
+        *syntax_flag -= 1;
+    if (*syntax_flag > 1 || *syntax_flag < 0)
+    {
+        *syntax_node = root;
+        return ;
+    }
+    *node_nb += 1;
+    if (root->right)
+        check_tree_syntax_recursive(root->right, syntax_node, syntax_flag, node_nb);
+}
+
+int check_tree_syntax(t_ast **tree)
+{
+    t_ast *root;
+    t_ast  *error_node;
+    int    syntax_flag;
+    int    node_nb;
+
+    root = *tree;
+    syntax_flag = 0;
+    node_nb = 0;
+    error_node = NULL;
+    error_node = get_first_node_tree(root);
+    if (error_node->node_type != CMD)
+        return (printf("syntax error 1: %s\n", error_node->token_node->content), -1);
+    check_tree_syntax_recursive(root, &error_node, &syntax_flag, &node_nb);
+    printf("syntax flag = %d\n", syntax_flag);
+    error_node = NULL;
+    if (error_node)
+        return (printf("syntax error 2: %s\n", error_node->token_node->content), -1);
+    get_last_node_tree(root, &error_node);
+    if (error_node->node_type != CMD)
+        return (printf("syntax error 3: %s\n", error_node->token_node->content), -1);
+    printf("syntax flag after func = %d\n", syntax_flag);
+    return (0);
+}
+
 int	start_parsing(char *prompt)
 {
 	t_token	*input;
@@ -139,12 +245,20 @@ int	start_parsing(char *prompt)
 	if (check_syntax_errors(prompt))
 		return (-1);
 	input = tokenize_input(prompt);
+	if (check_par_syntax(&input) == -1)
+		return (-1);
 	// print_lst(&input);
-    // printf("------\n");
+	// printf("------\n");
 	clean_lst(&input);
 	print_lst(&input);
 	tree = build_ast(&input);
-	print_tree(&tree);
+	if (tree)
+    {
+        printf("on veut print\n");
+		print_tree(&tree);
+        check_tree_syntax(&tree);
+    }
+    
 	return (0);
 }
 

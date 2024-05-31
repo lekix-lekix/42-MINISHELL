@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ast_par_tools.c                                    :+:      :+:    :+:   */
+/*   ast_parenthesis.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:19:53 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/29 17:21:30 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/31 18:19:07 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,16 +77,21 @@ t_token	*create_par_lst(t_token **lst)
 	return (dup_lst);
 }
 
-t_ast	*handle_par(t_token **lst, t_ast **tree, t_ast **root)
+t_ast	*handle_par(t_token **lst, t_ast **tree, t_ast **root, int *insert_node)
 {
 	t_token	*par_lst;
 	t_ast	*par_tree;
 
 	par_lst = create_par_lst(lst);
-    print_lst(&par_lst);
+    // printf("handle par print_lst ====\n");
+    // print_lst(&par_lst);
+    // printf("=========================\n");
 	if (!par_lst)
 		return (NULL);
-	par_tree = build_ast(&par_lst);
+	par_tree = build_ast(&par_lst, insert_node);
+    // printf("====\n");
+    // print_tree(&par_tree);
+    // printf("====\n");
 	par_tree->is_in_par = 1;
     if (!*root)
     {

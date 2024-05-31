@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:17:54 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/29 17:44:20 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/31 18:04:04 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	insert_operator_token_node(t_ast **tree, t_ast *node)
 	root = *tree;
 	if (!root)
 	{
+        // printf("node nest = %s\n", node->right->token_node->content);
 		*tree = node;
 		return ;
 	}
@@ -51,11 +52,7 @@ void	insert_operator_token_node(t_ast **tree, t_ast *node)
 
 int	parse_insert_cmd_node(t_ast *root, t_ast *cmd_node, int level)
 {
-    if (!root)
-    {
-        root = cmd_node;
-        return (0);
-    }
+    // printf("root = %s cmd_npde = %s\n", root->token_node->content, cmd_node->token_node->content);
 	if (root->left)
 	{
 		if (parse_insert_cmd_node(root->left, cmd_node, level + 1) == 0)
@@ -79,4 +76,19 @@ int	parse_insert_cmd_node(t_ast *root, t_ast *cmd_node, int level)
 		return (0);
 	}
 	return (-1);
+}
+
+int insert_cmd_node(t_ast **tree, t_ast *node)
+{
+    t_ast *root;
+    
+    root = *tree;
+    if (!root)
+    {
+        root = node;
+        return (0);
+    }
+    if (parse_insert_cmd_node(root, node, 0) == -1)
+        return (-1);
+    return (0);
 }

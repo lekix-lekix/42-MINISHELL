@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:27:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/29 17:29:41 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/31 16:26:12 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_token	*lst_dup(t_token **lst, t_token *node)
 		insert_node_lst(&lst_cpy, current_cpy);
 		current = current->next;
 	}
+    current->next = NULL;
 	return (lst_cpy);
 }
 
@@ -43,7 +44,7 @@ t_token	*find_operator_token(t_token **lst)
 		return (NULL);
 	while (current)
 	{
-		if (current->type > 0 && current->type < 5)
+		if (current->type > CMD && current->type < PAR_RIGHT)
 			return (current);
 		current = current->next;
 	}
@@ -60,7 +61,7 @@ t_token	*find_next_operator_token(t_token **lst)
     current = current->next;
 	while (current)
 	{
-		if (current->type > 0)
+		if (current->type > CMD)
 			return (current);
 		current = current->next;
 	}

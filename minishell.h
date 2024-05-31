@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/29 17:34:19 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/05/31 18:20:04 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,19 +93,20 @@ void				print_tree(t_ast **tree);
 int					ft_strlen_sep(char *str, char *sep);
 char				*find_operator(char *str);
 void				insert_operator_node(t_token **tree, t_token *node);
-void				insert_cmd_node(t_token **tree, t_token *node);
+int 				insert_cmd_node(t_ast **tree, t_ast *node);
 int					ft_strcpy_sep(char *dest, char *input, char *sep);
 void				clear_tree(t_token **tree);
-t_ast				*build_ast(t_token **lst);
+t_ast				*build_ast(t_token **lst, int *insert_node);
 void				insert_node_lst(t_token **lst, t_token *node);
 void				print_lst(t_token **lst);
 t_token				*find_closing_par(t_token **lst);
 void				insert_operator_token_node(t_ast **tree, t_ast *node);
-int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
-						int level);
-t_ast				*handle_par(t_token **lst, t_ast **tree, t_ast **root);
+// int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
+						// int level);
+t_ast				*handle_par(t_token **lst, t_ast **tree, t_ast **root, int *insert_node);
 t_token				*lst_dup(t_token **lst, t_token *node);
-t_ast	*create_ast_node(t_token *node);
-t_token	*find_operator_token(t_token **lst);
+t_ast				*create_ast_node(t_token *node);
+t_token				*find_operator_token(t_token **lst);
+void				syntax_error(t_token *node);
 
 #endif
