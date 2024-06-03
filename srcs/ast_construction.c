@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_construction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/31 18:24:57 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/03 13:29:38 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,8 @@ t_ast	*build_operator_tree(t_token **lst)
 		if (current && current->type == PAR_LEFT)
 		{
 			par = find_closing_par(&current);
-			// if (!par)
-				// return (syntax_error(current), NULL);
+			if (!par)
+				return (syntax_error(current), NULL);
 			current = par;
 			continue ;
 		}
@@ -122,13 +122,14 @@ int	build_cmd_tree(t_ast **tree, t_token **lst)
 	insert_node = 1;
 	while (current && current->type < 5)
 	{
-		// printf("INSIDE CMD TREE\n");
 		if (current->type == PAR_LEFT)
 		{
 			cmd_node = handle_par(&current, tree, &root, &insert_node);
-			// printf("lst content = %s\n", (*lst)->content);
-			// if (!cmd_node) // handle unclosed par here ?
-				// return (syntax_error(current), -1);
+            if (!cmd_node)
+            {
+                printf("no cmd node\n");
+                return (syntax_error(find_closing_par(&current)), -1);
+            }
 			if (insert_node)
 				insert_cmd_node(tree, cmd_node);
 			printf("coucou\n");
@@ -149,8 +150,11 @@ t_ast	*build_ast(t_token **lst, int *insert_node)
 
 	// printf("coucou\n");
 	tree = build_operator_tree(lst);
-	// if (!tree)
-	// 	return (NULL);
+	if (!tree)
+    {
+        printf("no operator tree\n");
+		// return (NULL);
+    }
 	// printf("====\n");
 	// print_lst(lst);
 	// printf("====\n");
