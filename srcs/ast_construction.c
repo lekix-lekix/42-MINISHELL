@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_construction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/03 13:29:38 by lekix            ###   ########.fr       */
+/*   Updated: 2024/06/04 14:32:21 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,26 +112,32 @@ int	build_cmd_tree(t_ast **tree, t_token **lst)
 {
 	t_token	*current;
 	t_ast	*cmd_node;
-	t_ast	*root;
+	// t_ast	*root;
 	int		insert_node;
 
 	current = *lst;
 	if (!current)
 		return (-1);
-	root = *tree;
+	// root = *tree;
 	insert_node = 1;
 	while (current && current->type < 5)
 	{
+        printf("current cmd = %s\n", current->content);
 		if (current->type == PAR_LEFT)
 		{
-			cmd_node = handle_par(&current, tree, &root, &insert_node);
+			cmd_node = handle_par(&current, tree, /* &root,  */&insert_node);
             if (!cmd_node)
             {
-                printf("no cmd node\n");
-                return (syntax_error(find_closing_par(&current)), -1);
+                *tree = NULL;
+                return (-1);
+                // printf("no cmd node\n");
+                // return (syntax_error(find_closing_par(&current)), -1);
             }
 			if (insert_node)
-				insert_cmd_node(tree, cmd_node);
+            {    
+				if (insert_cmd_node(tree, cmd_node) == -1)
+                    return (syntax_error(get_first_node_tree(cmd_node)->token_node), -1);
+            }
 			printf("coucou\n");
 			current = find_closing_par(&current);
 			continue ;
@@ -139,6 +145,9 @@ int	build_cmd_tree(t_ast **tree, t_token **lst)
 		else
 			cmd_node = create_ast_node(current);
 		printf("return (= %d\n", insert_cmd_node(tree, cmd_node));
+        printf("cmd tree building -------------\n");
+        print_tree(tree);
+        printf("-----------------------------\n");
 		current = current->next;
 	}
 	return (0);

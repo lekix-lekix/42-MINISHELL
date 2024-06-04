@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/03 13:31:24 by lekix            ###   ########.fr       */
+/*   Updated: 2024/06/04 18:16:07 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,18 @@ void	print_lst(t_token **lst)
 	}
 }
 
+int	only_spaces(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (ft_is_space(str[i]))
+		i++;
+	if (!str[i])
+		return (1);
+	return (0);
+}
+
 void	clean_lst(t_token **lst)
 {
 	t_token	*current;
@@ -110,7 +122,7 @@ void	clean_lst(t_token **lst)
 	if (!*lst)
 		return ;
 	current = *lst;
-	if (!ft_strlen(current->content))
+	if (!ft_strlen(current->content) || only_spaces(current->content))
 	{
 		prev = current->next;
 		gbg_coll(current->content, PARSING, FREE);
@@ -120,7 +132,7 @@ void	clean_lst(t_token **lst)
 	current = *lst;
 	while (current)
 	{
-		if (!ft_strlen(current->content))
+		if (!ft_strlen(current->content) || only_spaces(current->content))
 		{
 			prev->next = current->next;
 			gbg_coll(current->content, PARSING, FREE);
@@ -227,33 +239,119 @@ int	check_tree_syntax(t_ast **tree)
 	error_node = NULL;
 	error_node = get_first_node_tree(root);
 	if (error_node->node_type != CMD)
-		return (printf("syntax error 1: %s\n", error_node->token_node->content),
-			-1);
+	{
+		if (!error_node->is_in_par)
+			return (printf("syntax error 1: %s\n",
+					error_node->token_node->content), -1);
+		else
+			return (-1);
+	}
 	check_tree_syntax_recursive(root, &error_node, &syntax_flag, &node_nb);
-	printf("syntax flag = %d\n", syntax_flag);
+	// printf("syntax flag = %d\n", syntax_flag);
 	error_node = NULL;
 	if (error_node)
-		return (printf("syntax error 2: %s\n", error_node->token_node->content),
-			-1);
+	{
+		if (!error_node->is_in_par)
+			return (printf("syntax error 2: %s\n",
+					error_node->token_node->content), -1);
+		else
+			return (-1);
+	}
 	get_last_node_tree(root, &error_node);
 	if (error_node->node_type != CMD)
-		return (printf("syntax error 3: %s\n", error_node->token_node->content),
-			-1);
+	{
+		if (!error_node->is_in_par)
+			return (printf("syntax error 3: %s\n",
+					error_node->token_node->content), -1);
+		else
+			return (-1);
+	}
 	printf("syntax flag after func = %d\n", syntax_flag);
 	return (0);
+}
+
+int	check_op_len(char *str, int *op_len)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] == str[0])
+		i++;
+	if (i > 2)
+		return (0);
+	*op_len = i;
+	return (1);
+}
+
+int	check_set_redir(t_token *node)
+{
+	int	i;
+	int	op_len;
+
+	i = 0;
+	while (node->content[i])
+	{
+        printf("content[i] == %c\n", node->content[i]);
+		if ((node->content[i] == '>' || node->content[i] == '<'))
+		{
+			if (!check_op_len(node->content + i, &op_len))
+				return (-1);
+			if (node->content[i] == '<' && op_len == 1)
+				node->redir = INPUT;
+			if (node->content[i] == '<' && op_len == 2)
+				node->redir = HEREDOC;
+			if (node->content[i] == '>' && op_len == 1)
+				node->redir = OUTPUT;
+			if (node->content[i] == '>' && op_len == 2)
+				node->redir = OUTPUT_APPEND;
+			i += op_len;
+			continue ;
+		}
+		i++;
+	}
+	return (0);
+}
+
+int set_filename_token(t_token *node)
+{
+    
+}
+
+int	check_redirections(t_token **lst)
+{
+	t_token	*current;
+
+	current = *lst;
+	if (!current)
+		return (-1);
+	while (current)
+	{
+        printf("current->content = %s\n", current->content);
+		if (current->type == CMD)
+        {
+			check_set_redir(current);
+            if (current->redir)
+                set_filename_token(current);
+            printf("current->content redir = %d\n", current->redir);
+        }
+		current = current->next;
+	}
+    return (0);
 }
 
 int	start_parsing(char *prompt)
 {
 	t_token	*input;
 	t_ast	*tree;
-    int insert_node;
+	int		insert_node;
 
-    insert_node = 1;
+	insert_node = 1;
 	if (check_syntax_errors(prompt))
 		return (-1);
 	input = tokenize_input(prompt);
 	if (check_par_syntax(&input) == -1)
+		return (-1);
+	if (check_redirections(&input) == -1)
 		return (-1);
 	// print_lst(&input);
 	// printf("------\n")

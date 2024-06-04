@@ -1,8 +1,7 @@
-|| && ok
-&& ||  ok
-| | | && || 
-|| | cat
-(ls && ||)
-(ls && || coucou)
-ls && (coucou &&)
-(||)
+hello && ( &&)
+hello &&
+any cmd with '&'
+
+
+bash things :
+cat -e outfile < outfile ---> works

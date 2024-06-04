@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:17:54 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/31 18:04:04 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/04 12:11:29 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int insert_cmd_node(t_ast **tree, t_ast *node)
     root = *tree;
     if (!root)
     {
-        root = node;
+        *tree = node;
         return (0);
     }
     if (parse_insert_cmd_node(root, node, 0) == -1)
