@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/05 11:17:11 by lekix            ###   ########.fr       */
+/*   Updated: 2024/06/05 15:41:27 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ typedef enum e_ast_node_type
 
 typedef enum e_redir_type
 {
-	INPUT = 1,
+    NONE,
+	INPUT,
 	OUTPUT,
 	OUTPUT_APPEND,
 	HEREDOC

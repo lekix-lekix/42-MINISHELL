@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/05 11:31:55 by lekix            ###   ########.fr       */
+/*   Updated: 2024/06/05 15:41:41 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	check_operator_len(char *str, int *op_len)
 	i = 0;
 	while (str[i] == str[0])
 		i++;
-	// if (i > 2)
+	// if (i > 2)==
 	// 	return (0);
 	*op_len = i;
 	return (1);
@@ -82,6 +82,7 @@ t_token	*create_cmd_node(char *input, char *sep)
 	if (!node->content || gbg_coll(node->content, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	ft_strcpy_sep(node->content, input, sep);
+    node->redir = NONE;
 	node->type = CMD;
     node->filename = NULL;
 	node->next = NULL;
