@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/04 18:16:07 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/05 12:44:38 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,6 +283,11 @@ int	check_op_len(char *str, int *op_len)
 	return (1);
 }
 
+int is_redir(char c)
+{
+    return (c == '<' || c == '>');
+}
+
 int	check_set_redir(t_token *node)
 {
 	int	i;
@@ -291,7 +296,6 @@ int	check_set_redir(t_token *node)
 	i = 0;
 	while (node->content[i])
 	{
-        printf("content[i] == %c\n", node->content[i]);
 		if ((node->content[i] == '>' || node->content[i] == '<'))
 		{
 			if (!check_op_len(node->content + i, &op_len))
@@ -312,9 +316,62 @@ int	check_set_redir(t_token *node)
 	return (0);
 }
 
+int ft_strlen_operator(char *str)
+{
+    int i;
+
+    i = 0;
+    while (str[i] && !is_an_operator(str[i]) && !ft_is_space(str[i]))
+        i++;
+    return (i);
+}
+
+void    replace_redir_blank(t_token *node, char *redir)
+{
+    int i;
+    int j;
+ 
+    i = 0;
+    j = 0;
+    printf("redir = %s\n", redir);
+    while (node->content[i] && (node->content[i] != redir[0]))
+        i++;
+    while (node->content[i] && (node->content[i] == redir[j]))
+    {
+        node->content[i] = ' ';
+        i++;
+        j++;
+    }
+}
+
+void    rem_redir_from_content(t_token *node, char *redir)
+{
+    replace_redir_blank(node, redir);
+    printf("content after blanking = %s\n", node->content);    
+}
+
 int set_filename_token(t_token *node)
 {
-    
+    char *str;
+    char *redir;
+    int len;
+    int i;
+
+    i = 0;
+    while (!is_redir(node->content[i]))
+        i++;
+    redir = node->content + i;
+    while (is_redir(node->content[i]))
+        i++;
+    str = skip_spaces(node->content + i);
+    len = ft_strlen_operator(str) + 1;
+    node->filename = malloc(sizeof(char) * len);
+    if (!node->filename || gbg_coll(node->filename, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
+    ft_strlcpy(node->filename, str, len);
+    printf("str = %s\n", str);
+    rem_redir_from_content(node, redir);
+    return (0);
 }
 
 int	check_redirections(t_token **lst)
@@ -333,6 +390,7 @@ int	check_redirections(t_token **lst)
             if (current->redir)
                 set_filename_token(current);
             printf("current->content redir = %d\n", current->redir);
+            printf("current->filename = '%s'\n", current->filename);
         }
 		current = current->next;
 	}

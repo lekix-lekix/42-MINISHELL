@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/04 17:15:32 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/05 11:31:55 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ t_token	*create_operator_node(char **input)
 	if (!node->content || gbg_coll(node->content, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	ft_strlcpy(node->content, input_copy, operator_len + 1);
+    node->filename = NULL;
 	node->next = NULL;
 	*input += operator_len;
 	return (node);
@@ -82,6 +83,7 @@ t_token	*create_cmd_node(char *input, char *sep)
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	ft_strcpy_sep(node->content, input, sep);
 	node->type = CMD;
+    node->filename = NULL;
 	node->next = NULL;
 	return (node);
 }

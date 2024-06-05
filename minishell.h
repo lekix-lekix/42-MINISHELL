@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/04 18:19:01 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/05 11:17:11 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,17 @@ typedef enum e_ast_node_type
 
 typedef enum e_redir_type
 {
-    INPUT = 1,
-    OUTPUT,
-    OUTPUT_APPEND,
-    HEREDOC
-}                   t_redir_type;
+	INPUT = 1,
+	OUTPUT,
+	OUTPUT_APPEND,
+	HEREDOC
+}					t_redir_type;
 
 typedef struct s_token
 {
 	t_token_type	type;
-    t_redir_type    redir;
-    char            *filename;
+	t_redir_type	redir;
+	char			*filename;
 	char			*content;
 	struct s_token	*next;
 }					t_token;
@@ -125,5 +125,7 @@ void				syntax_error(t_token *node);
 t_ast				*get_first_node_tree(t_ast *root);
 int					check_tree_syntax(t_ast **tree);
 int					ft_is_space(char c);
+char				*skip_spaces(char *str);
+int					is_an_operator(char c);
 
 #endif
