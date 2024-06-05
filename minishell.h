@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/05 15:41:27 by lekix            ###   ########.fr       */
+/*   Updated: 2024/06/05 17:34:28 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,5 +128,6 @@ int					check_tree_syntax(t_ast **tree);
 int					ft_is_space(char c);
 char				*skip_spaces(char *str);
 int					is_an_operator(char c);
+char	*msh_strtrim(char const *s1, char const *set);
 
 #endif

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
+#    By: lekix <lekix@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/26 17:19:05 by kipouliq          #+#    #+#              #
-#    Updated: 2024/05/29 17:34:57 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/06/05 17:34:47 by lekix            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ SRCS = ./srcs/minishell.c \
 	./srcs/ast_construction.c \
 	./srcs/ast_parenthesis.c \
 	./srcs/ast_insert_node.c \
-	./srcs/ast_tools.c
+	./srcs/ast_tools.c \
+	./srcs/msh_strtrim.c
 
 OBJ = $(SRCS:.c=.o)
 

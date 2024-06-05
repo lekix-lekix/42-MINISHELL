@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/05 15:41:41 by lekix            ###   ########.fr       */
+/*   Updated: 2024/06/05 17:47:15 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ t_token	*create_operator_node(char **input)
 	ft_strlcpy(node->content, input_copy, operator_len + 1);
     node->filename = NULL;
 	node->next = NULL;
+    node->redir = NONE;
 	*input += operator_len;
 	return (node);
 }

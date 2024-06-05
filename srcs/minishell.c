@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/05 16:16:44 by lekix            ###   ########.fr       */
+/*   Updated: 2024/06/05 17:49:38 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,11 @@ void	print_lst(t_token **lst)
 	root = *lst;
 	while (root)
 	{
+        printf("--------\n");
 		printf("content = '%s'\n", root->content);
 		printf("type = %u\n", root->type);
+        printf("redir = %d\n", root->redir);
+        printf("filename = '%s'\n", root->filename);
 		root = root->next;
 	}
 }
@@ -326,7 +329,7 @@ int ft_strlen_operator(char *str)
     return (i);
 }
 
-void    replace_redir_blank(t_token *node, char *redir, int redir_len)
+void    replace_redir_blank(t_token *node, char *redir)
 {
     int i;
  
@@ -366,9 +369,7 @@ int set_filename_token(t_token *node)
     if (!node->filename || gbg_coll(node->filename, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
     ft_strlcpy(node->filename, str, len + 1);
-    printf("str = %s\n", str);
-    replace_redir_blank(node, redir, ft_strlen(node->filename));
-    printf("content after blanking = '%s'\n", node->content);
+    replace_redir_blank(node, redir);
     return (0);
 }
 
@@ -381,20 +382,48 @@ int	check_redirections(t_token **lst)
 		return (-1);
 	while (current)
 	{
-        printf("current->content = %s\n", current->content);
 		if (current->type == CMD)
         {
 			check_set_redir(current);
             if (current->redir)
                 set_filename_token(current);
-            printf("current->content redir = %d\n", current->redir);
-            printf("current->filename = '%s'\n", current->filename);
         }
 		current = current->next;
 	}
     return (0);
 }
 
+int trim_token_fields(t_token **lst)
+{
+    t_token *current;
+    char *str;
+
+    current = *lst;
+    while (current)
+    {
+        if (current->content)
+        {
+            str = msh_strtrim(current->content, " ");
+            gbg_coll(current->content, PARSING, FREE);
+            current->content = str;
+        }
+        if (current->filename)
+        {
+            str = msh_strtrim(current->filename, " ");
+            gbg_coll(current->filename, PARSING, FREE);
+            current->filename = str;
+        }
+        current = current->next;
+    }
+    return (0);
+}
+
+int clean_token_lst(t_token **lst)
+{
+    clean_lst(lst);
+    trim_token_fields(lst);
+    return (0);
+}
 
 int	start_parsing(char *prompt)
 {
@@ -410,10 +439,10 @@ int	start_parsing(char *prompt)
 		return (-1);
 	if (check_redirections(&input) == -1)
 		return (-1);
-	// print_lst(&input);
-	// printf("------\n")
-	clean_lst(&input);
+	clean_token_lst(&input);
+    printf("TOKEN LST BEFORE AST =======\n");
 	print_lst(&input);
+    printf("============================\n");
 	tree = build_ast(&input, &insert_node);
 	if (tree)
 	{

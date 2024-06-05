@@ -1,7 +1,11 @@
 hello && ( &&)
 hello &&
-any cmd with '&'
+ls () ---> empty par
+
+
+any cmd with '&' / syntax errors on wrong operators
 
 
 bash things :
 cat -e outfile < outfile ---> works
+syntax errors status --> 2
