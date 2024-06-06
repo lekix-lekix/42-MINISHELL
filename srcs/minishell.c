@@ -3,14 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/05 17:49:38 by lekix            ###   ########.fr       */
+/*   Updated: 2024/06/06 18:33:06 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+char	*msh_strdup(const char *s, int mlc_lst)
+{
+	char	*final_str;
+	int		s_len;
+
+	s_len = ft_strlen(s);
+	final_str = malloc(sizeof(char) * (s_len + 1));
+	if (!final_str || gbg_coll(final_str, mlc_lst, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+	ft_strlcpy(final_str, s, s_len + 1);
+	return (final_str);
+}
 
 char	*get_path(char **envp)
 {
@@ -96,11 +109,11 @@ void	print_lst(t_token **lst)
 	root = *lst;
 	while (root)
 	{
-        printf("--------\n");
+		printf("--------\n");
 		printf("content = '%s'\n", root->content);
 		printf("type = %u\n", root->type);
-        printf("redir = %d\n", root->redir);
-        printf("filename = '%s'\n", root->filename);
+		// printf("redir = %d\n", root->redir);
+		printf("filename = '%s'\n", root->filename);
 		root = root->next;
 	}
 }
@@ -117,6 +130,12 @@ int	only_spaces(char *str)
 	return (0);
 }
 
+void	gbg_delete_lst(t_token *node, int mlc_lst)
+{
+	gbg_coll(node->content, mlc_lst, FREE);
+	gbg_coll(node, mlc_lst, FREE);
+}
+
 void	clean_lst(t_token **lst)
 {
 	t_token	*current;
@@ -128,8 +147,7 @@ void	clean_lst(t_token **lst)
 	if (!ft_strlen(current->content) || only_spaces(current->content))
 	{
 		prev = current->next;
-		gbg_coll(current->content, PARSING, FREE);
-		gbg_coll(current, PARSING, FREE);
+		gbg_delete_lst(current, PARSING);
 		*lst = prev;
 	}
 	current = *lst;
@@ -138,8 +156,35 @@ void	clean_lst(t_token **lst)
 		if (!ft_strlen(current->content) || only_spaces(current->content))
 		{
 			prev->next = current->next;
-			gbg_coll(current->content, PARSING, FREE);
-			gbg_coll(current, PARSING, FREE);
+			gbg_delete_lst(current, PARSING);
+		}
+		prev = current;
+		current = current->next;
+	}
+}
+
+void	remove_token_node(t_token **lst, t_token *node)
+{
+	t_token	*current;
+	t_token	*prev;
+
+	if (!*lst)
+		return ;
+	current = *lst;
+	if (current == node)
+	{
+		prev = current->next;
+		gbg_delete_lst(current, PARSING);
+		*lst = prev;
+		return ;
+	}
+	current = *lst;
+	while (current)
+	{
+		if (current == node)
+		{
+			prev->next = current->next;
+			gbg_delete_lst(current, PARSING);
 		}
 		prev = current;
 		current = current->next;
@@ -286,91 +331,193 @@ int	check_op_len(char *str, int *op_len)
 	return (1);
 }
 
-int is_redir_operator(char c)
+int	is_redir_operator(char c)
 {
-    return (c == '<' || c == '>');
+	return (c == '<' || c == '>');
 }
 
-int	check_set_redir(t_token *node)
+// int	check_set_redir(t_token *node)
+// {
+// 	int	i;
+// 	int	op_len;
+
+// 	i = 0;
+// 	while (node->content[i])
+// 	{
+// 		if ((node->content[i] == '>' || node->content[i] == '<'))
+// 		{
+// 			if (!check_op_len(node->content + i, &op_len))
+// 				return (-1);
+// 			if (node->content[i] == '<' && op_len == 1)
+// 				node->redirections = INPUT;
+// 			if (node->content[i] == '<' && op_len == 2)
+// 				node->redirections = HEREDOC;
+// 			if (node->content[i] == '>' && op_len == 1)
+// 				node->redirections = OUTPUT;
+// 			if (node->content[i] == '>' && op_len == 2)
+// 				node->redirections = OUTPUT_APPEND;
+// 			i += op_len;
+// 			continue ;
+// 		}
+// 		i++;
+// 	}
+// 	return (0);
+// }
+
+int	ft_strlen_operator(char *str)
 {
 	int	i;
-	int	op_len;
 
 	i = 0;
-	while (node->content[i])
+	while (str[i] && !is_an_operator(str[i]) && !ft_is_space(str[i]))
+		i++;
+	return (i);
+}
+
+void	replace_redir_blank(t_token *node, char *redir)
+{
+	int	i;
+
+	i = 0;
+	while (node->content[i] && (node->content[i] != redir[0]))
+		i++;
+	while (node->content[i] && is_redir_operator(node->content[i]))
 	{
-		if ((node->content[i] == '>' || node->content[i] == '<'))
-		{
-			if (!check_op_len(node->content + i, &op_len))
-				return (-1);
-			if (node->content[i] == '<' && op_len == 1)
-				node->redir = INPUT;
-			if (node->content[i] == '<' && op_len == 2)
-				node->redir = HEREDOC;
-			if (node->content[i] == '>' && op_len == 1)
-				node->redir = OUTPUT;
-			if (node->content[i] == '>' && op_len == 2)
-				node->redir = OUTPUT_APPEND;
-			i += op_len;
-			continue ;
-		}
+		node->content[i] = ' ';
 		i++;
 	}
+	while (node->content[i] && ft_is_space(node->content[i]))
+		i++;
+	while (node->content[i] && !ft_is_space(node->content[i]))
+	{
+		node->content[i] = ' ';
+		i++;
+	}
+}
+
+int	set_filename_token(t_token *node)
+{
+	char	*str;
+	char	*redir;
+	int		len;
+	int		i;
+
+	i = 0;
+	while (!is_redir_operator(node->content[i]))
+		i++;
+	redir = node->content + i;
+	while (is_redir_operator(node->content[i]))
+		i++;
+	str = skip_spaces(node->content + i);
+	len = ft_strlen_operator(str);
+	node->filename = malloc(sizeof(char) * (len + 1));
+	if (!node->filename || gbg_coll(node->filename, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
+	ft_strlcpy(node->filename, str, len + 1);
+	replace_redir_blank(node, redir);
 	return (0);
 }
 
-int ft_strlen_operator(char *str)
-{
-    int i;
+// int	check_redirections(t_token **lst)
+// {
+// 	t_token	*current;
 
-    i = 0;
-    while (str[i] && !is_an_operator(str[i]) && !ft_is_space(str[i]))
-        i++;
-    return (i);
+// 	current = *lst;
+// 	if (!current)
+// 		return (-1);
+// 	while (current)
+// 	{
+// 		if (current->type == CMD)
+//         {
+// 			check_set_redir(current);
+//             if (current->redir)
+//                 set_filename_token(current);
+//         }
+// 		current = current->next;
+// 	}
+//     return (0);
+// }
+
+char	*get_filename(t_token *node)
+{
+	int		i;
+	char	*filename;
+	int		filename_len;
+
+	i = 0;
+	filename_len = ft_strlen_sep(node->content, " ");
+	printf("filename len = %d\n", filename_len);
+	filename = malloc(sizeof(char) * (filename_len + 1));
+	if (!filename || gbg_coll(filename, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+	ft_strlcpy(filename, node->content, filename_len);
+	i = -1;
+	while (node->content[++i] && i < filename_len)
+		node->content[i] = ' ';
+	return (filename);
 }
 
-void    replace_redir_blank(t_token *node, char *redir)
+t_token	*find_redir_node(t_token **lst)
 {
-    int i;
- 
-    i = 0;
-    while (node->content[i] && (node->content[i] != redir[0]))
-        i++;
-    while (node->content[i] && is_redir_operator(node->content[i]))
-    {
-        node->content[i] = ' ';
-        i++;
-    }
-    while (node->content[i] && ft_is_space(node->content[i]))
-        i++;
-    while (node->content[i] && !ft_is_space(node->content[i]))
-    {
-        node->content[i] = ' ';
-        i++;
-    }
+	t_token	*cmd_node;
+	t_token	*current;
+	int		found_redir;
+
+	current = *lst;
+	if (!current)
+		return (NULL);
+	found_redir = 0;
+	cmd_node = NULL;
+	while (current)
+	{
+        // printf("current = %s type = %d\n", current->content, current->type);
+		// if (cmd_node)
+		// 	printf("found cmd node = %s\n", cmd_node->content);
+		if (current->type == CMD)
+			cmd_node = current;
+		if ((current->type > CMD && current->type < REDIR_INPUT))
+		{
+			printf("RETURNING\n");
+			return (cmd_node);
+		}
+		current = current->next;
+	}
+	return (cmd_node);
 }
 
-int set_filename_token(t_token *node)
+void	set_redir_lst(t_token **lst)
 {
-    char *str;
-    char *redir;
-    int len;
-    int i;
+	t_token	*current;
 
-    i = 0;
-    while (!is_redir_operator(node->content[i]))
-        i++;
-    redir = node->content + i;
-    while (is_redir_operator(node->content[i]))
-        i++;
-    str = skip_spaces(node->content + i);
-    len = ft_strlen_operator(str);
-    node->filename = malloc(sizeof(char) * (len + 1));
-    if (!node->filename || gbg_coll(node->filename, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
-    ft_strlcpy(node->filename, str, len + 1);
-    replace_redir_blank(node, redir);
-    return (0);
+	current = *lst;
+	if (!current)
+		return ;
+	while (current)
+	{
+		if ((current->type >= REDIR_INPUT && current->type < OUTFILE) && current->next)
+			current->next->type = OUTFILE;
+		current = current->next;
+	}
+}
+
+int	handle_redirection(t_token **lst, t_token *redir)
+{
+	t_token	*redir_node;
+	t_token	*filename_token;
+	int		redir_type;
+	char	*filename;
+
+	printf("node = %s type = %u\n", redir->content, redir->type);
+	if (!redir->next)
+		return (-1); // syntax error : newline
+	filename_token = redir->next;
+	redir_type = redir->type;
+	filename = get_filename(filename_token);
+	redir_node = find_redir_node(lst);
+	printf("filename = %s\n", filename);
+	printf("node->content = %s\n", filename_token->content);
+	printf("found cmd_node = %s\n", redir_node->content);
+	return (0);
 }
 
 int	check_redirections(t_token **lst)
@@ -380,49 +527,46 @@ int	check_redirections(t_token **lst)
 	current = *lst;
 	if (!current)
 		return (-1);
+	set_redir_lst(lst);
 	while (current)
 	{
-		if (current->type == CMD)
-        {
-			check_set_redir(current);
-            if (current->redir)
-                set_filename_token(current);
-        }
+		if (current->type >= REDIR_INPUT && current->type < OUTFILE)
+			handle_redirection(lst, current);
 		current = current->next;
 	}
-    return (0);
+	return (0);
 }
 
-int trim_token_fields(t_token **lst)
+int	trim_token_fields(t_token **lst)
 {
-    t_token *current;
-    char *str;
+	t_token	*current;
+	char	*str;
 
-    current = *lst;
-    while (current)
-    {
-        if (current->content)
-        {
-            str = msh_strtrim(current->content, " ");
-            gbg_coll(current->content, PARSING, FREE);
-            current->content = str;
-        }
-        if (current->filename)
-        {
-            str = msh_strtrim(current->filename, " ");
-            gbg_coll(current->filename, PARSING, FREE);
-            current->filename = str;
-        }
-        current = current->next;
-    }
-    return (0);
+	current = *lst;
+	while (current)
+	{
+		if (current->content)
+		{
+			str = msh_strtrim(current->content, " ");
+			gbg_coll(current->content, PARSING, FREE);
+			current->content = str;
+		}
+		if (current->filename)
+		{
+			str = msh_strtrim(current->filename, " ");
+			gbg_coll(current->filename, PARSING, FREE);
+			current->filename = str;
+		}
+		current = current->next;
+	}
+	return (0);
 }
 
-int clean_token_lst(t_token **lst)
+int	clean_token_lst(t_token **lst)
 {
-    clean_lst(lst);
-    trim_token_fields(lst);
-    return (0);
+	clean_lst(lst);
+	trim_token_fields(lst);
+	return (0);
 }
 
 int	start_parsing(char *prompt)
@@ -437,12 +581,12 @@ int	start_parsing(char *prompt)
 	input = tokenize_input(prompt);
 	if (check_par_syntax(&input) == -1)
 		return (-1);
+	clean_token_lst(&input);
 	if (check_redirections(&input) == -1)
 		return (-1);
-	clean_token_lst(&input);
-    printf("TOKEN LST BEFORE AST =======\n");
+	printf("TOKEN LST BEFORE AST =======\n");
 	print_lst(&input);
-    printf("============================\n");
+	printf("============================\n");
 	tree = build_ast(&input, &insert_node);
 	if (tree)
 	{
@@ -471,7 +615,7 @@ int	main(int argc, char **argv, char **env)
 			break ;
 		start_parsing(prompt);
 		free(prompt);
-        printf("===========\n");
+		printf("===========\n");
 	}
 	free(prompt);
 	gbg_coll(NULL, ENV, FLUSH_ALL);

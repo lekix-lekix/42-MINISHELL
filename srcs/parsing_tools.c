@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_tools.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:53:14 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/05 15:18:37 by lekix            ###   ########.fr       */
+/*   Updated: 2024/06/06 13:33:11 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	ft_strlen_sep(char *str, char *sep)
 
 int	is_an_operator(char c)
 {
-	return (c == '|' || c == '&' || c == '(' || c == ')');
+	return (c == '|' || c == '&' || c == '(' || c == ')' || c == '<' || c == '>');
 }
 
 char	*find_operator(char *str)

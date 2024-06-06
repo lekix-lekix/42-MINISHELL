@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/05 17:47:15 by lekix            ###   ########.fr       */
+/*   Updated: 2024/06/06 17:15:38 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,14 @@ void	find_operator_type(char *input, t_token *node)
 		node->type = OR;
 	else if (*input == '&' && op_len == 2)
 		node->type = AND;
+	else if (*input == '<' && op_len == 1)
+		node->type = REDIR_INPUT;
+	else if (*input == '<' && op_len == 2)
+		node->type = REDIR_HEREDOC;
+	else if (*input == '>' && op_len == 1)
+		node->type = REDIR_OUTPUT;
+	else if (*input == '>' && op_len == 2)
+		node->type = REDIR_OUTPUT_APPEND;
 }
 
 t_token	*create_operator_node(char **input)
@@ -49,7 +57,7 @@ t_token	*create_operator_node(char **input)
 	char	*input_copy;
 
 	input_copy = *input;
-    check_operator_len(input_copy, &operator_len);
+	check_operator_len(input_copy, &operator_len);
 	// if (!check_operator_len(input_copy, &operator_len))
 	// 	return (printf("bash: syntax error near unexpected token `%c'\n",
 	// 			*input_copy), NULL);
@@ -63,9 +71,9 @@ t_token	*create_operator_node(char **input)
 	if (!node->content || gbg_coll(node->content, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	ft_strlcpy(node->content, input_copy, operator_len + 1);
-    node->filename = NULL;
+	node->filename = NULL;
 	node->next = NULL;
-    node->redir = NONE;
+	node->redirections = NULL;
 	*input += operator_len;
 	return (node);
 }
@@ -83,9 +91,9 @@ t_token	*create_cmd_node(char *input, char *sep)
 	if (!node->content || gbg_coll(node->content, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	ft_strcpy_sep(node->content, input, sep);
-    node->redir = NONE;
+	node->redirections = NULL;
 	node->type = CMD;
-    node->filename = NULL;
+	node->filename = NULL;
 	node->next = NULL;
 	return (node);
 }
