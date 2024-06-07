@@ -1,7 +1,7 @@
 hello && ( &&)
 hello &&
 ls () ---> empty par
-
+<ls
 
 any cmd with '&' / syntax errors on wrong operators
 

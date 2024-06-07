@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/06 18:00:14 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/07 17:53:15 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ typedef enum e_token_type
 	REDIR_OUTPUT,
 	REDIR_OUTPUT_APPEND,
 	REDIR_HEREDOC,
-    OUTFILE
+	OUTFILE
 }					t_token_type;
 
 // typedef enum e_ast_node_type
@@ -69,15 +69,15 @@ typedef enum e_redir_type
 
 typedef struct s_redir
 {
-    t_redir_type    redir_type;
-    char            *filename;
-    struct s_redir  *next;
-}                   t_redir;
+	t_token_type	redir_type;
+	char			*filename;
+	struct s_redir	*next;
+}					t_redir;
 
 typedef struct s_token
 {
 	t_token_type	type;
-	t_redir     	*redirections;
+	t_redir			*redirections;
 	char			*filename;
 	char			*content;
 	struct s_token	*next;
@@ -87,6 +87,7 @@ typedef struct s_ast
 {
 	t_token			*token_node;
 	t_token_type	node_type;
+	t_redir			*redirections;
 	int				is_in_par;
 	struct s_ast	*left;
 	struct s_ast	*right;
@@ -142,5 +143,11 @@ int					is_an_operator(char c);
 char				*msh_strtrim(char const *s1, char const *set);
 char				**msh_split(char const *s, char c, int mlc_list);
 t_token				*create_cmd_node(char *input, char *sep);
+int					check_redirections(t_token **lst);
+char				*get_filename(t_token *node);
+t_token				*find_redir_node(t_token **lst, t_token *redir_node);
+void				remove_token_node(t_token **lst, t_token *node);
+int					only_spaces(char *str);
+int					check_par_syntax(t_token **lst);
 
 #endif

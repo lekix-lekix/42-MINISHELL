@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:04:20 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/25 21:53:57 by lekix            ###   ########.fr       */
+/*   Updated: 2024/06/07 12:43:43 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,19 @@ void	remove_mem_node(t_lst **lst, void *mem_addr)
 	if (ft_lstsize(*lst) == 1)
 		nullify = 1;
 	current = *lst;
+    if (current->content == mem_addr)
+    {
+        *lst = current->next;
+        free(current);
+        return ;
+    }    
     while (current)
     {
         if (current->content == mem_addr)
         {
             prev->next = current->next;
             free(current);
-            current = prev;
-            continue ;
+            break ;
         }
         prev = current;
         current = current->next;
