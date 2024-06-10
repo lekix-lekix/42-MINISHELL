@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:53:14 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/06 13:33:11 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/10 11:54:11 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,19 @@ int	ft_strcpy_sep(char *dest, char *input, char *sep)
 		dest[i] = input[i];
 	dest[i] = '\0';
 	return (i);
+}
+
+int	ft_is_space(char c)
+{
+	return ((c >= 9 && c <= 13) || c == 32);
+}
+
+char	*skip_spaces(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && ft_is_space(str[i]))
+		i++;
+	return (str + i);
 }

@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/07 14:06:12 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/10 17:56:02 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	consume_node(t_token **lst, t_token *node)
 	if (current == node)
 	{
 		*lst = current->next;
-		gbg_coll(node->content, PARSING, FREE);
+		gbg_coll(node, PARSING, FREE);
 		return ;
 	}
 	while (current)
@@ -50,9 +50,10 @@ void	consume_node(t_token **lst, t_token *node)
 		if (current == node)
 		{
 			prev->next = current->next;
-			gbg_coll(node->content, PARSING, FREE);
+			// gbg_coll(node->content, PARSING, FREE);
 			// gbg_coll(node, PARSING, FREE); // bizarre ? probable leak
 		}
+        printf("yo\n");
 		prev = current;
 		current = current->next;
 	}
@@ -82,7 +83,6 @@ t_ast	*build_operator_tree(t_token **lst)
 	t_ast	*tree;
 	t_ast	*right;
 	t_token	*current;
-	t_token	*par;
 
 	tree = NULL;
 	right = NULL;
@@ -92,10 +92,7 @@ t_ast	*build_operator_tree(t_token **lst)
 		current = find_operator_token(&current);
 		if (current && current->type == PAR_LEFT)
 		{
-			par = find_closing_par(&current);
-			if (!par)
-				return (syntax_error(current), NULL);
-			current = par;
+			current = find_closing_par(&current);
 			continue ;
 		}
 		if (!current)
@@ -108,46 +105,45 @@ t_ast	*build_operator_tree(t_token **lst)
 	return (tree);
 }
 
+int	create_insert_ast_node_par(t_ast **tree, t_token *current)
+{
+	t_ast	*cmd_node;
+	int		insert_node;
+
+	insert_node = 1;
+	cmd_node = handle_par(&current, tree, &insert_node);
+	if (!cmd_node)
+	{
+		*tree = NULL;
+		return (-1);
+	}
+	if (insert_node && insert_cmd_node(tree, cmd_node) == -1)
+		return (syntax_error(get_first_node_tree(cmd_node)->token_node), -1);
+	return (0);
+}
+
 int	build_cmd_tree(t_ast **tree, t_token **lst)
 {
 	t_token	*current;
 	t_ast	*cmd_node;
-	// t_ast	*root;
-	int		insert_node;
 
 	current = *lst;
 	if (!current)
 		return (-1);
-	// root = *tree;
-	insert_node = 1;
-	while (current && current->type < 5)
+	while (current)
 	{
-        printf("current cmd = %s\n", current->content);
 		if (current->type == PAR_LEFT)
 		{
-			cmd_node = handle_par(&current, tree, /* &root,  */&insert_node);
-            if (!cmd_node)
-            {
-                *tree = NULL;
-                return (-1);
-                // printf("no cmd node\n");
-                // return (syntax_error(find_closing_par(&current)), -1);
-            }
-			if (insert_node)
-            {    
-				if (insert_cmd_node(tree, cmd_node) == -1)
-                    return (syntax_error(get_first_node_tree(cmd_node)->token_node), -1);
-            }
-			printf("coucou\n");
+			if (create_insert_ast_node_par(tree, current) == -1)
+				return (-1);
 			current = find_closing_par(&current);
 			continue ;
 		}
 		else
+		{
 			cmd_node = create_ast_node(current);
-		printf("return (= %d\n", insert_cmd_node(tree, cmd_node));
-        printf("cmd tree building -------------\n");
-        print_tree(tree);
-        printf("-----------------------------\n");
+			insert_cmd_node(tree, cmd_node);
+		}
 		current = current->next;
 	}
 	return (0);
@@ -157,16 +153,12 @@ t_ast	*build_ast(t_token **lst, int *insert_node)
 {
 	t_ast	*tree;
 
-	// printf("coucou\n");
 	tree = build_operator_tree(lst);
-	if (!tree)
-    {
-        printf("no operator tree\n");
+	// if (!tree)
+	// {`
+		// printf("no operat`or tree\n");
 		// return (NULL);
-    }
-	// printf("====\n");
-	// print_lst(lst);
-	// printf("====\n");
+	// }`
 	if (build_cmd_tree(&tree, lst) == -1)
 		*insert_node = 0;
 	return (tree);

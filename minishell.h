@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/07 17:53:15 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/10 12:08:29 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,5 +149,7 @@ t_token				*find_redir_node(t_token **lst, t_token *redir_node);
 void				remove_token_node(t_token **lst, t_token *node);
 int					only_spaces(char *str);
 int					check_par_syntax(t_token **lst);
+void				gbg_delete_node(t_token *node, int mlc_lst);
+int					clean_token_lst(t_token **lst);
 
 #endif

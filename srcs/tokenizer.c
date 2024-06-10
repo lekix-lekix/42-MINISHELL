@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/06 17:15:38 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/10 17:55:34 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ t_token	*create_operator_node(char **input)
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	ft_strlcpy(node->content, input_copy, operator_len + 1);
 	node->filename = NULL;
-	node->next = NULL;
 	node->redirections = NULL;
+	node->next = NULL;
 	*input += operator_len;
 	return (node);
 }
@@ -98,36 +98,6 @@ t_token	*create_cmd_node(char *input, char *sep)
 	return (node);
 }
 
-void	insert_node_lst(t_token **lst, t_token *node)
-{
-	t_token	*root;
-
-	root = *lst;
-	if (!root)
-	{
-		*lst = node;
-		return ;
-	}
-	while (root->next)
-		root = root->next;
-	root->next = node;
-}
-
-int	ft_is_space(char c)
-{
-	return ((c >= 9 && c <= 13) || c == 32);
-}
-
-char	*skip_spaces(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && ft_is_space(str[i]))
-		i++;
-	return (str + i);
-}
-
 t_token	*tokenize_input(char *input)
 {
 	t_token	*root;
@@ -143,6 +113,7 @@ t_token	*tokenize_input(char *input)
 		operator= find_operator(input_parse);
 		if (!operator)
 		{
+            printf("input parse = %s\n", input_parse);
 			cmd_node = create_cmd_node(input_parse, NULL);
 			insert_node_lst(&root, cmd_node);
 			break ;

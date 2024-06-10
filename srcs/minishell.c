@@ -6,24 +6,11 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/07 17:52:18 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/10 17:35:25 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-char	*msh_strdup(const char *s, int mlc_lst)
-{
-	char	*final_str;
-	int		s_len;
-
-	s_len = ft_strlen(s);
-	final_str = malloc(sizeof(char) * (s_len + 1));
-	if (!final_str || gbg_coll(final_str, mlc_lst, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-	ft_strlcpy(final_str, s, s_len + 1);
-	return (final_str);
-}
 
 char	*get_path(char **envp)
 {
@@ -131,142 +118,10 @@ void	print_lst(t_token **lst)
 	}
 }
 
-int	only_spaces(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (ft_is_space(str[i]))
-		i++;
-	if (!str[i])
-		return (1);
-	return (0);
-}
-
-void	gbg_delete_lst(t_token *node, int mlc_lst)
+void	gbg_delete_node(t_token *node, int mlc_lst)
 {
 	gbg_coll(node->content, mlc_lst, FREE);
 	gbg_coll(node, mlc_lst, FREE);
-}
-
-void	clean_lst(t_token **lst)
-{
-	t_token	*current;
-	t_token	*prev;
-
-	if (!*lst)
-		return ;
-	current = *lst;
-	if (!ft_strlen(current->content) || only_spaces(current->content))
-	{
-		prev = current->next;
-		gbg_delete_lst(current, PARSING);
-		*lst = prev;
-	}
-	current = *lst;
-	while (current)
-	{
-		if (!ft_strlen(current->content) || only_spaces(current->content))
-		{
-			prev->next = current->next;
-			gbg_delete_lst(current, PARSING);
-		}
-		prev = current;
-		current = current->next;
-	}
-}
-
-void	remove_token_node(t_token **lst, t_token *node)
-{
-	t_token	*current;
-	t_token	*prev;
-
-	if (!*lst)
-		return ;
-	current = *lst;
-	if (current == node)
-	{
-		prev = current->next;
-		gbg_delete_lst(current, PARSING);
-		*lst = prev;
-		return ;
-	}
-	current = *lst;
-	while (current)
-	{
-		if (current == node)
-		{
-			prev->next = current->next;
-			gbg_delete_lst(current, PARSING);
-		}
-		prev = current;
-		current = current->next;
-	}
-} 
-
-void	parse_tree_size(t_ast *root, int *size)
-{
-	if (root->left)
-		parse_tree_size(root->left, size);
-	*size += 1;
-	if (root->right)
-		parse_tree_size(root->right, size);
-}
-
-int	tree_size(t_ast **tree)
-{
-	t_ast	*root;
-	int		size;
-
-	root = *tree;
-	size = 0;
-	parse_tree_size(root, &size);
-	return (size);
-}
-
-int	check_op_len(char *str, int *op_len)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] == str[0])
-		i++;
-	if (i > 2)
-		return (0);
-	*op_len = i;
-	return (1);
-}
-
-int	trim_token_fields(t_token **lst)
-{
-	t_token	*current;
-	char	*str;
-
-	current = *lst;
-	while (current)
-	{
-		if (current->content)
-		{
-			str = msh_strtrim(current->content, " ");
-			gbg_coll(current->content, PARSING, FREE);
-			current->content = str;
-		}
-		if (current->filename)
-		{
-			str = msh_strtrim(current->filename, " ");
-			gbg_coll(current->filename, PARSING, FREE);
-			current->filename = str;
-		}
-		current = current->next;
-	}
-	return (0);
-}
-
-int	clean_token_lst(t_token **lst)
-{
-	clean_lst(lst);
-	trim_token_fields(lst);
-	return (0);
 }
 
 int	start_parsing(char *prompt)
@@ -292,7 +147,7 @@ int	start_parsing(char *prompt)
 	printf("============================\n");
     clean_token_lst(&input);
     printf("AFTER CLEANING ==== \n");
-	print_lst(&input);
+	// print_lst(&input);
     printf("===========\n");
 	tree = build_ast(&input, &insert_node);
 	if (tree)
@@ -302,6 +157,12 @@ int	start_parsing(char *prompt)
 		check_tree_syntax(&tree);
 	}
 	return (0);
+}
+
+void    ft_exit(void)
+{
+	gbg_coll(NULL, ALL, FLUSH_ALL);
+    exit(0);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -318,10 +179,12 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		prompt = readline("./minishell$ ");
-		if (!prompt | !*prompt)
+		if (!prompt || !*prompt || gbg_coll(prompt, PARSING, ADD))
 			break ;
+        if (ft_strncmp(prompt, "exit", 4) == 0)
+            ft_exit();
 		start_parsing(prompt);
-		free(prompt);
+		gbg_coll(prompt, PARSING, FREE);
 		printf("===========\n");
 	}
 	free(prompt);
