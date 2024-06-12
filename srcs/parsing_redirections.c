@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirections.c                                     :+:      :+:    :+:   */
+/*   parsing_redirections.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:13:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/07 17:18:48 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:28:20 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,11 @@ int	handle_redirection(t_token **lst, t_token *redir_node)
 	filename_token = redir_node->next;
 	filename = get_filename(filename_token);
 	cmd_node = find_redir_node(lst, redir_node);
+	if (!cmd_node)
+    {
+        cmd_node = create_cmd_node(NULL, NULL);
+        insert_node_lst(lst, cmd_node);
+    }
 	add_redirection(cmd_node, redir_node, filename);
 	remove_token_node(lst, redir_node);
 	if (only_spaces(filename_token->content))
@@ -86,8 +91,11 @@ int	check_redirections(t_token **lst)
 	while (current)
 	{
 		if (current->type >= REDIR_INPUT && current->type < OUTFILE)
+        {
 			handle_redirection(lst, current);
-		current = current->next;
+            current = *lst;
+        }
+        current = current->next;
 	}
 	return (0);
 }

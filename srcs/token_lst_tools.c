@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:50:13 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/10 17:30:26 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:34:10 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	clean_lst(t_token **lst)
 	if (!*lst)
 		return ;
 	current = *lst;
-	if (!ft_strlen(current->content) || only_spaces(current->content))
+	if ((!ft_strlen(current->content) || only_spaces(current->content)) && !current->redirections)
 	{
 		prev = current->next;
 		gbg_delete_node(current, PARSING);
@@ -29,10 +29,12 @@ void	clean_lst(t_token **lst)
 	current = *lst;
 	while (current)
 	{
-		if (!ft_strlen(current->content) || only_spaces(current->content))
+		if ((!ft_strlen(current->content) || only_spaces(current->content)) && !current->redirections)
 		{
 			prev->next = current->next;
 			gbg_delete_node(current, PARSING);
+            current = *lst;
+            continue; 
 		}
 		prev = current;
 		current = current->next;
@@ -84,14 +86,14 @@ int	trim_token_fields(t_token **lst)
 	current = *lst;
 	while (current)
 	{
-		if (current->content)
+		if (current->content && ft_strlen(current->content))
 		{
 			str = msh_strtrim(current->content, " ");
             printf("str = %s\n", str);
 			gbg_coll(current->content, PARSING, FREE);
 			current->content = str;
 		}
-		if (current->filename)
+		if (current->filename && ft_strlen(current->content))
 		{
 			str = msh_strtrim(current->filename, " ");
             printf("str = %s\n", str);

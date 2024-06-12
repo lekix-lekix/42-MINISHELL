@@ -6,7 +6,7 @@
 #    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/26 17:19:05 by kipouliq          #+#    #+#              #
-#    Updated: 2024/06/10 15:09:42 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/06/11 14:27:14 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,6 +47,7 @@ LIBS = -lreadline
 all : 
 	git submodule update --init
 	make $(NAME)
+	# make clean	
 
 $(NAME) : $(OBJ)
 	make -C $(PATH_LIBFT)

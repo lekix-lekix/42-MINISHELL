@@ -1,7 +1,34 @@
-hello && ( &&)
+hello && ( &&) --> wrong syntax_error
 hello &&
-ls () ---> empty par
-<ls
+ls () ---> empty par : should be a syntax error
+
+
+
+
+
+AST TESTS :
+
+ls
+ls | coucou
+ls | ls | ls | ls | ls | ls
+1 && 2 | 3 
+1 && 2 | 3 || 4
+
+
+ls && (((1 || 2) || 3) || 4)
+
+ls && (toi && moi) | pwd || (vous && moi) --> works
+
+
+
+
+<ls : crash --> done and working
+
+
+
+
+
+
 
 any cmd with '&' / syntax errors on wrong operators
 
@@ -9,3 +36,6 @@ any cmd with '&' / syntax errors on wrong operators
 bash things :
 cat -e outfile < outfile ---> works
 syntax errors status --> 2
+
+
+TO DO :

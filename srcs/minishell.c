@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/10 17:35:25 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/12 14:46:53 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,8 +152,9 @@ int	start_parsing(char *prompt)
 	tree = build_ast(&input, &insert_node);
 	if (tree)
 	{
-		printf("on veut print\n");
+		printf("PRINT TREE =========\n");
 		print_tree(&tree);
+		printf("PRINT TREE END =====\n");
 		check_tree_syntax(&tree);
 	}
 	return (0);

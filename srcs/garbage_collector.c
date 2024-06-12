@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:04:20 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/10 16:50:01 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/11 14:27:04 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	remove_mem_node(t_lst **lst, void *mem_addr)
 		{
 			prev->next = current->next;
 			free(current->content);
+            current->content = NULL;
 			free(current);
 			break ;
 		}

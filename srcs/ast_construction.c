@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/10 17:56:02 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/12 15:42:44 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,33 +42,38 @@ void	consume_node(t_token **lst, t_token *node)
 	if (current == node)
 	{
 		*lst = current->next;
-		gbg_coll(node, PARSING, FREE);
 		return ;
 	}
 	while (current)
 	{
 		if (current == node)
-		{
 			prev->next = current->next;
-			// gbg_coll(node->content, PARSING, FREE);
-			// gbg_coll(node, PARSING, FREE); // bizarre ? probable leak
-		}
-        printf("yo\n");
 		prev = current;
 		current = current->next;
 	}
 }
 
-void	create_consume_insert_node(t_token **lst, t_token *node, t_ast **tree,
+void	create_consume_insert_node(t_token **lst, t_token **node, t_ast **tree,
 		t_ast **tree_right)
 {
 	t_ast	*new_node;
 
-	printf("inserting node = %s\n", node->content);
-	new_node = create_ast_node(node);
+    (void) tree_right;
+	printf("inserting node = %s\n", (*node)->content);
+	new_node = create_ast_node(*node);
+	if (*lst == *node)
+	{
+		consume_node(lst, new_node->token_node);
+		*node = NULL;
+	}
 	consume_node(lst, new_node->token_node);
-	if (*tree && new_node->node_type < (*tree)->node_type)
+    if (*tree_right)
+        insert_operator_token_node(tree_right, new_node);
+    else if (*tree && new_node->node_type < (*tree)->node_type)
+    {
+        printf("inserting op '%s' right\n", new_node->token_node->content);
 		insert_operator_token_node(tree_right, new_node);
+    }
 	else
 		insert_operator_token_node(tree, new_node);
 }
@@ -97,8 +102,12 @@ t_ast	*build_operator_tree(t_token **lst)
 		}
 		if (!current)
 			break ;
-		create_consume_insert_node(lst, current, &tree, &right);
-		current = current->next;
+		create_consume_insert_node(lst, &current, &tree, &right);
+		if (current)    
+			current = current->next;
+        printf("TREE AFTER OP INSERT ====\n");
+        print_tree(&tree);
+        printf("TREE AFTER OP INSERT END====\n");
 	}
 	if (tree && right)
 		tree->right = right;
@@ -118,7 +127,9 @@ int	create_insert_ast_node_par(t_ast **tree, t_token *current)
 		return (-1);
 	}
 	if (insert_node && insert_cmd_node(tree, cmd_node) == -1)
+    {
 		return (syntax_error(get_first_node_tree(cmd_node)->token_node), -1);
+    }
 	return (0);
 }
 
@@ -142,9 +153,11 @@ int	build_cmd_tree(t_ast **tree, t_token **lst)
 		else
 		{
 			cmd_node = create_ast_node(current);
+            printf("inserted cmd = %s\n", cmd_node->token_node->content);
 			insert_cmd_node(tree, cmd_node);
 		}
-		current = current->next;
+		if (current)
+			current = current->next;
 	}
 	return (0);
 }
@@ -156,8 +169,8 @@ t_ast	*build_ast(t_token **lst, int *insert_node)
 	tree = build_operator_tree(lst);
 	// if (!tree)
 	// {`
-		// printf("no operat`or tree\n");
-		// return (NULL);
+	// printf("no operat`or tree\n");
+	// return (NULL);
 	// }`
 	if (build_cmd_tree(&tree, lst) == -1)
 		*insert_node = 0;

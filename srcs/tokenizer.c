@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/10 17:55:34 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/12 16:57:51 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ t_token	*create_operator_node(char **input)
 	// if (!check_operator_len(input_copy, &operator_len))
 	// 	return (printf("bash: syntax error near unexpected token `%c'\n",
 	// 			*input_copy), NULL);
+    printf("operator len = %d\n", operator_len);
 	node = malloc(sizeof(t_token));
 	if (!node || gbg_coll(node, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
@@ -113,7 +114,7 @@ t_token	*tokenize_input(char *input)
 		operator= find_operator(input_parse);
 		if (!operator)
 		{
-            printf("input parse = %s\n", input_parse);
+            // printf("input parse = %s\n", input_parse);
 			cmd_node = create_cmd_node(input_parse, NULL);
 			insert_node_lst(&root, cmd_node);
 			break ;

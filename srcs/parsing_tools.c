@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:53:14 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/10 11:54:11 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/12 16:23:28 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	ft_strlen_sep(char *str, char *sep)
 	int	i;
 
 	i = 0;
+	if (!str)
+		return (0);
 	if (!sep)
 		return (ft_strlen(str));
 	while (str[i] && str[i] != *sep)
@@ -26,7 +28,8 @@ int	ft_strlen_sep(char *str, char *sep)
 
 int	is_an_operator(char c)
 {
-	return (c == '|' || c == '&' || c == '(' || c == ')' || c == '<' || c == '>');
+	return (c == '|' || c == '&' || c == '(' || c == ')' || c == '<'
+		|| c == '>');
 }
 
 char	*find_operator(char *str)
@@ -49,6 +52,11 @@ int	ft_strcpy_sep(char *dest, char *input, char *sep)
 	int	i;
 
 	i = -1;
+    if (!input)
+    {
+        dest[0] = '\0';
+        return (1);
+    }
 	if (!sep)
 		return (ft_strlcpy(dest, input, ft_strlen(input) + 1));
 	while (input[++i] && input[i] != sep[0])
