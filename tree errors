@@ -16,9 +16,8 @@ ls | ls | ls | ls | ls | ls
 
 
 ls && (((1 || 2) || 3) || 4)
-
 ls && (toi && moi) | pwd || (vous && moi) --> works
-
+< infile > outfile ls | pwd > lws > outfile
 
 
 
@@ -39,3 +38,6 @@ syntax errors status --> 2
 
 
 TO DO :
+
+- Handle redirections && parenthesis
+    (= syntax error if before, applied at the begin of each redir lst of each node)

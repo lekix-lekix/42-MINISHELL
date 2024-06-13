@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 14:00:08 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/06 14:09:00 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/13 14:56:20 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ char	**msh_split(char const *s, char c, int mlc_list)
 	if (!s)
 		return (NULL);
 	strs_count = ft_count_words(s, c);
-	if (!strs_count)
+	if (!strs_count || strs_count == 1)
 		return (NULL);
 	str_arr = malloc(sizeof(char *) * (strs_count + 1));
 	if (!str_arr || gbg_coll(str_arr, mlc_list, ADD))

@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:50:13 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/12 17:34:10 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/13 17:52:35 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ void	clean_lst(t_token **lst)
 	if (!*lst)
 		return ;
 	current = *lst;
-	if ((!ft_strlen(current->content) || only_spaces(current->content)) && !current->redirections)
+	if ((!ft_strlen(current->content) || only_spaces(current->content))
+		&& !current->redirections)
 	{
 		prev = current->next;
 		gbg_delete_node(current, PARSING);
@@ -29,12 +30,13 @@ void	clean_lst(t_token **lst)
 	current = *lst;
 	while (current)
 	{
-		if ((!ft_strlen(current->content) || only_spaces(current->content)) && !current->redirections)
+		if ((!ft_strlen(current->content) || only_spaces(current->content))
+			&& !current->redirections)
 		{
 			prev->next = current->next;
 			gbg_delete_node(current, PARSING);
-            current = *lst;
-            continue; 
+			current = *lst;
+			continue ;
 		}
 		prev = current;
 		current = current->next;
@@ -63,6 +65,7 @@ void	remove_token_node(t_token **lst, t_token *node)
 		{
 			prev->next = current->next;
 			gbg_delete_node(current, PARSING);
+			return ;
 		}
 		prev = current;
 		current = current->next;
@@ -89,20 +92,79 @@ int	trim_token_fields(t_token **lst)
 		if (current->content && ft_strlen(current->content))
 		{
 			str = msh_strtrim(current->content, " ");
-            printf("str = %s\n", str);
+			printf("str = %s\n", str);
 			gbg_coll(current->content, PARSING, FREE);
 			current->content = str;
 		}
 		if (current->filename && ft_strlen(current->content))
 		{
 			str = msh_strtrim(current->filename, " ");
-            printf("str = %s\n", str);
+			printf("str = %s\n", str);
 			gbg_coll(current->filename, PARSING, FREE);
 			current->filename = str;
 		}
 		current = current->next;
 	}
 	return (0);
+}
+
+t_token	*find_last_node(t_token **lst)
+{
+	t_token	*current;
+
+	current = *lst;
+	if (!current)
+		return (NULL);
+	while (current->next)
+		current = current->next;
+	return (current);
+}
+
+void	create_insert_split_nodes(t_token *prev, t_token *splt_node,
+		char **contents)
+{
+	t_token	*new_lst;
+	t_token	*new_node;
+	int		i;
+
+	i = 0;
+	new_lst = NULL;
+	while (contents[i])
+	{
+		new_node = create_cmd_node(contents[i], NULL);
+		printf("new node content = %s\n", new_node->content);
+		insert_node_lst(&new_lst, new_node);
+		i++;
+	}
+	find_last_node(&new_lst)->next = splt_node->next;
+	prev->next = new_lst;
+}
+
+void	split_lst_contents(t_token **lst)
+{
+	t_token	*current;
+	t_token	*prev;
+	char	**contents;
+
+	contents = NULL;
+	prev = NULL;
+	current = *lst;
+	if (!current)
+		return ;
+	while (current)
+	{
+		prev = current;
+		if (current->content)
+			contents = msh_split(current->content, ' ', PARSING);
+		if (contents)
+		{
+			create_insert_split_nodes(prev, current, contents);
+			remove_token_node(lst, current);
+			current = *lst;
+			continue ;
+		}
+		current = current->next;
+	}
 }
 
 int	clean_token_lst(t_token **lst)

@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/12 15:42:44 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/13 13:34:48 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,7 @@ void	create_consume_insert_node(t_token **lst, t_token **node, t_ast **tree,
     if (*tree_right)
         insert_operator_token_node(tree_right, new_node);
     else if (*tree && new_node->node_type < (*tree)->node_type)
-    {
-        printf("inserting op '%s' right\n", new_node->token_node->content);
 		insert_operator_token_node(tree_right, new_node);
-    }
 	else
 		insert_operator_token_node(tree, new_node);
 }
@@ -127,9 +124,7 @@ int	create_insert_ast_node_par(t_ast **tree, t_token *current)
 		return (-1);
 	}
 	if (insert_node && insert_cmd_node(tree, cmd_node) == -1)
-    {
 		return (syntax_error(get_first_node_tree(cmd_node)->token_node), -1);
-    }
 	return (0);
 }
 
