@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/13 17:59:21 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/14 15:30:20 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_gbg
 typedef enum e_token_type
 {
 	CMD,
+	ARGS_FLAGS,
 	PIPE,
 	AND,
 	OR,
@@ -80,6 +81,7 @@ typedef struct s_token
 	t_redir			*redirections;
 	char			*filename;
 	char			*content;
+	char			**contents;
 	struct s_token	*next;
 }					t_token;
 
@@ -154,5 +156,7 @@ int					clean_token_lst(t_token **lst);
 int					is_a_redir_operator(t_token *node);
 void				split_lst_contents(t_token **lst);
 int					is_a_token_operator(t_token *node);
+char				*msh_strdup(const char *s, int mlc_lst);
+void				print_redir_lst(t_redir **lst);
 
 #endif

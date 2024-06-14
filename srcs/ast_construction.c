@@ -6,19 +6,31 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/13 13:34:48 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/14 14:14:42 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+void	print_contents(t_ast *node)
+{
+	int	i;
+
+	i = -1;
+	while (node->token_node->contents[++i])
+		printf("contents[%d] = %s\n", i, node->token_node->contents[i]);
+}
+
 void	traverse_print(t_ast *node, int level)
 {
-	// printf("node content = %s, level = %d\n", node->token_node->content,
-	// level);
 	if (node->left)
 		traverse_print(node->left, level + 1);
+	printf("----NODE-------\n");
 	printf("node content = %s, level = %d\n", node->token_node->content, level);
+	if (node->token_node->contents)
+		print_contents(node);
+	if (node->token_node->redirections)
+		print_redir_lst(&node->token_node->redirections);
 	if (node->right)
 		traverse_print(node->right, level + 1);
 }
@@ -58,7 +70,7 @@ void	create_consume_insert_node(t_token **lst, t_token **node, t_ast **tree,
 {
 	t_ast	*new_node;
 
-    (void) tree_right;
+	(void)tree_right;
 	printf("inserting node = %s\n", (*node)->content);
 	new_node = create_ast_node(*node);
 	if (*lst == *node)
@@ -67,9 +79,9 @@ void	create_consume_insert_node(t_token **lst, t_token **node, t_ast **tree,
 		*node = NULL;
 	}
 	consume_node(lst, new_node->token_node);
-    if (*tree_right)
-        insert_operator_token_node(tree_right, new_node);
-    else if (*tree && new_node->node_type < (*tree)->node_type)
+	if (*tree_right)
+		insert_operator_token_node(tree_right, new_node);
+	else if (*tree && new_node->node_type < (*tree)->node_type)
 		insert_operator_token_node(tree_right, new_node);
 	else
 		insert_operator_token_node(tree, new_node);
@@ -100,11 +112,8 @@ t_ast	*build_operator_tree(t_token **lst)
 		if (!current)
 			break ;
 		create_consume_insert_node(lst, &current, &tree, &right);
-		if (current)    
+		if (current)
 			current = current->next;
-        printf("TREE AFTER OP INSERT ====\n");
-        print_tree(&tree);
-        printf("TREE AFTER OP INSERT END====\n");
 	}
 	if (tree && right)
 		tree->right = right;
@@ -148,7 +157,7 @@ int	build_cmd_tree(t_ast **tree, t_token **lst)
 		else
 		{
 			cmd_node = create_ast_node(current);
-            printf("inserted cmd = %s\n", cmd_node->token_node->content);
+			printf("inserted cmd = %s\n", cmd_node->token_node->content);
 			insert_cmd_node(tree, cmd_node);
 		}
 		if (current)

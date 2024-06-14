@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/13 18:18:14 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/14 13:48:39 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,54 +124,73 @@ void	gbg_delete_node(t_token *node, int mlc_lst)
 	gbg_coll(node, mlc_lst, FREE);
 }
 
-char	*msh_strjoin_space(char const *s1, char const *s2, int mlc_lst)
-{
-	size_t	s1_size;
-	size_t	s2_size;
-	char	*final_str;
 
-	final_str = NULL;
-	if (!s1)
-	{
-		final_str = ft_strdup(s2);
-		if (!final_str)
-			return (NULL);
-		return (final_str);
-	}
-	s1_size = ft_strlen(s1);
-	s2_size = ft_strlen(s2);
-	final_str = malloc(sizeof(char) * (s1_size + s2_size) + 2);
-	if (!final_str || gbg_coll(final_str, mlc_lst, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-	ft_strlcpy(final_str, s1, s1_size + 1);
-	final_str[s1_size] = ' ';
-	ft_strlcpy(final_str + s1_size + 1, s2, s2_size + 1);
-	return (final_str);
+int     get_nb_of_args(t_token **lst)
+{
+    t_token *current;
+    int args_nb;
+
+    current = *lst;
+    args_nb = 0;
+    while (current && !is_a_token_operator(current))
+    {
+        if (current->type == ARGS_FLAGS)
+            args_nb++;
+        current = current->next;
+    }
+    return (args_nb);
 }
 
-void	join_cmds(t_token **lst)
+int    get_args_flags(t_token **lst)
+{
+    t_token *current;
+    t_token *cmd_node;
+    t_token *next;
+    int nb_of_args;
+    int i;
+
+    cmd_node = *lst;
+    current = (*lst)->next;
+    nb_of_args = get_nb_of_args(lst);
+    cmd_node->contents = malloc(sizeof(char *) * (nb_of_args + 2));
+    if (!cmd_node->content || gbg_coll(cmd_node->content, PARSING, ADD))
+        return (gbg_coll(NULL, ALL, FLUSH_ALL), -1);
+    cmd_node->contents[0] = msh_strdup(cmd_node->content, PARSING);
+    if (nb_of_args == 0)
+    {
+        cmd_node->contents[1] = NULL;
+        *lst = current;
+        return (0);
+    }
+    i = 0;
+    while (current && current->type == ARGS_FLAGS)
+    {
+        next = current->next;
+        cmd_node->contents[++i] = msh_strdup(current->content, PARSING);
+        remove_token_node(lst, current);
+        current = next;
+    }
+    cmd_node->contents[i + 1] = NULL;
+    *lst = current;
+    return (0);
+}
+
+void	join_cmd_args(t_token **lst)
 {
 	t_token	*current;
-	t_token	*final_node;
-    t_token *next;
-	char	*final_content;
+    int     i;
 
-	current = *lst;
-	final_content = NULL;
-	while (current)
-	{
-		while (!is_a_token_operator(current))
+    i = 0;
+    current = *lst;
+    while (current)
+    {
+        if (current->type == CMD)
         {
-			final_content = msh_strjoin_space(final_content, current->content,
-					PARSING);
-            next = current->next;
-            remove_token_node(lst, current);
-            current = next;
+            get_args_flags(&current);
+            continue ;
         }
-        final_node = create_cmd_node(final_content, NULL);
         current = current->next;
-	}
-    
+    }
 }
 
 int	start_parsing(char *prompt)
@@ -187,20 +206,20 @@ int	start_parsing(char *prompt)
 	if (check_par_syntax(&input) == -1)
 		return (-1);
 	clean_token_lst(&input);
-	printf("TOKEN LST BEFORE REDIR =======\n");
-	print_lst(&input);
-	printf("============================\n");
+	// printf("TOKEN LST BEFORE REDIR =======\n");
+	// print_lst(&input);
+	// printf("============================\n");
 	split_lst_contents(&input);
 	if (check_redirections(&input) == -1)
 		return (-1);
-	printf("TOKEN LST BEFORE AST =======\n");
-	print_lst(&input);
-	printf("============================\n");
-	clean_token_lst(&input);
-	join_cmds(&input);
-	printf("AFTER CLEANING ==== \n");
+	// printf("TOKEN LST BEFORE AST =======\n");
 	// print_lst(&input);
-	printf("===========\n");
+	// printf("============================\n");
+	clean_token_lst(&input);
+	join_cmd_args(&input);
+	// printf("AFTER CLEANING ==== \n");
+	// print_lst(&input);
+	// printf("===========\n");
 	tree = build_ast(&input, &insert_node);
 	if (tree)
 	{

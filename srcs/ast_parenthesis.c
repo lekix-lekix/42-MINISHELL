@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:19:53 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/12 14:58:59 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/14 12:18:13 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,17 +39,13 @@ t_token	*find_closing_par(t_token **lst)
 		return (NULL);
 	while (current)
 	{
-        printf("0find closing current = %s\n", current->content);
 		if (current->type == PAR_LEFT){
-            printf("0find last par\n");
 			return (find_last_par(lst));
         }
 		if (current->type == PAR_RIGHT)
         {
-            printf("0find par right\n");
             if (current->next)
-                printf("current->next existe : %s \n", current->next->content);
-			return (current);
+			    return (current);
         }
 		current = current->next;
 	}

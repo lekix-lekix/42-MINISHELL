@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:50:13 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/13 17:52:35 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/14 13:48:23 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,14 +92,12 @@ int	trim_token_fields(t_token **lst)
 		if (current->content && ft_strlen(current->content))
 		{
 			str = msh_strtrim(current->content, " ");
-			printf("str = %s\n", str);
 			gbg_coll(current->content, PARSING, FREE);
 			current->content = str;
 		}
 		if (current->filename && ft_strlen(current->content))
 		{
 			str = msh_strtrim(current->filename, " ");
-			printf("str = %s\n", str);
 			gbg_coll(current->filename, PARSING, FREE);
 			current->filename = str;
 		}
@@ -132,7 +130,6 @@ void	create_insert_split_nodes(t_token *prev, t_token *splt_node,
 	while (contents[i])
 	{
 		new_node = create_cmd_node(contents[i], NULL);
-		printf("new node content = %s\n", new_node->content);
 		insert_node_lst(&new_lst, new_node);
 		i++;
 	}

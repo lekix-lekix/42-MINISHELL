@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 15:05:08 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/13 17:59:06 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/14 09:34:59 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,5 @@ int	check_op_len(char *str, int *op_len)
 
 int is_a_token_operator(t_token *node)
 {
-    return (node->type > CMD && node->type < PAR_LEFT);
+    return (node->type > ARGS_FLAGS && node->type < PAR_LEFT);
 }

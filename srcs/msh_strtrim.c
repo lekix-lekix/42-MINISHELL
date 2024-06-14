@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 17:33:34 by lekix             #+#    #+#             */
-/*   Updated: 2024/06/12 17:32:45 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/14 12:18:26 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ char	*msh_strtrim(char const *s1, char const *set)
 	if (!s1 || !set)
 		return (NULL);
 	str_size = ft_strlen(s1) - ft_total_to_trim(s1, set, &i) + 1;
-	printf("str size = %d\n", str_size);
 	if (str_size < 0)
 	{
 		final_str = malloc(1);

@@ -22,6 +22,7 @@ ls && (toi && moi) | pwd || (vous && moi) --> works
 
 
 <ls : crash --> done and working
+< infile > outfile > gjojo ls -a -e -e | > outfile1 ls > outfileee | (echo a && echo b) -->crash
 
 
 
@@ -41,3 +42,22 @@ TO DO :
 
 - Handle redirections && parenthesis
     (= syntax error if before, applied at the begin of each redir lst of each node)
+
+
+REDIR PARENTHESIS :
+
+`bash-5.1$ (echo a > file0 && echo b) > file1
+bash-5.1$ cat file1
+b
+bash-5.1$ cat file0
+a
+bash-5.1$ (echo a && echo b) > file1
+bash-5.1$ cat file1
+a
+b
+bash-5.1$ (echo a > file0 && echo b) > file1 > file2
+bash-5.1$ cat file0
+a
+bash-5.1$ cat file1
+bash-5.1$ cat file2
+b

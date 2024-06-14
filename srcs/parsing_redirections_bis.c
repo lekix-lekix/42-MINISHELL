@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:40:44 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/13 14:44:35 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/14 09:23:19 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,6 @@ char	*get_filename(t_token *node)
 	if (!only_spaces(node->content))
 		node->type = CMD;
 	return (filename);
-}
-
-int	is_a_token_operator(t_token *node)
-{
-	return (node->type > CMD && node->type < REDIR_INPUT);
 }
 
 int is_a_redir_operator(t_token *node)
