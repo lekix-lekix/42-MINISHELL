@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_construction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/14 14:14:42 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/18 17:09:03 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ void	create_consume_insert_node(t_token **lst, t_token **node, t_ast **tree,
 	t_ast	*new_node;
 
 	(void)tree_right;
-	printf("inserting node = %s\n", (*node)->content);
 	new_node = create_ast_node(*node);
 	if (*lst == *node)
 	{
@@ -157,7 +156,6 @@ int	build_cmd_tree(t_ast **tree, t_token **lst)
 		else
 		{
 			cmd_node = create_ast_node(current);
-			printf("inserted cmd = %s\n", cmd_node->token_node->content);
 			insert_cmd_node(tree, cmd_node);
 		}
 		if (current)

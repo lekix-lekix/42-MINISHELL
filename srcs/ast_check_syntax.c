@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_check_syntax.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:48:38 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/07 17:52:54 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/18 17:10:12 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,6 @@ int	check_tree_syntax(t_ast **tree)
 		else
 			return (-1);
 	}
-	printf("syntax flag after func = %d\n", syntax_flag);
+	// printf("syntax flag after func = %d\n", syntax_flag);
 	return (0);
 }
