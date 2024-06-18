@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/18 15:45:05 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/18 16:28:39 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,15 @@ int	init_data(t_minishell *data, char **envp)
 	if (!data->env_lst)
 		return (-1);
 	return (0);
+}
+
+static void	ft_start_execution(t_ast **tree, t_minishell *data)
+{
+	t_ast	*nodes;
+	int		la_status;
+
+	nodes = *tree;
+	la_status = ft_start_exec(&nodes, data);
 }
 
 int	print_env(t_env **lst)
@@ -193,7 +202,7 @@ void	join_cmd_args(t_token **lst)
     }
 }
 
-int	start_parsing(char *prompt)
+int	start_parsing(char *prompt, t_minishell *data)
 {
 	t_token	*input;
 	t_ast	*tree;
@@ -219,6 +228,7 @@ int	start_parsing(char *prompt)
 		printf("PRINT TREE END =====\n");
 		check_tree_syntax(&tree);
 	}
+    ft_start_execution(&tree, data)
 	return (0);
 }
 
@@ -230,28 +240,21 @@ void	ft_exit(void)
 
 int	main(int argc, char **argv, char **env)
 {
-	char	*prompt;
+	t_minishell	data;
 
-	// char	*path;
-	// t_env	*lst;
-	(void)argc;
-	(void)argv;
-	(void)env;
-	// path = get_path(env);
-	// lst = get_env_lst(env);
+	((void)argc, (void)argv);
+	data.env_lst = get_env_lst(env);
 	while (1)
 	{
-		prompt = readline("./minishell$ ");
-		if (!prompt || !*prompt || gbg_coll(prompt, PARSING, ADD))
+		data.prompt = readline("./minishell$ ");
+		if (!data.prompt | !*data.prompt)
 			break ;
-		if (ft_strncmp(prompt, "exit", 4) == 0)
-			ft_exit();
-		start_parsing(prompt);
-		gbg_coll(prompt, PARSING, FREE);
-		printf("===========\n");
+		start_parsing(data.prompt, &data);
+		free(data.prompt);
 	}
-	free(prompt);
+	free(data.prompt);
 	gbg_coll(NULL, ENV, FLUSH_ALL);
 	gbg_coll(NULL, PARSING, FLUSH_ALL);
 	gbg_coll(NULL, ENV, FREE);
+
 }

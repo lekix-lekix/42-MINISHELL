@@ -1,0 +1,71 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   do_cd.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/29 14:44:43 by sabakar-          #+#    #+#             */
+/*   Updated: 2024/06/18 14:17:40 by sabakar-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../minishell.h"
+
+static int	ft_cdhome(t_minishell *data);
+static int	ft_change_cwd(t_minishell *data);
+static int	ft_cderr_msg(char *err_msg);
+
+static int	ft_change_cwd(t_minishell *data)
+{
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+		return (1);
+	return (ft_update_envlst("PWD", cwd, false, data), 0);
+}
+
+static int	ft_cdhome(t_minishell *data)
+{
+	char	*home;
+
+	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD", data), false, data);
+	home = ft_get_envlst_content("HOME", data);
+	if (!home)
+		return (ft_putstr_fd("minishell: cd: HOME not set\n", 2), 1);
+	if (chdir(home) == ENO_SUCCESS)
+		return (ft_update_envlst("PWD", home, false, data), 0);
+	return (1);
+}
+
+static int	ft_cderr_msg(char *err_msg)
+{
+	ft_putstr_fd("minishell: cd: `", 2);
+	ft_putstr_fd(err_msg, 2);
+	ft_putstr_fd("' can't cd!\n", 2);
+	return (1);
+}
+
+int	ft_do_cd(char **path, t_minishell *data)
+{
+	if (!path[1])
+		return (ft_cdhome(data));
+	if (chdir(path[1]) != ENO_SUCCESS)
+		return (ft_cderr_msg(path[1]));
+	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD", data), false, data);
+	return (ft_change_cwd(data));
+}
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	size_t	s1_len;
+	size_t	s2_len;
+
+	s1_len = ft_strlen(s1);
+	s2_len = ft_strlen(s2);
+	if (s1_len > s2_len)
+		return (ft_strncmp(s1, s2, s1_len));
+	else
+		return (ft_strncmp(s1, s2, s2_len));
+}

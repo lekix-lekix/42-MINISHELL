@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 17:31:49 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/09 17:37:22 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/17 15:58:20 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	lst_env_add_back(t_env **lst, t_env *new)
 	t_env	*list;
 
 	list = *lst;
-	while (list->next)
+	while (list && list->next)
 		list = list->next;
 	if (!new)
 		list->next = NULL;
