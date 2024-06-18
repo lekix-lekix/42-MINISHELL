@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:04:20 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/22 14:58:36 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/18 14:32:10 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	remove_mem_node(t_lst **lst, void *mem_addr)
 {
-    t_lst   *current;
-    t_lst   *prev;
+	t_lst	*current;
+	t_lst	*prev;
 	int		nullify;
 
 	nullify = 0;
@@ -24,18 +24,42 @@ void	remove_mem_node(t_lst **lst, void *mem_addr)
 	if (ft_lstsize(*lst) == 1)
 		nullify = 1;
 	current = *lst;
-    while (current)
-    {
-        if (current->content == mem_addr)
-        {
-            prev->next = current->next;
-            free(current);
-            current = prev;
-            continue ;
-        }
-        prev = current;
-        current = current->next;
-    }
+	if (current->content == mem_addr)
+	{
+		*lst = current->next;
+		free(current->content);
+		free(current);
+		return ;
+	}
+	while (current)
+	{
+		if (current->content == mem_addr)
+		{
+			prev->next = current->next;
+			free(current->content);
+            current->content = NULL;
+			free(current);
+			break ;
+		}
+		prev = current;
+		current = current->next;
+	}
+	if (nullify)
+		*lst = NULL;
+}
+
+void	clear_content_lst(t_lst **lst)
+{
+	t_lst	*current;
+
+	current = *lst;
+	if (!current)
+		return ;
+	while (current)
+	{
+		free(current->content);
+		current = current->next;
+	}
 }
 
 void	flush_lst(int which_list, t_gbg *all_lsts)

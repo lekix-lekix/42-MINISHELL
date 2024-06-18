@@ -6,17 +6,31 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/24 15:43:43 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/14 14:14:42 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+void	print_contents(t_ast *node)
+{
+	int	i;
+
+	i = -1;
+	while (node->token_node->contents[++i])
+		printf("contents[%d] = %s\n", i, node->token_node->contents[i]);
+}
+
 void	traverse_print(t_ast *node, int level)
 {
 	if (node->left)
 		traverse_print(node->left, level + 1);
+	printf("----NODE-------\n");
 	printf("node content = %s, level = %d\n", node->token_node->content, level);
+	if (node->token_node->contents)
+		print_contents(node);
+	if (node->token_node->redirections)
+		print_redir_lst(&node->token_node->redirections);
 	if (node->right)
 		traverse_print(node->right, level + 1);
 }
@@ -29,178 +43,147 @@ void	print_tree(t_ast **tree)
 	traverse_print(node, 0);
 }
 
-int	parse_insert_op_token_node(t_ast *root, t_ast *node, int level)
-{
-	// printf("node = %s\n level = %d\n", node->token_node->content, level);
-	if (root->left)
-		parse_insert_op_token_node(root->left, node, level + 1);
-	if (root->right)
-		parse_insert_op_token_node(root->right, node, level + 1);
-    // printf("root = %s type = %d, node = %s type = %d\n", root->token_node->content, root->node_type, node->token_node->content, node->node_type);
-	if (root->node_type > node->node_type)
-	{
-		if (!root->left)
-			root->left = node;
-		else
-			root->right = node;
-		return (0);
-	}
-	if (root->node_type <= node->node_type && level == 0)
-		return (1);
-	// add error case
-	return (-1);
-}
-
-void	insert_operator_token_node(t_ast **tree, t_ast *node)
-{
-	t_ast	*root;
-
-	root = *tree;
-	if (!root)
-	{
-		*tree = node;
-		return ;
-	}
-	if (parse_insert_op_token_node(root, node, 0) == 1)
-	{
-		*tree = node;
-		node->left = root;
-	}
-}
-
-t_token	*find_operator_token(t_token **lst)
+void	consume_node(t_token **lst, t_token *node)
 {
 	t_token	*current;
+	t_token	*prev;
 
 	current = *lst;
-	if (!current)
-		return (NULL);
+	if (!current || !node)
+		return ;
+	if (current == node)
+	{
+		*lst = current->next;
+		return ;
+	}
 	while (current)
 	{
-		if (current->type > 0)
-			return (current);
+		if (current == node)
+			prev->next = current->next;
+		prev = current;
 		current = current->next;
 	}
-	return (NULL);
 }
 
-t_ast	*create_ast_node(t_token *node)
+void	create_consume_insert_node(t_token **lst, t_token **node, t_ast **tree,
+		t_ast **tree_right)
 {
 	t_ast	*new_node;
 
-	new_node = malloc(sizeof(t_ast));
-	if (!new_node || gbg_coll(new_node, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-	new_node->token_node = node;
-	new_node->left = NULL;
-	new_node->right = NULL;
-    new_node->node_type = node->type;
-	return (new_node);
+	(void)tree_right;
+	printf("inserting node = %s\n", (*node)->content);
+	new_node = create_ast_node(*node);
+	if (*lst == *node)
+	{
+		consume_node(lst, new_node->token_node);
+		*node = NULL;
+	}
+	consume_node(lst, new_node->token_node);
+	if (*tree_right)
+		insert_operator_token_node(tree_right, new_node);
+	else if (*tree && new_node->node_type < (*tree)->node_type)
+		insert_operator_token_node(tree_right, new_node);
+	else
+		insert_operator_token_node(tree, new_node);
 }
 
-void    consume_node(t_token **lst, t_token *node)
+void	syntax_error(t_token *node)
 {
-    t_token *current;
-    t_token *prev;
-
-    current = *lst;
-    if (!current || !node)
-        return ;
-    while (current)
-    {
-        // printf("current = %s\n", current->content);
-        if (current == node)
-        {
-            prev->next = current->next;
-            gbg_coll(node->content, PARSING, FREE);
-            // gbg_coll(node, PARSING, FREE); // bizarre ? probable leak
-        }
-        prev = current;
-        current = current->next;
-    }
+	printf("error syntax : %s\n", node->content);
 }
 
 t_ast	*build_operator_tree(t_token **lst)
 {
 	t_ast	*tree;
-    t_ast   *right;
+	t_ast	*right;
 	t_token	*current;
-	t_ast	*new_node;
 
 	tree = NULL;
-    right = NULL;
-	while (1)
+	right = NULL;
+	current = *lst;
+	while (current)
 	{
-		current = find_operator_token(lst);
+		current = find_operator_token(&current);
+		if (current && current->type == PAR_LEFT)
+		{
+			current = find_closing_par(&current);
+			continue ;
+		}
 		if (!current)
 			break ;
-		new_node = create_ast_node(current);
-        consume_node(lst, new_node->token_node);
-        if (tree && new_node->node_type < tree->node_type)
-            insert_operator_token_node(&right, new_node);
-        else
-            insert_operator_token_node(&tree, new_node);
+		create_consume_insert_node(lst, &current, &tree, &right);
+		if (current)
+			current = current->next;
 	}
-    tree->right = right;
+	if (tree && right)
+		tree->right = right;
 	return (tree);
 }
 
-int    parse_insert_cmd_node(t_ast *root, t_ast *cmd_node, int level)
+int	create_insert_ast_node_par(t_ast **tree, t_token *current)
 {
-    // printf("root = %s, cmd-node = %s level = %d\n", root->token_node->content, cmd_node->token_node->content, level);
-    if (root->left)
-    {
-        if (parse_insert_cmd_node(root->left, cmd_node, level + 1) == 0)
-            return (0);
-    }
-    if (!root->left && root->node_type > cmd_node->node_type)
-    {
-        root->left = cmd_node;
-        return (0);
-    }
-    if (root->right)
-    {
-        if (parse_insert_cmd_node(root->right, cmd_node, level + 1) == 0)
-            return (0);
-    }
-    if (!root->right && root->node_type > cmd_node->node_type)
-    {
-        root->right = cmd_node;
-        return (0);
-    }
-    return (-1);
+	t_ast	*cmd_node;
+	int		insert_node;
+
+	insert_node = 1;
+	cmd_node = handle_par(&current, tree, &insert_node);
+	if (!cmd_node)
+	{
+		*tree = NULL;
+		return (-1);
+	}
+	if (insert_node && insert_cmd_node(tree, cmd_node) == -1)
+		return (syntax_error(get_first_node_tree(cmd_node)->token_node), -1);
+	return (0);
 }
 
-void    insert_command_node(t_ast **tree, t_token *cmd_node)
+int	build_cmd_tree(t_ast **tree, t_token **lst)
 {
-    t_ast *root;
-    t_ast *new_cmd_node;
+	t_token	*current;
+	t_ast	*cmd_node;
 
-    root = *tree;
-    new_cmd_node = create_ast_node(cmd_node);
-    parse_insert_cmd_node(root, new_cmd_node, 0);
-    // printf("insert cmd = %d\n", parse_insert_cmd_node(root, new_cmd_node, 0));
+	current = *lst;
+	if (!current)
+		return (-1);
+	while (current)
+	{
+		if (current->type == PAR_LEFT)
+		{
+			if (create_insert_ast_node_par(tree, current) == -1)
+				return (-1);
+			current = find_closing_par(&current);
+			continue ;
+		}
+		else
+		{
+			cmd_node = create_ast_node(current);
+			printf("inserted cmd = %s\n", cmd_node->token_node->content);
+			insert_cmd_node(tree, cmd_node);
+		}
+		if (current)
+			current = current->next;
+	}
+	return (0);
 }
 
-void    build_cmd_tree(t_ast **tree, t_token **lst)
-{
-    t_token *current;
-
-    current = *lst;
-    while (current)
-    {
-        insert_command_node(tree, current);
-        current = current->next;
-    }
-}
-
-t_ast	*build_ast(t_token **lst)
+t_ast	*build_ast(t_token **lst, int *insert_node)
 {
 	t_ast	*tree;
 
 	tree = build_operator_tree(lst);
-    build_cmd_tree(&tree, lst);
+	// if (!tree)
+	// {`
+	// printf("no operat`or tree\n");
+	// return (NULL);
+	// }`
+	if (build_cmd_tree(&tree, lst) == -1)
+		*insert_node = 0;
 	return (tree);
 }
 
 // cmd1 | cmd2 || cmd3 | cmd4
+// (1 && 2) | (3 && 4)
+// (1 && 2) || (3 && 4)
+// ((1 && 2) || 4) | 4
+// ((1 && 2) || (3 && 4) || 5) SIGSEV
+// (((1 || 2) || 3) || 4)

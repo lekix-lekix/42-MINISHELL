@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/23 19:16:24 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/18 15:45:05 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,19 @@ int	check_syntax_errors(char *str)
 	return (0);
 }
 
+void	print_redir_lst(t_redir **lst)
+{
+	t_redir	*current;
+
+	current = *lst;
+	while (current)
+	{
+		printf("redir type = %d\n", current->redir_type);
+		printf("redir filename = %s\n", current->filename);
+		current = current->next;
+	}
+}
+
 void	print_lst(t_token **lst)
 {
 	t_token	*root;
@@ -96,56 +109,123 @@ void	print_lst(t_token **lst)
 	root = *lst;
 	while (root)
 	{
+		printf("--------\n");
 		printf("content = '%s'\n", root->content);
 		printf("type = %u\n", root->type);
+		if (root->redirections)
+			print_redir_lst(&root->redirections);
 		root = root->next;
 	}
 }
 
-void	clean_lst(t_token **lst)
+void	gbg_delete_node(t_token *node, int mlc_lst)
+{
+	gbg_coll(node->content, mlc_lst, FREE);
+	gbg_coll(node, mlc_lst, FREE);
+}
+
+
+int     get_nb_of_args(t_token **lst)
+{
+    t_token *current;
+    int args_nb;
+
+    current = *lst;
+    args_nb = 0;
+    while (current && !is_a_token_operator(current))
+    {
+        if (current->type == ARGS_FLAGS)
+            args_nb++;
+        current = current->next;
+    }
+    return (args_nb);
+}
+
+int    get_args_flags(t_token **lst)
+{
+    t_token *current;
+    t_token *cmd_node;
+    t_token *next;
+    int nb_of_args;
+    int i;
+
+    cmd_node = *lst;
+    current = (*lst)->next;
+    nb_of_args = get_nb_of_args(lst);
+    cmd_node->contents = malloc(sizeof(char *) * (nb_of_args + 2));
+    if (!cmd_node->content || gbg_coll(cmd_node->content, PARSING, ADD))
+        return (gbg_coll(NULL, ALL, FLUSH_ALL), -1);
+    cmd_node->contents[0] = msh_strdup(cmd_node->content, PARSING);
+    if (nb_of_args == 0)
+    {
+        cmd_node->contents[1] = NULL;
+        *lst = current;
+        return (0);
+    }
+    i = 0;
+    while (current && current->type == ARGS_FLAGS)
+    {
+        next = current->next;
+        cmd_node->contents[++i] = msh_strdup(current->content, PARSING);
+        remove_token_node(lst, current);
+        current = next;
+    }
+    cmd_node->contents[i + 1] = NULL;
+    *lst = current;
+    return (0);
+}
+
+void	join_cmd_args(t_token **lst)
 {
 	t_token	*current;
-	t_token	*prev;
+    int     i;
 
-	if (!*lst)
-		return ;
-	current = *lst;
-	if (!ft_strlen(current->content))
-	{
-		prev = current->next;
-		gbg_coll(current->content, PARSING, FREE);
-		gbg_coll(current, PARSING, FREE);
-		*lst = prev;
-	}
-	current = *lst;
-	while (current)
-	{
-		if (!ft_strlen(current->content))
-		{
-			prev->next = current->next;
-			gbg_coll(current->content, PARSING, FREE);
-			gbg_coll(current, PARSING, FREE);
-		}
-		prev = current;
-		current = current->next;
-	}
+    i = 0;
+    current = *lst;
+    while (current)
+    {
+        if (current->type == CMD)
+        {
+            get_args_flags(&current);
+            continue ;
+        }
+        current = current->next;
+    }
 }
 
 int	start_parsing(char *prompt)
 {
 	t_token	*input;
 	t_ast	*tree;
+	int		insert_node;
 
+	insert_node = 1;
 	if (check_syntax_errors(prompt))
 		return (-1);
 	input = tokenize_input(prompt);
-	// print_lst(&input);
-    // printf("------\n");
-	clean_lst(&input);
-	// print_lst(&input);
-	tree = build_ast(&input);
-	print_tree(&tree);
+	if (check_par_syntax(&input) == -1)
+		return (-1);
+	clean_token_lst(&input);
+	split_lst_contents(&input);
+	if (check_redirections(&input) == -1)
+		return (-1);
+	clean_token_lst(&input);
+	join_cmd_args(&input);
+	tree = build_ast(&input, &insert_node);
+	if (tree)
+	{
+		printf("PRINT TREE =========\n");
+		print_tree(&tree);
+		printf("PRINT TREE END =====\n");
+		check_tree_syntax(&tree);
+	}
 	return (0);
+}
+
+void	ft_exit(void)
+{
+	gbg_coll(NULL, ALL, FLUSH_ALL);
+	exit(0);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -162,10 +242,13 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		prompt = readline("./minishell$ ");
-		if (!prompt | !*prompt)
+		if (!prompt || !*prompt || gbg_coll(prompt, PARSING, ADD))
 			break ;
+		if (ft_strncmp(prompt, "exit", 4) == 0)
+			ft_exit();
 		start_parsing(prompt);
-		free(prompt);
+		gbg_coll(prompt, PARSING, FREE);
+		printf("===========\n");
 	}
 	free(prompt);
 	gbg_coll(NULL, ENV, FLUSH_ALL);

@@ -6,7 +6,7 @@
 #    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/26 17:19:05 by kipouliq          #+#    #+#              #
-#    Updated: 2024/05/16 14:05:26 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/06/11 14:27:14 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,9 +15,20 @@ NAME = minishell
 SRCS = ./srcs/minishell.c \
 	./srcs/garbage_collector.c \
 	./srcs/env.c \
-	./srcs/ast_tools.c \
+	./srcs/tokenizer.c \
+	./srcs/token_lst_tools.c \
+	./srcs/parsing_tools.c \
+	./srcs/parsing_tools_bis.c \
 	./srcs/ast_construction.c \
-	./srcs/tokenizer.c
+	./srcs/ast_parenthesis.c \
+	./srcs/ast_insert_node.c \
+	./srcs/ast_check_syntax.c\
+	./srcs/ast_tools.c \
+	./srcs/ast_tools_bis.c \
+	./srcs/msh_strtrim.c \
+	./srcs/msh_split.c \
+	./srcs/parsing_redirections.c \
+	./srcs/parsing_redirections_bis.c
 
 OBJ = $(SRCS:.c=.o)
 
@@ -36,6 +47,7 @@ LIBS = -lreadline
 all : 
 	git submodule update --init
 	make $(NAME)
+	# make clean	
 
 $(NAME) : $(OBJ)
 	make -C $(PATH_LIBFT)
