@@ -6,28 +6,15 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/18 10:26:41 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/18 14:25:54 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	check_operator_len(char *str, int *op_len)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] == str[0])
-		i++;
-	if (i > 2)
-		return (0);
-	*op_len = i;
-	return (1);
-}
-
 void	find_operator_type(char *input, t_token *node)
-{  
-    int	op_len;
+{
+	int	op_len;
 
 	check_operator_len(input, &op_len);
 	if (*input == '(')
@@ -88,38 +75,23 @@ void	insert_node_lst(t_token **lst, t_token *node)
 	t_token	*root;
 
 	root = *lst;
-    if (!root)
-    {
-        *lst = node;
-        return ;
-    }
+	if (!root)
+	{
+		*lst = node;
+		return ;
+	}
 	while (root->next)
 		root = root->next;
 	root->next = node;
 }
 
-int ft_is_space(char c)
-{
-    return ((c >= 9 && c <= 13) || c == 32);
-}
-
-char *skip_spaces(char *str)
-{
-    int i;
-
-    i = 0;
-    while (str[i] && ft_is_space(str[i]))
-        i++;
-    return (str + i);
-}
-
 t_token	*tokenize_input(char *input)
 {
-	t_token *root;
-	t_token *op_node;
-	t_token *cmd_node;
-	char *input_parse;
-	char *operator;
+	t_token	*root;
+	t_token	*op_node;
+	t_token	*cmd_node;
+	char	*input_parse;
+	char	*operator;
 
 	root = NULL;
 	input_parse = input;
@@ -128,17 +100,16 @@ t_token	*tokenize_input(char *input)
 		operator = find_operator(input_parse);
 		if (!operator)
 		{
-			cmd_node = create_cmd_node(input_parse, NULL);
-            insert_node_lst(&root, cmd_node);
+			(cmd_node = create_cmd_node(input_parse, NULL));
+			insert_node_lst(&root, cmd_node);
 			break ;
 		}
 		op_node = create_operator_node(&operator);
 		if (!op_node)
 			return (NULL);
-        input_parse = skip_spaces(input_parse);
+		input_parse = skip_spaces(input_parse);
 		cmd_node = create_cmd_node(input_parse, op_node->content);
-		insert_node_lst(&root, cmd_node);
-		insert_node_lst(&root, op_node);
+		(insert_node_lst(&root, cmd_node), insert_node_lst(&root, op_node));
 		input_parse = operator;
 	}
 	return (root);

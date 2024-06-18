@@ -6,7 +6,7 @@
 #    By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/26 17:19:05 by kipouliq          #+#    #+#              #
-#    Updated: 2024/06/13 08:08:43 by sabakar-         ###   ########.fr        #
+#    Updated: 2024/06/18 14:55:41 by sabakar-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,8 @@ SRCS = ./srcs/minishell.c \
 	./srcs/execs/start_exec.c \
 	./srcs/general_utils.c \
 	./srcs/non_builtins/paths_utils.c \
+	./srcs/ft_extra_fts.c \
+	./srcs/ft_tree_helpers.c \
 
 OBJ = $(SRCS:.c=.o)
 

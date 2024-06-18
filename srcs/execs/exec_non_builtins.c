@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/17 16:01:39 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/18 14:10:32 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ int	ft_exec_non_builtins(char **args, t_minishell *data)
 	int		la_status;
 
 	la_fork = fork();
-	if (la_fork < 0)
-		(ft_print_err(FORK_C1), exit(EXIT_FAILURE));
 	if (la_fork == 0)
 	{
 		env = env_lst_to_arr(&data->env_lst);

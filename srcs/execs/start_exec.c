@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/18 11:32:08 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/18 14:09:24 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	ft_exec_pipe_child(t_ast *node, int pids[],
 		close(pids[0]);
 	}
 	la_status = ft_start_exec(&node, data);
-	// (gbg_coll(NULL, ALL, FLUSH_ALL));
 	exit(la_status);
 }
 
@@ -64,19 +63,16 @@ int	ft_exec_pipe(t_ast *node, t_minishell *data)
 int	ft_check_cmds(t_token *token_node, t_minishell *data)
 {
 	char	**la_args;
-	int	le_satus;
+	int		le_satus;
 
-	la_args = ft_split(token_node->content, 32); //('|' || "||" || "&&")
-	// int x = -1;
-	// while (la_args[++x])
-	// 	printf("The cmd: %s\n", la_args[x]);
+	la_args = ft_split(token_node->content, 32);
 	if (ft_is_builtin(la_args[0]))
-	{	
+	{
 		le_satus = ft_exec_builtins(la_args, data);
 		return (ft_free(la_args), le_satus);
 	}
 	else
-	{	
+	{
 		le_satus = ft_exec_non_builtins(la_args, data);
 		return (ft_free(la_args), le_satus);
 	}

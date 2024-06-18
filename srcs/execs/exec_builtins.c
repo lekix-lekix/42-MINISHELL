@@ -6,12 +6,11 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:31:03 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/17 12:06:42 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/18 14:11:43 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-
 
 static int	ft_strncmp_loco(const char *s1, const char *s2, size_t n)
 {
@@ -49,11 +48,12 @@ int	ft_exec_builtins(char **args, t_minishell *data)
 
 bool	ft_is_builtin(char *arg)
 {
-	if (!ft_strncmp_loco(arg, "cd", ft_strlen(arg)) || !ft_strncmp_loco(arg, "pwd",
-			ft_strlen(arg)) || !ft_strncmp_loco("echo", arg, ft_strlen(arg))
-		|| !ft_strncmp_loco(arg, "export", ft_strlen(arg)) || !ft_strncmp_loco(arg, "env",
-			ft_strlen(arg)) || !ft_strncmp_loco(arg, "unset", ft_strlen(arg)))
-			return (true);
+	if (!ft_strncmp_loco(arg, "cd", ft_strlen(arg)) || !ft_strncmp_loco(arg,
+			"pwd", ft_strlen(arg)) || !ft_strncmp_loco("echo", arg,
+			ft_strlen(arg)) || !ft_strncmp_loco(arg, "export", ft_strlen(arg))
+		|| !ft_strncmp_loco(arg, "env", ft_strlen(arg)) || !ft_strncmp_loco(arg,
+			"unset", ft_strlen(arg)))
+		return (true);
 	else
 		return (false);
 }

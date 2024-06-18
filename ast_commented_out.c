@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ast_commented_out.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/18 14:46:14 by sabakar-          #+#    #+#             */
+/*   Updated: 2024/06/18 14:50:29 by sabakar-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 // void	insert_operator_node(t_token **tree, t_token *node)
 // {
 // 	t_token	*root;
@@ -138,4 +150,60 @@
 // 		current = current->next;
 // 	}
 // 	return (tree);
+// }
+
+// void	traverse_print(t_ast *node, int level)
+// {	
+//     if (!node) 
+//         return;
+//     if (node->left)
+//         traverse_print(node->left, level + 1);
+//     // ft_start_exec(&node);
+//     printf("The cmd is: %s\n", node->token_node->content);
+//     // printf("node content = %s, level = %d\n", node->token_node->content, level);
+//     if (node->right)
+//         traverse_print(node->right, level + 1);
+// }
+
+// void	print_tree(t_ast **tree)
+// {
+// 	t_ast	*node;
+	
+// 	node = *tree;
+// 	traverse_print(node, 0);
+// }
+
+
+// void	print_lst(t_token **lst)
+// {
+// 	t_token	*root;
+
+// 	root = *lst;
+// 	while (root)
+// 	{
+// 		printf("content = '%s'\n", root->content);
+// 		printf("type = %u\n", root->type);
+// 		root = root->next;
+// 	}
+// }
+
+// int	print_real_env(char **env)
+// {
+// 	int	i;
+
+// 	i = -1;
+// 	while (env[++i])
+// 		printf("%s\n", env[i]);
+// 	return (0);
+// }
+
+// int	init_data(t_minishell *data, char **envp)
+// {
+// 	data->path = get_path(envp);
+// 	if (!data->path)
+// 		return (-1);
+// 	data->env_lst = get_env_lst(envp);
+// 	if (!data->env_lst)
+// 		return (-1);
+// 	return (0);
 // }

@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:02:12 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/17 15:54:49 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/18 14:14:08 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	ft_export_err_msg(char *identifier)
 	return (1);
 }
 
-static	void	ft_export_list(t_minishell *data)
+static void	ft_export_list(t_minishell *data)
 {
 	t_env	*list;
 	size_t	i;
@@ -80,8 +80,6 @@ int	ft_exec_export(char **args, t_minishell *data)
 		else
 		{
 			key = ft_extract_val(args[i]);
-			// printf("The field: %s\n", key);
-			// printf("The content: %s\n", ft_extract_key(args[i]));
 			if (ft_env_entry_exists(key, data))
 				ft_update_envlst(ft_extract_key(args[i]), key, false, data);
 			else
@@ -91,3 +89,5 @@ int	ft_exec_export(char **args, t_minishell *data)
 	}
 	return (exit_s);
 }
+// printf("The field: %s\n", key);
+// printf("The content: %s\n", ft_extract_key(args[i]));

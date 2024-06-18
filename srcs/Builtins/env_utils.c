@@ -6,25 +6,11 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/17 11:52:21 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/18 14:13:28 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-
-bool	ft_env_entry_exists(char *content, t_minishell *data)
-{
-	t_env	*envlst;
-
-	envlst = data->env_lst;
-	while (envlst)
-	{
-		if (!ft_strcmp(content, envlst->content))
-			return (true);
-		envlst = envlst->next;
-	}
-	return (false);
-}
 
 static t_env	*ft_envlst_new(char *content, char *field)
 {
@@ -54,7 +40,8 @@ char	*ft_get_envlst_content(char *key, t_minishell *data)
 	return (NULL);
 }
 
-void	ft_update_envlst(char *field, char *content, bool create, t_minishell *data)
+void	ft_update_envlst(char *field, char *content, bool create,
+		t_minishell *data)
 {
 	t_env	*envlst;
 

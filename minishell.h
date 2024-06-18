@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/17 12:02:43 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/18 14:58:16 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,6 @@ typedef struct s_minishell
 	int				pids_num;
 }					t_minishell;
 
-// extern t_minishell	g_minishell;
-
 int					gbg_coll(void *mem_addr, int which_list, int rule);
 t_env				*get_env_lst(char **envp);
 int					ft_strlen_sep(char *str, char *sep);
@@ -136,12 +134,21 @@ int					ft_strcpy_sep(char *dest, char *input, char *sep);
 t_ast				*build_ast(t_token **lst);
 t_env				*create_env_node(char *str, char *sep);
 void				lst_env_add_back(t_env **lst, t_env *new);
+void				clean_lst(t_token **lst);
+
+// Tree:
+void				consume_node(t_token **lst, t_token *node);
+void				insert_operator_token_node(t_ast **tree, t_ast *node);
+t_token				*find_operator_token(t_token **lst);
+int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
+						int level);
 
 // The builtins
 int					ft_exec_echo(char **args);
 int					ft_exec_pwd(void);
 int					ft_do_cd(char **path, t_minishell *data);
-void				ft_update_envlst(char *field, char *content, bool create, t_minishell *data);
+void				ft_update_envlst(char *field, char *content, bool create,
+						t_minishell *data);
 int					print_env(t_env **lst);
 int					ft_exec_export(char **args, t_minishell *data);
 int					ft_exec_builtins(char **args, t_minishell *data);
@@ -164,6 +171,11 @@ int					ft_start_exec(t_ast **tree, t_minishell *data);
 void				ft_free(char **arr);
 void				ft_print_err(char *str);
 char				**env_lst_to_arr(t_env **lst);
+char				*ft_join(char *s1, char *s2);
+int					check_operator_len(char *str, int *op_len);
+char				*skip_spaces(char *str);
+int					print_env(t_env **lst);
+
 // void				print_lst(t_token **lst);
 
 // paths utils
