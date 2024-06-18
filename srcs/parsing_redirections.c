@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:13:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/18 15:43:20 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/18 18:32:07 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,25 +94,26 @@ char	*msh_strdup(const char *s, int mlc_lst)
 	return (final_str);
 }
 
-int	handle_redirection(t_token **lst, t_token *redir_node)
+int	handle_redirection(t_token **lst, t_token **redir_node)
 {
 	t_token	*cmd_node;
 	t_token	*filename_token;
 	char	*filename;
 
-	if (!redir_node->next)
+	if (!(*redir_node)->next)
 		return (-1); // syntax error : newline
-	cmd_node = find_redir_node(lst, redir_node);
+	cmd_node = find_redir_node(lst, *redir_node);
 	if (!cmd_node)
 	{
 		cmd_node = create_cmd_node(NULL, NULL);
 		insert_node_lst(lst, cmd_node);
 	}
-    filename_token = redir_node->next;
+    filename_token = (*redir_node)->next;
 	filename = msh_strdup(filename_token->content, PARSING);
-	add_redirection(cmd_node, redir_node, filename);
-	remove_token_node(lst, redir_node);
+	add_redirection(cmd_node, *redir_node, filename);
+	remove_token_node(lst, *redir_node);
 	remove_token_node(lst, filename_token);
+    *redir_node = *lst;
 	return (0);
 }
 
@@ -212,13 +213,9 @@ t_token *get_outfile_next_node(t_token **lst)
     t_token *current;
 
     current = *lst;
-    while (current)
-    {
-        if (current->type == OUTFILE && current->next)
-            return (current->next);
+    while (current && (is_a_redir_operator(current) || current->type == OUTFILE))
         current = current->next;
-    }
-    return (NULL);
+    return (current);
 }
 
 void    remove_redir_nodes(t_token **lst, t_token **redir_lst)
@@ -235,11 +232,12 @@ void    remove_redir_nodes(t_token **lst, t_token **redir_lst)
     }
 }
 
-int handle_par_redirection(t_token **lst, t_token *redir_node, t_token *closing_par)
+int handle_par_redirection(t_token **lst, t_token **redir_node, t_token *closing_par)
 {
     t_redir *redir_lst;
     t_token *current;
     t_token *par_right;
+    t_token *next;
 
     current = *lst;
     par_right = NULL;
@@ -249,13 +247,15 @@ int handle_par_redirection(t_token **lst, t_token *redir_node, t_token *closing_
             par_right = find_closing_par(&current);
         if (par_right == closing_par)
         {
-            redir_lst = get_redir_lst_par(&redir_node, closing_par);
+            next = get_outfile_next_node(&closing_par->next);
+            redir_lst = get_redir_lst_par(redir_node, closing_par);
             apply_redir_lst(&current, closing_par, &redir_lst);
-            closing_par->next = get_outfile_next_node(&closing_par);
+            closing_par->next = next;
             return (0);
         }
         current = current->next;
     }
+    *redir_node = *lst;
     return (0);
 }
 
@@ -274,14 +274,12 @@ int	check_redirections(t_token **lst)
 	{
         if (is_a_redir_operator(current) && prev && prev->type == PAR_RIGHT)
         {
-            handle_par_redirection(lst, current, prev);
-            current = *lst;
+            handle_par_redirection(lst, &current, prev);
             continue ;
         }
 		else if (is_a_redir_operator(current))
 		{
-			handle_redirection(lst, current);
-			current = *lst;
+			handle_redirection(lst, &current);
             continue ;
 		}
         prev = current;

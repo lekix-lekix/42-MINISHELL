@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/18 16:32:52 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/18 17:44:14 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,14 @@ int	init_data(t_minishell *data, char **envp)
 	return (0);
 }
 
-static void	ft_start_execution(t_ast **tree, t_minishell *data)
-{
-	t_ast	*nodes;
-	int		la_status;
+// static void	ft_start_execution(t_ast **tree, t_minishell *data)
+// {
+// 	t_ast	*nodes;
+// 	int		la_status;
 
-	nodes = *tree;
-	la_status = ft_start_exec(&nodes, data);
-}
+// 	nodes = *tree;
+// 	la_status = ft_start_exec(&nodes, data);
+// }
 
 int	print_env(t_env **lst)
 {
@@ -202,7 +202,7 @@ void	join_cmd_args(t_token **lst)
     }
 }
 
-int	start_parsing(char *prompt, t_minishell *data)
+int	start_parsing(char *prompt/* , t_minishell *data */)
 {
 	t_token	*input;
 	t_ast	*tree;
@@ -228,7 +228,7 @@ int	start_parsing(char *prompt, t_minishell *data)
 		printf("PRINT TREE END =====\n");
 		check_tree_syntax(&tree);
 	}
-    ft_start_execution(&tree, data);
+    // ft_start_execution(&tree, data);
 	return (0);
 }
 
@@ -249,7 +249,7 @@ int	main(int argc, char **argv, char **env)
 		data.prompt = readline("./minishell$ ");
 		if (!data.prompt | !*data.prompt)
 			break ;
-		start_parsing(data.prompt, &data);
+		start_parsing(data.prompt/* , &data */);
 		free(data.prompt);
 	}
 	free(data.prompt);
