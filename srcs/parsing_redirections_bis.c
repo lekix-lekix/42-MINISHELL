@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:40:44 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/14 09:23:19 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/18 15:43:58 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ char	*get_filename(t_token *node)
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	ft_strlcpy(filename, node->content, filename_len);
 	i = -1;
-	printf("filename len = %d content = %s\n", filename_len, node->content);
 	while (node->content[++i] && i < filename_len)
 		node->content[i] = ' ';
 	if (!only_spaces(node->content))

@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:13:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/17 18:10:26 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/18 15:43:20 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,12 +124,12 @@ t_redir *create_redir_node(t_token_type redir_type, char *filename)
     if (!redir_node || gbg_coll(redir_node, PARSING, ADD))
         return (gbg_coll(redir_node, PARSING, ADD), exit(255), NULL);
     redir_node->redir_type = redir_type;
-    redir_node->filename = filename;
+    redir_node->filename = ft_strdup(filename);
     redir_node->next = NULL;
     return (redir_node);
 }
 
-t_redir *get_redir_lst_par(t_token **redir_node_lst)
+t_redir *get_redir_lst_par(t_token **redir_node_lst, t_token *closing_par)
 {
     t_token *current;
     t_redir *new_redir_node;
@@ -141,10 +141,13 @@ t_redir *get_redir_lst_par(t_token **redir_node_lst)
     {
         if (is_a_redir_operator(current) && current->next && current->next->type == OUTFILE)
         {
-            printf("yo\n");
             new_redir_node = create_redir_node(current->type, current->next->content);
-            printf("redir node type = %d filename = %s\n", current->type, current->next->content);
+            closing_par = current->next->next;
+            remove_token_node(redir_node_lst, current->next);
+            remove_token_node(redir_node_lst, current);
             add_redirection_node(&redir_lst, new_redir_node);
+            current = *redir_node_lst;
+            continue ;
         }
         current = current->next;
     }
@@ -176,7 +179,7 @@ t_redir	*redir_lst_dup(t_redir **lst)
 		current_cpy = malloc(sizeof(t_redir));
 		if (!current_cpy || gbg_coll(current_cpy, PARSING, ADD))
 			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-		current_cpy->filename = current->filename;
+		current_cpy->filename = msh_strdup(current->filename, PARSING);
         current_cpy->redir_type = current->redir_type;
         current_cpy->next = NULL;
 		add_redirection_node(&lst_cpy, current_cpy);
@@ -195,21 +198,9 @@ void    apply_redir_lst(t_token **lst, t_token *end_node, t_redir **redir_lst)
     {
         if (current->type == CMD)
         {
-            printf("found cmd = %s\n", current->content);
-            printf("===REDIR LST====\n");
-            print_redir_lst(redir_lst);
-            printf("================\n");
             node_redir_save = current->redirections;
-            printf("===REDIR LST2====\n");
-            print_redir_lst(redir_lst);
-            printf("================\n");
-            printf("===SAVE====\n");
             print_redir_lst(&node_redir_save);
-            printf("===========\n");
             current->redirections = redir_lst_dup(redir_lst);
-            printf("===REDIR LST3====\n");
-            print_redir_lst(redir_lst);
-            printf("================\n");
             find_last_redir_node(&current->redirections)->next = node_redir_save;
         }
         current = current->next;
@@ -223,11 +214,25 @@ t_token *get_outfile_next_node(t_token **lst)
     current = *lst;
     while (current)
     {
-        if (current->type == OUTFILE)
+        if (current->type == OUTFILE && current->next)
             return (current->next);
         current = current->next;
     }
     return (NULL);
+}
+
+void    remove_redir_nodes(t_token **lst, t_token **redir_lst)
+{
+    t_token *current;
+    t_token *next;
+
+    current = *redir_lst;
+    while (current)
+    {
+        next = current->next;
+        remove_token_node(lst, current);
+        current = next;
+    }
 }
 
 int handle_par_redirection(t_token **lst, t_token *redir_node, t_token *closing_par)
@@ -244,11 +249,9 @@ int handle_par_redirection(t_token **lst, t_token *redir_node, t_token *closing_
             par_right = find_closing_par(&current);
         if (par_right == closing_par)
         {
-            redir_lst = get_redir_lst_par(&redir_node);
+            redir_lst = get_redir_lst_par(&redir_node, closing_par);
             apply_redir_lst(&current, closing_par, &redir_lst);
             closing_par->next = get_outfile_next_node(&closing_par);
-            remove_token_node(lst, redir_node->next);
-            remove_token_node(lst, redir_node);
             return (0);
         }
         current = current->next;
@@ -266,15 +269,11 @@ int	check_redirections(t_token **lst)
 		return (-1);
 	set_redir_lst(lst);
     set_args_lst(lst);
-    printf("LST AFTER SET REDIR LST =====\n");
-    print_lst(lst);
-    printf("LST END =====================\n");
     prev = NULL;
 	while (current)
 	{
-        if (prev && prev->type == PAR_RIGHT && is_a_redir_operator(current))
+        if (is_a_redir_operator(current) && prev && prev->type == PAR_RIGHT)
         {
-            printf("par redirection\n");
             handle_par_redirection(lst, current, prev);
             current = *lst;
             continue ;

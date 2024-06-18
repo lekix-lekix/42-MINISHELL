@@ -24,7 +24,7 @@ ls && (toi && moi) | pwd || (vous && moi) --> works
 <ls : crash --> done and working
 < infile > outfile > gjojo ls -a -e -e | > outfile1 ls > outfileee | (echo a && echo b) -->crash
 
-ls && (<infile ls && cmd2) > outfile
+ : doublons dans lst si plus d4une redir + par
 
 
 

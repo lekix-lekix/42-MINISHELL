@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/14 13:48:39 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/18 15:45:05 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,20 +206,11 @@ int	start_parsing(char *prompt)
 	if (check_par_syntax(&input) == -1)
 		return (-1);
 	clean_token_lst(&input);
-	// printf("TOKEN LST BEFORE REDIR =======\n");
-	// print_lst(&input);
-	// printf("============================\n");
 	split_lst_contents(&input);
 	if (check_redirections(&input) == -1)
 		return (-1);
-	// printf("TOKEN LST BEFORE AST =======\n");
-	// print_lst(&input);
-	// printf("============================\n");
 	clean_token_lst(&input);
 	join_cmd_args(&input);
-	// printf("AFTER CLEANING ==== \n");
-	// print_lst(&input);
-	// printf("===========\n");
 	tree = build_ast(&input, &insert_node);
 	if (tree)
 	{
