@@ -5,7 +5,6 @@
 #                                                     +:+ +:+         +:+      #
 #    By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/02/26 17:19:05 by kipouliq          #+#    #+#              #
 #    Updated: 2024/06/18 14:55:41 by sabakar-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
@@ -15,9 +14,6 @@ NAME = minishell
 SRCS = ./srcs/minishell.c \
 	./srcs/garbage_collector.c \
 	./srcs/env.c \
-	./srcs/ast_tools.c \
-	./srcs/ast_construction.c \
-	./srcs/tokenizer.c \
 	./srcs/execs/exec_builtins.c \
 	./srcs/Builtins/do_cd.c \
 	./srcs/Builtins/do_echo.c \
@@ -31,6 +27,20 @@ SRCS = ./srcs/minishell.c \
 	./srcs/non_builtins/paths_utils.c \
 	./srcs/ft_extra_fts.c \
 	./srcs/ft_tree_helpers.c \
+	./srcs/tokenizer.c \
+	./srcs/token_lst_tools.c \
+	./srcs/parsing_tools.c \
+	./srcs/parsing_tools_bis.c \
+	./srcs/ast_construction.c \
+	./srcs/ast_parenthesis.c \
+	./srcs/ast_insert_node.c \
+	./srcs/ast_check_syntax.c\
+	./srcs/ast_tools.c \
+	./srcs/ast_tools_bis.c \
+	./srcs/msh_strtrim.c \
+	./srcs/msh_split.c \
+	./srcs/parsing_redirections.c \
+	./srcs/parsing_redirections_bis.c
 
 OBJ = $(SRCS:.c=.o)
 
@@ -49,6 +59,7 @@ LIBS = -lreadline
 all : 
 	git submodule update --init
 	make $(NAME)
+	# make clean	
 
 $(NAME) : $(OBJ)
 	make -C $(PATH_LIBFT)

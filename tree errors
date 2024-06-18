@@ -1,0 +1,62 @@
+hello && ( &&) --> wrong syntax_error
+hello &&
+ls () ---> empty par : should be a syntax error
+
+
+
+
+
+AST TESTS :
+
+ls
+ls | coucou
+ls | ls | ls | ls | ls | ls
+1 && 2 | 3 
+1 && 2 | 3 || 4
+
+
+ls && (((1 || 2) || 3) || 4)
+ls && (toi && moi) | pwd || (vous && moi) --> works
+< infile > outfile ls | pwd > lws > outfile
+
+
+
+<ls : crash --> done and working
+< infile > outfile > gjojo ls -a -e -e | > outfile1 ls > outfileee | (echo a && echo b) -->crash
+
+ : doublons dans lst si plus d4une redir + par
+
+
+
+
+any cmd with '&' / syntax errors on wrong operators
+
+
+bash things :
+cat -e outfile < outfile ---> works
+syntax errors status --> 2
+
+
+TO DO :
+
+- Handle redirections && parenthesis
+    (= syntax error if before, applied at the begin of each redir lst of each node)
+
+
+REDIR PARENTHESIS :
+
+`bash-5.1$ (echo a > file0 && echo b) > file1
+bash-5.1$ cat file1
+b
+bash-5.1$ cat file0
+a
+bash-5.1$ (echo a && echo b) > file1
+bash-5.1$ cat file1
+a
+b
+bash-5.1$ (echo a > file0 && echo b) > file1 > file2
+bash-5.1$ cat file0
+a
+bash-5.1$ cat file1
+bash-5.1$ cat file2
+b

@@ -3,66 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   ast_construction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/18 14:37:36 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/14 14:14:42 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	parse_insert_op_token_node(t_ast *root, t_ast *node, int level)
+void	print_contents(t_ast *node)
 {
-	if (root->left)
-		parse_insert_op_token_node(root->left, node, level + 1);
-	if (root->right)
-		parse_insert_op_token_node(root->right, node, level + 1);
-	if (root->node_type > node->node_type)
-	{
-		if (!root->left)
-			root->left = node;
-		else
-			root->right = node;
-		return (0);
-	}
-	if (root->node_type <= node->node_type && level == 0)
-		return (1);
-	// add error case
-	return (-1);
+	int	i;
+
+	i = -1;
+	while (node->token_node->contents[++i])
+		printf("contents[%d] = %s\n", i, node->token_node->contents[i]);
 }
 
-void	insert_operator_token_node(t_ast **tree, t_ast *node)
+void	traverse_print(t_ast *node, int level)
 {
-	t_ast	*root;
-
-	root = *tree;
-	if (!root)
-	{
-		*tree = node;
-		return ;
-	}
-	if (parse_insert_op_token_node(root, node, 0) == 1)
-	{
-		*tree = node;
-		node->left = root;
-	}
+	if (node->left)
+		traverse_print(node->left, level + 1);
+	printf("----NODE-------\n");
+	printf("node content = %s, level = %d\n", node->token_node->content, level);
+	if (node->token_node->contents)
+		print_contents(node);
+	if (node->token_node->redirections)
+		print_redir_lst(&node->token_node->redirections);
+	if (node->right)
+		traverse_print(node->right, level + 1);
 }
 
-t_token	*find_operator_token(t_token **lst)
+void	print_tree(t_ast **tree)
 {
-	t_token	*current;
+	t_ast	*node;
 
-	current = *lst;
-	if (!current)
-		return (NULL);
-	while (current)
-	{
-		if (current->type > 0)
-			return (current);
-		current = current->next;
-	}
-	return (NULL);
+	node = *tree;
+	traverse_print(node, 0);
 }
 
 void	consume_node(t_token **lst, t_token *node)
@@ -73,42 +51,139 @@ void	consume_node(t_token **lst, t_token *node)
 	current = *lst;
 	if (!current || !node)
 		return ;
+	if (current == node)
+	{
+		*lst = current->next;
+		return ;
+	}
 	while (current)
 	{
 		if (current == node)
-		{
 			prev->next = current->next;
-			gbg_coll(node->content, PARSING, FREE);
-			// gbg_coll(node, PARSING, FREE); // bizarre ? probable leak
-		}
 		prev = current;
 		current = current->next;
 	}
 }
 
-int	parse_insert_cmd_node(t_ast *root, t_ast *cmd_node, int level)
+void	create_consume_insert_node(t_token **lst, t_token **node, t_ast **tree,
+		t_ast **tree_right)
 {
-	if (!root || !cmd_node)
-		return (-1);
-	if (root->left)
+	t_ast	*new_node;
+
+	(void)tree_right;
+	printf("inserting node = %s\n", (*node)->content);
+	new_node = create_ast_node(*node);
+	if (*lst == *node)
 	{
-		if (parse_insert_cmd_node(root->left, cmd_node, level + 1) == 0)
-			return (0);
+		consume_node(lst, new_node->token_node);
+		*node = NULL;
 	}
-	if (!root->left && root->node_type > cmd_node->node_type)
-	{
-		root->left = cmd_node;
-		return (0);
-	}
-	if (root->right)
-	{
-		if (parse_insert_cmd_node(root->right, cmd_node, level + 1) == 0)
-			return (0);
-	}
-	if (!root->right && root->node_type > cmd_node->node_type)
-	{
-		root->right = cmd_node;
-		return (0);
-	}
-	return (-1);
+	consume_node(lst, new_node->token_node);
+	if (*tree_right)
+		insert_operator_token_node(tree_right, new_node);
+	else if (*tree && new_node->node_type < (*tree)->node_type)
+		insert_operator_token_node(tree_right, new_node);
+	else
+		insert_operator_token_node(tree, new_node);
 }
+
+void	syntax_error(t_token *node)
+{
+	printf("error syntax : %s\n", node->content);
+}
+
+t_ast	*build_operator_tree(t_token **lst)
+{
+	t_ast	*tree;
+	t_ast	*right;
+	t_token	*current;
+
+	tree = NULL;
+	right = NULL;
+	current = *lst;
+	while (current)
+	{
+		current = find_operator_token(&current);
+		if (current && current->type == PAR_LEFT)
+		{
+			current = find_closing_par(&current);
+			continue ;
+		}
+		if (!current)
+			break ;
+		create_consume_insert_node(lst, &current, &tree, &right);
+		if (current)
+			current = current->next;
+	}
+	if (tree && right)
+		tree->right = right;
+	return (tree);
+}
+
+int	create_insert_ast_node_par(t_ast **tree, t_token *current)
+{
+	t_ast	*cmd_node;
+	int		insert_node;
+
+	insert_node = 1;
+	cmd_node = handle_par(&current, tree, &insert_node);
+	if (!cmd_node)
+	{
+		*tree = NULL;
+		return (-1);
+	}
+	if (insert_node && insert_cmd_node(tree, cmd_node) == -1)
+		return (syntax_error(get_first_node_tree(cmd_node)->token_node), -1);
+	return (0);
+}
+
+int	build_cmd_tree(t_ast **tree, t_token **lst)
+{
+	t_token	*current;
+	t_ast	*cmd_node;
+
+	current = *lst;
+	if (!current)
+		return (-1);
+	while (current)
+	{
+		if (current->type == PAR_LEFT)
+		{
+			if (create_insert_ast_node_par(tree, current) == -1)
+				return (-1);
+			current = find_closing_par(&current);
+			continue ;
+		}
+		else
+		{
+			cmd_node = create_ast_node(current);
+			printf("inserted cmd = %s\n", cmd_node->token_node->content);
+			insert_cmd_node(tree, cmd_node);
+		}
+		if (current)
+			current = current->next;
+	}
+	return (0);
+}
+
+t_ast	*build_ast(t_token **lst, int *insert_node)
+{
+	t_ast	*tree;
+
+	tree = build_operator_tree(lst);
+	// if (!tree)
+	// {`
+	// printf("no operat`or tree\n");
+	// return (NULL);
+	// }`
+	if (build_cmd_tree(&tree, lst) == -1)
+		*insert_node = 0;
+	return (tree);
+}
+
+// cmd1 | cmd2 || cmd3 | cmd4
+// (1 && 2) | (3 && 4)
+// (1 && 2) || (3 && 4)
+// ((1 && 2) || 4) | 4
+// ((1 && 2) || (3 && 4) || 5) SIGSEV
+// (((1 || 2) || 3) || 4)

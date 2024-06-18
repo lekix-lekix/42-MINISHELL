@@ -53,23 +53,47 @@ typedef struct s_gbg
 typedef enum e_token_type
 {
 	CMD,
+	ARGS_FLAGS,
 	PIPE,
 	AND,
 	OR,
 	PAR_LEFT,
-	PAR_RIGHT
+	PAR_RIGHT,
+	REDIR_INPUT,
+	REDIR_OUTPUT,
+	REDIR_OUTPUT_APPEND,
+	REDIR_HEREDOC,
+	OUTFILE
 }					t_token_type;
 
-typedef enum e_ast_node_type
+// typedef enum e_ast_node_type
+// {
+// 	COMMAND,
+// 	OPERATOR
+// }					t_ast_node_type;
+
+typedef enum e_redir_type
 {
-	COMMAND,
-	OPERATOR
-}					t_ast_node_type;
+	INPUT,
+	OUTPUT,
+	OUTPUT_APPEND,
+	HEREDOC
+}					t_redir_type;
+
+typedef struct s_redir
+{
+	t_token_type	redir_type;
+	char			*filename;
+	struct s_redir	*next;
+}					t_redir;
 
 typedef struct s_token
 {
 	t_token_type	type;
+	t_redir			*redirections;
+	char			*filename;
 	char			*content;
+	char			**contents;
 	struct s_token	*next;
 }					t_token;
 
@@ -77,6 +101,8 @@ typedef struct s_ast
 {
 	t_token			*token_node;
 	t_token_type	node_type;
+	t_redir			*redirections;
+	int				is_in_par;
 	struct s_ast	*left;
 	struct s_ast	*right;
 }					t_ast;
@@ -124,24 +150,45 @@ int					gbg_coll(void *mem_addr, int which_list, int rule);
 t_env				*get_env_lst(char **envp);
 int					ft_strlen_sep(char *str, char *sep);
 t_token				*tokenize_input(char *input);
-// void				perint_tree(t_ast **tree);
-int					ft_strlen_sep(char *str, char *sep);
-char				*find_operator(char *str);
-// void				insert_operator_node(t_token **tree, t_token *node);
-// void				insert_cmd_node(t_token **tree, t_token *node);
-int					ft_strcpy_sep(char *dest, char *input, char *sep);
-// void				clear_tree(t_token **tree);
-t_ast				*build_ast(t_token **lst);
-t_env				*create_env_node(char *str, char *sep);
-void				lst_env_add_back(t_env **lst, t_env *new);
-void				clean_lst(t_token **lst);
 
-// Tree:
-void				consume_node(t_token **lst, t_token *node);
+// Merge combined functions
+void				print_tree(t_ast **tree);
+char				*find_operator(char *str);
+void				insert_operator_node(t_token **tree, t_token *node);
+int					insert_cmd_node(t_ast **tree, t_ast *node);
+int					ft_strcpy_sep(char *dest, char *input, char *sep);
+void				clear_tree(t_token **tree);
+t_ast				*build_ast(t_token **lst, int *insert_node);
+void				insert_node_lst(t_token **lst, t_token *node);
+void				print_lst(t_token **lst);
+t_token				*find_closing_par(t_token **lst);
 void				insert_operator_token_node(t_ast **tree, t_ast *node);
+t_ast				*handle_par(t_token **lst, t_ast **tree, int *insert_node);
+t_token				*lst_dup(t_token **lst, t_token *node);
+t_ast				*create_ast_node(t_token *node);
 t_token				*find_operator_token(t_token **lst);
-int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
-						int level);
+void				syntax_error(t_token *node);
+t_ast				*get_first_node_tree(t_ast *root);
+int					check_tree_syntax(t_ast **tree);
+int					ft_is_space(char c);
+char				*skip_spaces(char *str);
+int					is_an_operator(char c);
+char				*msh_strtrim(char const *s1, char const *set);
+char				**msh_split(char const *s, char c, int mlc_list);
+t_token				*create_cmd_node(char *input, char *sep);
+int					check_redirections(t_token **lst);
+char				*get_filename(t_token *node);
+t_token				*find_redir_node(t_token **lst, t_token *redir_node);
+void				remove_token_node(t_token **lst, t_token *node);
+int					only_spaces(char *str);
+int					check_par_syntax(t_token **lst);
+void				gbg_delete_node(t_token *node, int mlc_lst);
+int					clean_token_lst(t_token **lst);
+int					is_a_redir_operator(t_token *node);
+void				split_lst_contents(t_token **lst);
+int					is_a_token_operator(t_token *node);
+char				*msh_strdup(const char *s, int mlc_lst);
+void				print_redir_lst(t_redir **lst);
 
 // The builtins
 int					ft_exec_echo(char **args);
@@ -161,9 +208,8 @@ int					ft_exec_unset(char **args, t_minishell *data);
 int					ft_check_key(char *str);
 char				*ft_get_envlst_content(char *content, t_minishell *data);
 
-// The none builtins
+// The non-builtins
 int					ft_exec_non_builtins(char **args, t_minishell *data);
-// int					ft_exec_node(char **args, char *lat_path, char **env);
 
 // utils
 void				ft_print_err(char *str);
@@ -175,8 +221,6 @@ char				*ft_join(char *s1, char *s2);
 int					check_operator_len(char *str, int *op_len);
 char				*skip_spaces(char *str);
 int					print_env(t_env **lst);
-
-// void				print_lst(t_token **lst);
 
 // paths utils
 char				*ft_check_path(char *cmd, char **env);

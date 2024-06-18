@@ -5,54 +5,83 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 13:53:14 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/24 15:44:28 by kipouliq         ###   ########.fr       */
+/*   Created: 2024/05/29 17:27:57 by kipouliq          #+#    #+#             */
+/*   Updated: 2024/06/14 11:56:14 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_strlen_sep(char *str, char *sep)
+t_token	*lst_dup(t_token **lst, t_token *node)
 {
-	int	i;
+	t_token	*lst_cpy;
+	t_token	*current_cpy;
+	t_token	*current;
 
-	i = 0;
-	if (!sep)
-		return (ft_strlen(str));
-	while (str[i] && str[i] != *sep)
-		i++;
-	return (i + 1);
-}
-
-int	is_an_operator(char c)
-{
-	return (c == '|' || c == '&' || c == '(' || c == ')');
-}
-
-char	*find_operator(char *str)
-{
-	int	i;
-
-	i = -1;
-	if (!str | !str[0])
-		return (NULL);
-	while (str[++i])
+	current = *lst;
+	lst_cpy = NULL;
+	while (current != node)
 	{
-		if (is_an_operator(str[i]))
-			return (str + i);
+		current_cpy = malloc(sizeof(t_token));
+		if (!current_cpy || gbg_coll(current_cpy, PARSING, ADD))
+			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		current_cpy->type = current->type;
+		current_cpy->content = current->content;
+        current_cpy->contents = current->contents;
+        current_cpy->redirections = current->redirections;
+		current_cpy->next = NULL;
+		insert_node_lst(&lst_cpy, current_cpy);
+		current = current->next;
+	}
+	return (lst_cpy);
+}
+
+t_token	*find_operator_token(t_token **lst)
+{
+	t_token	*current;
+
+	current = *lst;
+	if (!current)
+		return (NULL);
+	while (current)
+	{
+		if (current->type > CMD && current->type < PAR_RIGHT)
+			return (current);
+		current = current->next;
 	}
 	return (NULL);
 }
 
-int	ft_strcpy_sep(char *dest, char *input, char *sep)
+t_token	*find_next_operator_token(t_token **lst)
 {
-	int	i;
+	t_token	*current;
 
-	i = -1;
-	if (!sep)
-		return (ft_strlcpy(dest, input, ft_strlen(input) + 1));
-	while (input[++i] && input[i] != sep[0])
-		dest[i] = input[i];
-	dest[i] = '\0';
-	return (i);
+	current = *lst;
+	if (!current)
+		return (NULL);
+	current = current->next;
+	while (current)
+	{
+		if (current->type > CMD)
+			return (current);
+		current = current->next;
+	}
+	return (NULL);
+}
+
+t_ast	*create_ast_node(t_token *node)
+{
+	t_ast	*new_node;
+
+	new_node = malloc(sizeof(t_ast));
+	if (!new_node || gbg_coll(new_node, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+	new_node->token_node = node;
+	new_node->left = NULL;
+	new_node->right = NULL;
+	new_node->is_in_par = 0;
+	new_node->node_type = node->type;
+	if (node->redirections)
+		new_node->redirections = node->redirections;
+	return (new_node);
 }
