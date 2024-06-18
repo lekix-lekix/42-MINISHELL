@@ -3,9 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+         #
+#    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Updated: 2024/06/18 14:55:41 by sabakar-         ###   ########.fr        #
+#    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
+#    Updated: 2024/06/18 16:43:22 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,8 +26,6 @@ SRCS = ./srcs/minishell.c \
 	./srcs/execs/start_exec.c \
 	./srcs/general_utils.c \
 	./srcs/non_builtins/paths_utils.c \
-	./srcs/ft_extra_fts.c \
-	./srcs/ft_tree_helpers.c \
 	./srcs/tokenizer.c \
 	./srcs/token_lst_tools.c \
 	./srcs/parsing_tools.c \
@@ -41,6 +40,9 @@ SRCS = ./srcs/minishell.c \
 	./srcs/msh_split.c \
 	./srcs/parsing_redirections.c \
 	./srcs/parsing_redirections_bis.c
+
+	# ./srcs/ft_tree_helpers.c \
+	#	./srcs/ft_extra_fts.c \
 
 OBJ = $(SRCS:.c=.o)
 

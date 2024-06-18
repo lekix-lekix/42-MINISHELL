@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:14:54 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/18 14:27:29 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/18 16:43:50 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,15 +88,15 @@ bool	ft_env_entry_exists(char *content, t_minishell *data)
 	return (false);
 }
 
-int	check_operator_len(char *str, int *op_len)
-{
-	int	i;
+// int	check_operator_len(char *str, int *op_len)
+// {
+// 	int	i;
 
-	i = 0;
-	while (str[i] == str[0])
-		i++;
-	if (i > 2)
-		return (0);
-	*op_len = i;
-	return (1);
-}
+// 	i = 0;
+// 	while (str[i] == str[0])
+// 		i++;
+// 	if (i > 2)
+// 		return (0);
+// 	*op_len = i;
+// 	return (1);
+// }
