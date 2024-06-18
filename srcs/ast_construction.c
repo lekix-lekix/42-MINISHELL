@@ -3,31 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   ast_construction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/24 15:43:43 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/18 11:30:44 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	traverse_print(t_ast *node, int level)
-{
-	if (node->left)
-		traverse_print(node->left, level + 1);
-	printf("node content = %s, level = %d\n", node->token_node->content, level);
-	if (node->right)
-		traverse_print(node->right, level + 1);
-}
+// void	traverse_print(t_ast *node, int level)
+// {	
+//     if (!node) 
+//         return;
+//     if (node->left)
+//         traverse_print(node->left, level + 1);
+//     // ft_start_exec(&node);
+//     printf("The cmd is: %s\n", node->token_node->content);
+//     // printf("node content = %s, level = %d\n", node->token_node->content, level);
+//     if (node->right)
+//         traverse_print(node->right, level + 1);
+// }
 
-void	print_tree(t_ast **tree)
-{
-	t_ast	*node;
-
-	node = *tree;
-	traverse_print(node, 0);
-}
+// void	print_tree(t_ast **tree)
+// {
+// 	t_ast	*node;
+	
+// 	node = *tree;
+// 	traverse_print(node, 0);
+// }
 
 int	parse_insert_op_token_node(t_ast *root, t_ast *node, int level)
 {
@@ -140,13 +144,19 @@ t_ast	*build_operator_tree(t_token **lst)
             insert_operator_token_node(&right, new_node);
         else
             insert_operator_token_node(&tree, new_node);
+        // tree->right = right;
 	}
+    // printf("we don't get here!\n");
+	// if (tree && tree->right) // it crashs here!
     tree->right = right;
+    // printf("nor fucking here!\n");
 	return (tree);
 }
 
 int    parse_insert_cmd_node(t_ast *root, t_ast *cmd_node, int level)
 {
+	if (!root || !cmd_node)
+        return -1;
     // printf("root = %s, cmd-node = %s level = %d\n", root->token_node->content, cmd_node->token_node->content, level);
     if (root->left)
     {
@@ -175,10 +185,24 @@ void    insert_command_node(t_ast **tree, t_token *cmd_node)
 {
     t_ast *root;
     t_ast *new_cmd_node;
+	int	result;
 
     root = *tree;
     new_cmd_node = create_ast_node(cmd_node);
-    parse_insert_cmd_node(root, new_cmd_node, 0);
+	if (root == NULL)
+        *tree = new_cmd_node;
+    else 
+	{
+        result = parse_insert_cmd_node(root, new_cmd_node, 0);
+        if (result == -1)
+        {
+            // If the command node could not be inserted, make a new root
+            // This is because the tree can't handle just one cmd
+            new_cmd_node->left = root;
+            *tree = new_cmd_node;
+        }
+    }
+    // parse_insert_cmd_node(root, new_cmd_node, 0); // It's crashs here!
     // printf("insert cmd = %d\n", parse_insert_cmd_node(root, new_cmd_node, 0));
 }
 
@@ -199,8 +223,8 @@ t_ast	*build_ast(t_token **lst)
 	t_ast	*tree;
 
 	tree = build_operator_tree(lst);
+    // printf("We don't get here!\n");
+    // print_tree(&tree);
     build_cmd_tree(&tree, lst);
 	return (tree);
 }
-
-// cmd1 | cmd2 || cmd3 | cmd4

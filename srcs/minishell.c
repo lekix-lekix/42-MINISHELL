@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/05/23 19:16:24 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/17 15:04:13 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+// t_minishell g_minishell;
 
 char	*get_path(char **envp)
 {
@@ -30,16 +31,16 @@ char	*get_path(char **envp)
 	return (str);
 }
 
-int	init_data(t_minishell *data, char **envp)
-{
-	data->path = get_path(envp);
-	if (!data->path)
-		return (-1);
-	data->env_lst = get_env_lst(envp);
-	if (!data->env_lst)
-		return (-1);
-	return (0);
-}
+// int	init_data(t_minishell *data, char **envp)
+// {
+// 	data->path = get_path(envp);
+// 	if (!data->path)
+// 		return (-1);
+// 	data->env_lst = get_env_lst(envp);
+// 	if (!data->env_lst)
+// 		return (-1);
+// 	return (0);
+// }
 
 int	print_env(t_env **lst)
 {
@@ -48,22 +49,22 @@ int	print_env(t_env **lst)
 	node = *lst;
 	while (node)
 	{
-		printf("field = %s\n", node->field);
-		printf("content = %s\n", node->content);
+		printf("%s", node->field);
+		printf("%s\n", node->content);
 		node = node->next;
 	}
 	return (0);
 }
 
-int	print_real_env(char **env)
-{
-	int	i;
+// int	print_real_env(char **env)
+// {
+// 	int	i;
 
-	i = -1;
-	while (env[++i])
-		printf("%s\n", env[i]);
-	return (0);
-}
+// 	i = -1;
+// 	while (env[++i])
+// 		printf("%s\n", env[i]);
+// 	return (0);
+// }
 
 int	check_syntax_errors(char *str)
 {
@@ -89,18 +90,18 @@ int	check_syntax_errors(char *str)
 	return (0);
 }
 
-void	print_lst(t_token **lst)
-{
-	t_token	*root;
+// void	print_lst(t_token **lst)
+// {
+// 	t_token	*root;
 
-	root = *lst;
-	while (root)
-	{
-		printf("content = '%s'\n", root->content);
-		printf("type = %u\n", root->type);
-		root = root->next;
-	}
-}
+// 	root = *lst;
+// 	while (root)
+// 	{
+// 		printf("content = '%s'\n", root->content);
+// 		printf("type = %u\n", root->type);
+// 		root = root->next;
+// 	}
+// }
 
 void	clean_lst(t_token **lst)
 {
@@ -131,43 +132,51 @@ void	clean_lst(t_token **lst)
 	}
 }
 
-int	start_parsing(char *prompt)
+static void	ft_start_execution(t_ast **tree, t_minishell *data)
+{
+	t_ast *nodes;
+	int la_status;
+
+	nodes = *tree;
+	la_status = ft_start_exec(&nodes, data);
+	// printf("The status code: %d\n", la_status);
+}
+
+int	start_parsing(char *prompt, t_minishell *data)
 {
 	t_token	*input;
 	t_ast	*tree;
-
+	
 	if (check_syntax_errors(prompt))
 		return (-1);
 	input = tokenize_input(prompt);
 	// print_lst(&input);
     // printf("------\n");
 	clean_lst(&input);
-	// print_lst(&input);
 	tree = build_ast(&input);
-	print_tree(&tree);
+	// print_tree(&tree);
+	ft_start_execution(&tree, data);
 	return (0);
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	char	*prompt;
-
-	// char	*path;
-	// t_env	*lst;
-	(void)argc;
-	(void)argv;
-	(void)env;
-	// path = get_path(env);
-	// lst = get_env_lst(env);
+	t_minishell data;
+	
+	((void)argc, (void)argv);
+	data.env_lst = get_env_lst(env);
 	while (1)
 	{
-		prompt = readline("./minishell$ ");
-		if (!prompt | !*prompt)
+		data.prompt = readline("./minishell$ ");
+		if (!data.prompt | !*data.prompt)
 			break ;
-		start_parsing(prompt);
-		free(prompt);
+		// printf("The data.prompt: %s\n", data.prompt);
+		start_parsing(data.prompt, &data);
+		// ft_start_execution();
+		// print_env(&lst);
+		free(data.prompt);
 	}
-	free(prompt);
+	free(data.prompt);
 	gbg_coll(NULL, ENV, FLUSH_ALL);
 	gbg_coll(NULL, PARSING, FLUSH_ALL);
 	gbg_coll(NULL, ENV, FREE);
