@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/18 17:09:37 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/24 10:41:49 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,16 @@ char	*get_path(char **envp)
 	return (str);
 }
 
-int	init_data(t_minishell *data, char **envp)
-{
-	data->path = get_path(envp);
-	if (!data->path)
-		return (-1);
-	data->env_lst = get_env_lst(envp);
-	if (!data->env_lst)
-		return (-1);
-	return (0);
-}
+// int	init_data(t_minishell *data, char **envp)
+// {
+// 	data->path = get_path(envp);
+// 	if (!data->path)
+// 		return (-1);
+// 	data->env_lst = get_env_lst(envp);
+// 	if (!data->env_lst)
+// 		return (-1);
+// 	return (0);
+// }
 
 static void	ft_start_execution(t_ast **tree, t_minishell *data)
 {
@@ -134,73 +134,73 @@ void	gbg_delete_node(t_token *node, int mlc_lst)
 }
 
 
-int     get_nb_of_args(t_token **lst)
-{
-    t_token *current;
-    int args_nb;
+// int     get_nb_of_args(t_token **lst)
+// {
+//     t_token *current;
+//     int args_nb;
 
-    current = *lst;
-    args_nb = 0;
-    while (current && !is_a_token_operator(current))
-    {
-        if (current->type == ARGS_FLAGS)
-            args_nb++;
-        current = current->next;
-    }
-    return (args_nb);
-}
+//     current = *lst;
+//     args_nb = 0;
+//     while (current && !is_a_token_operator(current))
+//     {
+//         if (current->type == ARGS_FLAGS)
+//             args_nb++;
+//         current = current->next;
+//     }
+//     return (args_nb);
+// }
 
-int    get_args_flags(t_token **lst)
-{
-    t_token *current;
-    t_token *cmd_node;
-    t_token *next;
-    int nb_of_args;
-    int i;
+// int    get_args_flags(t_token **lst)
+// {
+//     t_token *current;
+//     t_token *cmd_node;
+//     t_token *next;
+//     int nb_of_args;
+//     int i;
 
-    cmd_node = *lst;
-    current = (*lst)->next;
-    nb_of_args = get_nb_of_args(lst);
-    cmd_node->contents = malloc(sizeof(char *) * (nb_of_args + 2));
-    if (!cmd_node->content || gbg_coll(cmd_node->content, PARSING, ADD))
-        return (gbg_coll(NULL, ALL, FLUSH_ALL), -1);
-    cmd_node->contents[0] = msh_strdup(cmd_node->content, PARSING);
-    if (nb_of_args == 0)
-    {
-        cmd_node->contents[1] = NULL;
-        *lst = current;
-        return (0);
-    }
-    i = 0;
-    while (current && current->type == ARGS_FLAGS)
-    {
-        next = current->next;
-        cmd_node->contents[++i] = msh_strdup(current->content, PARSING);
-        remove_token_node(lst, current);
-        current = next;
-    }
-    cmd_node->contents[i + 1] = NULL;
-    *lst = current;
-    return (0);
-}
+//     cmd_node = *lst;
+//     current = (*lst)->next;
+//     nb_of_args = get_nb_of_args(lst);
+//     cmd_node->contents = malloc(sizeof(char *) * (nb_of_args + 2));
+//     if (!cmd_node->content || gbg_coll(cmd_node->content, PARSING, ADD))
+//         return (gbg_coll(NULL, ALL, FLUSH_ALL), -1);
+//     cmd_node->contents[0] = msh_strdup(cmd_node->content, PARSING);
+//     if (nb_of_args == 0)
+//     {
+//         cmd_node->contents[1] = NULL;
+//         *lst = current;
+//         return (0);
+//     }
+//     i = 0;
+//     while (current && current->type == ARGS_FLAGS)
+//     {
+//         next = current->next;
+//         cmd_node->contents[++i] = msh_strdup(current->content, PARSING);
+//         remove_token_node(lst, current);
+//         current = next;
+//     }
+//     cmd_node->contents[i + 1] = NULL;
+//     *lst = current;
+//     return (0);
+// }
 
-void	join_cmd_args(t_token **lst)
-{
-	t_token	*current;
-    int     i;
+// void	join_cmd_args(t_token **lst)
+// {
+// 	t_token	*current;
+//     int     i;
 
-    i = 0;
-    current = *lst;
-    while (current)
-    {
-        if (current->type == CMD)
-        {
-            get_args_flags(&current);
-            continue ;
-        }
-        current = current->next;
-    }
-}
+//     i = 0;
+//     current = *lst;
+//     while (current)
+//     {
+//         if (current->type == CMD)
+//         {
+//             get_args_flags(&current);
+//             continue ;
+//         }
+//         current = current->next;
+//     }
+// }
 
 int	start_parsing(char *prompt, t_minishell *data)
 {
@@ -219,7 +219,7 @@ int	start_parsing(char *prompt, t_minishell *data)
 	if (check_redirections(&input) == -1)
 		return (-1);
 	clean_token_lst(&input);
-	join_cmd_args(&input);
+	// join_cmd_args(&input);
 	tree = build_ast(&input, &insert_node);
 	if (tree)
 	{

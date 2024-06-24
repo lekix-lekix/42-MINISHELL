@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/18 14:09:24 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/24 14:32:43 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,24 @@ int	ft_check_cmds(t_token *token_node, t_minishell *data)
 	int		le_satus;
 
 	la_args = ft_split(token_node->content, 32);
+	// int x = -1;
+	// while (la_args[++x])
+	// 	printf("The splited cmd; %s\n", la_args[x]);
+	// print_lst(&token_node);
 	if (ft_is_builtin(la_args[0]))
 	{
+		le_satus = ft_check_redirections(token_node->redirections, data);
+		if (le_satus != ENO_SUCCESS)
+			return (ENO_GENERAL);
 		le_satus = ft_exec_builtins(la_args, data);
 		return (ft_free(la_args), le_satus);
 	}
 	else
 	{
-		le_satus = ft_exec_non_builtins(la_args, data);
+		le_satus = ft_check_redirections(token_node->redirections, data);
+		if (le_satus != ENO_SUCCESS)
+			return (ENO_GENERAL);
+		le_satus = ft_exec_non_builtins(la_args, data, token_node->redirections);
 		return (ft_free(la_args), le_satus);
 	}
 }
@@ -87,6 +97,7 @@ int	ft_start_exec(t_ast **tree, t_minishell *data)
 	nodes = *tree;
 	if (!nodes)
 		return (1);
+
 	if (nodes->node_type == PIPE)
 		return (ft_exec_pipe(nodes, data));
 	else if (nodes->node_type == AND)
