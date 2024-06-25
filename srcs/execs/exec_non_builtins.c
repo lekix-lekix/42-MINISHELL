@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/24 14:31:53 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/25 15:21:06 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	ft_exec_non_builtins(char **args, t_minishell *data, t_redir *redirections)
 	if (la_fork == 0)
 	{
 		la_status = ft_check_redirections(redirections, data);
+		if (la_status != ENO_SUCCESS)
+			(exit(ENO_GENERAL));
 		env = env_lst_to_arr(&data->env_lst);
 		if (args == NULL || args[0] == NULL)
 			(ft_free(args));

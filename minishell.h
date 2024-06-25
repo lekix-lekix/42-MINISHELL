@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/24 14:32:16 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/25 12:37:52 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,8 @@ typedef struct s_minishell
 	int				*pids;
 	int				heredoc;
 	int				pids_num;
+	int				stdin;
+	int				stdout;
 }					t_minishell;
 
 int					gbg_coll(void *mem_addr, int which_list, int rule);
@@ -200,7 +202,8 @@ void				ft_update_envlst(char *field, char *content, bool create,
 						t_minishell *data);
 int					print_env(t_env **lst);
 int					ft_exec_export(char **args, t_minishell *data);
-int					ft_exec_builtins(char **args, t_minishell *data);
+int					ft_exec_builtins(char **args, t_minishell *data,
+						t_redir *redirections);
 char				*ft_extract_val(char *str);
 char				*ft_extract_key(char *str);
 int					ft_strcmp(const char *s1, const char *s2);
@@ -211,7 +214,8 @@ int					ft_check_key(char *str);
 char				*ft_get_envlst_content(char *content, t_minishell *data);
 
 // The non-builtins
-int					ft_exec_non_builtins(char **args, t_minishell *data, t_redir *redirections);
+int					ft_exec_non_builtins(char **args, t_minishell *data,
+						t_redir *redirections);
 
 // utils
 void				ft_print_err(char *str);

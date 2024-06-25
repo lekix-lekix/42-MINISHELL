@@ -60,3 +60,6 @@ a
 bash-5.1$ cat file1
 bash-5.1$ cat file2
 b
+
+THINGS TO CHECK:
+    - env | grep PATH > file0 > file1

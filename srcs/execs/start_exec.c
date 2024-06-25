@@ -6,11 +6,19 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/24 14:32:43 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/25 15:23:40 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+
+void ft_reset_ports(bool piped, t_minishell *data)
+{
+	if (piped)
+		return ;
+	dup2(data->stdin, 0);
+	dup2(data->stdout, 1);
+}
 
 void	ft_exec_pipe_child(t_ast *node, int pids[],
 		t_cmd_pipe_directions direction, t_minishell *data)
@@ -62,30 +70,25 @@ int	ft_exec_pipe(t_ast *node, t_minishell *data)
 
 int	ft_check_cmds(t_token *token_node, t_minishell *data)
 {
-	char	**la_args;
+	// char	**la_args;
 	int		le_satus;
 
-	la_args = ft_split(token_node->content, 32);
+	// la_args = ft_split(token_node->content, 32);
 	// int x = -1;
-	// while (la_args[++x])
-	// 	printf("The splited cmd; %s\n", la_args[x]);
+	// while (token_node->contents[++x])
+		// printf("-------The splited cmd: %s --------;\n", token_node->contents[x]);
 	// print_lst(&token_node);
-	if (ft_is_builtin(la_args[0]))
+	if (ft_is_builtin(token_node->contents[0]))
 	{
 		le_satus = ft_check_redirections(token_node->redirections, data);
 		if (le_satus != ENO_SUCCESS)
-			return (ENO_GENERAL);
-		le_satus = ft_exec_builtins(la_args, data);
-		return (ft_free(la_args), le_satus);
+			return (ft_reset_ports(false, data), ENO_GENERAL);
+		printf("We passed the redirections\n");
+		le_satus = ft_exec_builtins(token_node->contents, data, token_node->redirections);
+		return (ft_reset_ports(false, data), le_satus);
 	}
 	else
-	{
-		le_satus = ft_check_redirections(token_node->redirections, data);
-		if (le_satus != ENO_SUCCESS)
-			return (ENO_GENERAL);
-		le_satus = ft_exec_non_builtins(la_args, data, token_node->redirections);
-		return (ft_free(la_args), le_satus);
-	}
+		return (ft_exec_non_builtins(token_node->contents, data, token_node->redirections));
 }
 
 int	ft_start_exec(t_ast **tree, t_minishell *data)
