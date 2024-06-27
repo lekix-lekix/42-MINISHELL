@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:48:38 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/07 17:52:54 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/27 16:55:07 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,12 @@ void	check_tree_syntax_recursive(t_ast *root, t_ast **syntax_node,
 			node_nb);
 }
 
+int print_ast_syntax_error(t_ast *node)
+{
+    printf("bash: syntax error near unexpected token `%s'\n", node->token_node->content);
+    return (-1);
+}
+
 int	check_tree_syntax(t_ast **tree)
 {
 	t_ast	*root;
@@ -89,11 +95,12 @@ int	check_tree_syntax(t_ast **tree)
 	error_node = get_first_node_tree(root);
 	if (error_node->node_type != CMD)
 	{
-		if (!error_node->is_in_par)
-			return (printf("syntax error 1: %s\n",
-					error_node->token_node->content), -1);
-		else
-			return (-1);
+        // printf("yo la mifzer\n");
+		// if (!error_node->is_in_par)
+		// 	return (printf("syntax error 1: %s\n",
+		// 			error_node->token_node->content), -1);
+		// else
+		return (print_ast_syntax_error(error_node));
 	}
 	check_tree_syntax_recursive(root, &error_node, &syntax_flag, &node_nb);
 	// printf("syntax flag = %d\n", syntax_flag);
@@ -101,8 +108,7 @@ int	check_tree_syntax(t_ast **tree)
 	if (error_node)
 	{
 		if (!error_node->is_in_par)
-			return (printf("syntax error 2: %s\n",
-					error_node->token_node->content), -1);
+			return (print_ast_syntax_error(error_node));
 		else
 			return (-1);
 	}
@@ -110,8 +116,7 @@ int	check_tree_syntax(t_ast **tree)
 	if (error_node->node_type != CMD)
 	{
 		if (!error_node->is_in_par)
-			return (printf("syntax error 3: %s\n",
-					error_node->token_node->content), -1);
+			return (print_ast_syntax_error(error_node));
 		else
 			return (-1);
 	}

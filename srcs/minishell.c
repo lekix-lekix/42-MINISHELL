@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/18 17:44:14 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/27 17:27:31 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	print_real_env(char **env)
 	return (0);
 }
 
-int	check_syntax_errors(char *str)
+int	check_quotes(char *str)
 {
 	int		i;
 	char	c;
@@ -95,6 +95,13 @@ int	check_syntax_errors(char *str)
 			continue ;
 		}
 	}
+	return (0);
+}
+
+int	check_syntax_errors(char *str)
+{
+	if (check_quotes(str) == -1)
+		return (-1);
 	return (0);
 }
 
@@ -133,76 +140,131 @@ void	gbg_delete_node(t_token *node, int mlc_lst)
 	gbg_coll(node, mlc_lst, FREE);
 }
 
-
-int     get_nb_of_args(t_token **lst)
+int	get_nb_of_args(t_token **lst)
 {
-    t_token *current;
-    int args_nb;
+	t_token	*current;
+	int		args_nb;
 
-    current = *lst;
-    args_nb = 0;
-    while (current && !is_a_token_operator(current))
-    {
-        if (current->type == ARGS_FLAGS)
-            args_nb++;
-        current = current->next;
-    }
-    return (args_nb);
+	current = *lst;
+	args_nb = 0;
+	while (current && !is_a_token_operator(current))
+	{
+		if (current->type == ARGS_FLAGS)
+			args_nb++;
+		current = current->next;
+	}
+	return (args_nb);
 }
 
-int    get_args_flags(t_token **lst)
+int	get_args_flags(t_token **lst)
 {
-    t_token *current;
-    t_token *cmd_node;
-    t_token *next;
-    int nb_of_args;
-    int i;
+	t_token	*current;
+	t_token	*cmd_node;
+	t_token	*next;
+	int		nb_of_args;
+	int		i;
 
-    cmd_node = *lst;
-    current = (*lst)->next;
-    nb_of_args = get_nb_of_args(lst);
-    cmd_node->contents = malloc(sizeof(char *) * (nb_of_args + 2));
-    if (!cmd_node->content || gbg_coll(cmd_node->content, PARSING, ADD))
-        return (gbg_coll(NULL, ALL, FLUSH_ALL), -1);
-    cmd_node->contents[0] = msh_strdup(cmd_node->content, PARSING);
-    if (nb_of_args == 0)
-    {
-        cmd_node->contents[1] = NULL;
-        *lst = current;
-        return (0);
-    }
-    i = 0;
-    while (current && current->type == ARGS_FLAGS)
-    {
-        next = current->next;
-        cmd_node->contents[++i] = msh_strdup(current->content, PARSING);
-        remove_token_node(lst, current);
-        current = next;
-    }
-    cmd_node->contents[i + 1] = NULL;
-    *lst = current;
-    return (0);
+	cmd_node = *lst;
+	current = (*lst)->next;
+	nb_of_args = get_nb_of_args(lst);
+	cmd_node->contents = malloc(sizeof(char *) * (nb_of_args + 2));
+	if (!cmd_node->content || gbg_coll(cmd_node->content, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), -1);
+	cmd_node->contents[0] = msh_strdup(cmd_node->content, PARSING);
+	if (nb_of_args == 0)
+	{
+		cmd_node->contents[1] = NULL;
+		*lst = current;
+		return (0);
+	}
+	i = 0;
+	while (current && current->type == ARGS_FLAGS)
+	{
+		next = current->next;
+		cmd_node->contents[++i] = msh_strdup(current->content, PARSING);
+		remove_token_node(lst, current);
+		current = next;
+	}
+	cmd_node->contents[i + 1] = NULL;
+	*lst = current;
+	return (0);
+}
+
+int	print_token_syntax_error(t_token *node)
+{
+	printf("bash: syntax error near unexpected token `%s'\n", node->content);
+	return (-1);
 }
 
 void	join_cmd_args(t_token **lst)
 {
 	t_token	*current;
-    int     i;
+	int		i;
 
-    i = 0;
-    current = *lst;
-    while (current)
-    {
-        if (current->type == CMD)
-        {
-            get_args_flags(&current);
-            continue ;
-        }
-        current = current->next;
-    }
+	i = 0;
+	current = *lst;
+	while (current)
+	{
+		if (current->type == CMD)
+		{
+			get_args_flags(&current);
+			continue ;
+		}
+		current = current->next;
+	}
 }
 
-int	start_parsing(char *prompt/* , t_minishell *data */)
+int	check_redir_syntax(t_token **input)
+{
+	t_token	*current;
+
+	current = *input;
+	while (current->next)
+	{
+		if (is_a_redir_operator(current) && (!current->next || !current->next->content[0]))
+		{
+			printf("bash: syntax error near unexpected token 'newline'\n");
+			return (-1);
+		}
+        if (is_a_redir_operator(current) && is_a_token_operator(current->next))
+            return (print_token_syntax_error(current->next));
+        if (is_a_redir_operator(current) && is_a_redir_operator(current->next))
+            return (print_token_syntax_error(current->next));
+		current = current->next;
+	}
+	return (0);
+}
+
+
+// int	check_lst_syntax(t_token **lst)
+// {
+// 	t_token	*current;
+// 	int		syntax_flag;
+
+// 	syntax_flag = 0;
+// 	current = *lst;
+// 	while (current)
+// 	{
+// 		if (current->type == PAR_LEFT || current->type == PAR_RIGHT)
+// 		{
+// 			current = current->next;
+// 			continue ;
+// 		}
+// 		if (current->type == CMD)
+// 			syntax_flag++;
+// 		if (current->type > CMD)
+// 			syntax_flag--;
+// 		if (syntax_flag > 1 || syntax_flag < 0)
+//         {
+//             printf(:k)
+// 			return (print_token_syntax_error(current));
+//         }
+// 		current = current->next;
+// 	}
+// 	return (0);
+// }
+
+int	start_parsing(char *prompt /* , t_minishell *data */)
 {
 	t_token	*input;
 	t_ast	*tree;
@@ -212,9 +274,16 @@ int	start_parsing(char *prompt/* , t_minishell *data */)
 	if (check_syntax_errors(prompt))
 		return (-1);
 	input = tokenize_input(prompt);
+	clean_token_lst(&input);
+	printf("==== TOKEN LST ====\n");
+	print_lst(&input);
+	printf("===================\n");
+	// if (check_lst_syntax(&input) == -1)
+	// 	return (-1);
+	if (check_redir_syntax(&input) == -1)
+		return (-1);
 	if (check_par_syntax(&input) == -1)
 		return (-1);
-	clean_token_lst(&input);
 	split_lst_contents(&input);
 	if (check_redirections(&input) == -1)
 		return (-1);
@@ -228,7 +297,7 @@ int	start_parsing(char *prompt/* , t_minishell *data */)
 		printf("PRINT TREE END =====\n");
 		check_tree_syntax(&tree);
 	}
-    // ft_start_execution(&tree, data);
+	// ft_start_execution(&tree, data);
 	return (0);
 }
 
@@ -249,12 +318,11 @@ int	main(int argc, char **argv, char **env)
 		data.prompt = readline("./minishell$ ");
 		if (!data.prompt | !*data.prompt)
 			break ;
-		start_parsing(data.prompt/* , &data */);
+		start_parsing(data.prompt /* , &data */);
 		free(data.prompt);
 	}
 	free(data.prompt);
 	gbg_coll(NULL, ENV, FLUSH_ALL);
 	gbg_coll(NULL, PARSING, FLUSH_ALL);
 	gbg_coll(NULL, ENV, FREE);
-
 }

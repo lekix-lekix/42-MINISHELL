@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/18 16:35:42 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/27 16:53:43 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ typedef struct s_minishell
 	t_env			*env_lst;
 	int				exit_status;
 	char			*prompt;
-    char            *path;
+	char			*path;
 	int				*pids;
 	int				pids_num;
 }					t_minishell;
@@ -171,6 +171,7 @@ t_token				*find_operator_token(t_token **lst);
 void				syntax_error(t_token *node);
 t_ast				*get_first_node_tree(t_ast *root);
 int					check_tree_syntax(t_ast **tree);
+int					print_ast_syntax_error(t_ast *node);
 int					ft_is_space(char c);
 char				*skip_spaces(char *str);
 int					is_an_operator(char c);
@@ -219,17 +220,16 @@ void				ft_free(char **arr);
 void				ft_print_err(char *str);
 char				**env_lst_to_arr(t_env **lst);
 char				*ft_join(char *s1, char *s2);
-int					check_operator_len(char *str, int *op_len);
+int					check_operator_len(char *str);
 char				*skip_spaces(char *str);
 int					print_env(t_env **lst);
-
 
 // paths utils
 char				*ft_check_path(char *cmd, char **env);
 
-void	lst_env_add_back(t_env **lst, t_env *new);
-void	consume_node(t_token **lst, t_token *node);
-int	parse_insert_cmd_node(t_ast *root, t_ast *cmd_node, int level);
+void				lst_env_add_back(t_env **lst, t_env *new);
+void				consume_node(t_token **lst, t_token *node);
+int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
+						int level);
 
 #endif
-

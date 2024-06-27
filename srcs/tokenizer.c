@@ -6,30 +6,27 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/17 14:21:55 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/27 16:10:09 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	check_operator_len(char *str, int *op_len)
+int	check_operator_len(char *str)
 {
 	int	i;
 
 	i = 0;
-	while (str[i] == str[0])
+	while (str[i] == str[0] && i < 2)
 		i++;
-	// if (i > 2)==
-	// 	return (0);
-	*op_len = i;
-	return (1);
+	return (i);
 }
 
 void	find_operator_type(char *input, t_token *node)
 {
 	int	op_len;
 
-	check_operator_len(input, &op_len);
+	op_len = check_operator_len(input);
 	if (*input == '(')
 		node->type = PAR_LEFT;
 	else if (*input == ')')
@@ -57,10 +54,7 @@ t_token	*create_operator_node(char **input)
 	char	*input_copy;
 
 	input_copy = *input;
-	check_operator_len(input_copy, &operator_len);
-	// if (!check_operator_len(input_copy, &operator_len))
-	// 	return (printf("bash: syntax error near unexpected token `%c'\n",
-	// 			*input_copy), NULL);
+	operator_len = check_operator_len(input_copy);
 	node = malloc(sizeof(t_token));
 	if (!node || gbg_coll(node, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);

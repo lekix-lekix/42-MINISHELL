@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:19:53 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/14 12:18:13 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/27 15:05:55 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,13 @@ t_token	*find_closing_par(t_token **lst)
 		return (NULL);
 	while (current)
 	{
-		if (current->type == PAR_LEFT){
+		if (current->type == PAR_LEFT)
 			return (find_last_par(lst));
-        }
 		if (current->type == PAR_RIGHT)
-        {
-            if (current->next)
-			    return (current);
-        }
+		{
+			if (current->next)
+				return (current);
+		}
 		current = current->next;
 	}
 	return (NULL);
@@ -77,6 +76,8 @@ t_token	*create_par_lst(t_token **lst)
 	if (!dup_lst)
 		return (NULL);
 	par = find_closing_par(lst);
+	if (!par)
+		par = find_right_par(lst);
 	dup_lst = lst_dup(&dup_lst, par);
 	return (dup_lst);
 }
@@ -93,19 +94,19 @@ t_ast	*handle_par(t_token **lst, t_ast **tree, int *insert_node)
 		printf("NO PAR LST\n");
 		return (NULL);
 	}
-    printf("*************************BEGIN BUILD AST*******************\n");
+	printf("===== PAR LST =====\n");
+	print_lst(&par_lst);
+	printf("===================\n");
+	printf("*************************BEGIN BUILD AST*******************\n");
 	par_tree = build_ast(&par_lst, insert_node);
-    printf("*************************END BUILD AST*******************\n");
+	printf("*************************END BUILD AST*******************\n");
 	par_tree->is_in_par = 1;
 	if (!*tree)
-    {
-        printf("yo jsuis la \n");
+	{
+		printf("yo jsuis la \n");
 		*tree = par_tree;
-    }
-    if (check_tree_syntax(&par_tree) == -1)
-    {
-        printf("error syntax : )\n");
-            return (NULL);
-    }
+	}
+	if (check_tree_syntax(&par_tree) == -1)
+		return (NULL);
 	return (par_tree);
 }

@@ -1,9 +1,5 @@
 hello && ( &&) --> wrong syntax_error
-hello &&
-ls () ---> empty par : should be a syntax error
-
-
-
+ls () ---> syntax error near unexpected  token ')'
 
 
 AST TESTS :
