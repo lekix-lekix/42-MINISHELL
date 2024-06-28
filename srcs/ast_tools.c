@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:27:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/27 15:03:12 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/28 17:16:48 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ t_token	*lst_dup(t_token **lst, t_token *node)
 
 	current = *lst;
 	lst_cpy = NULL;
-    // printf("lst dup node = '%s'\n", node->content);
 	while (current != node)
 	{
 		current_cpy = malloc(sizeof(t_token));
@@ -28,8 +27,8 @@ t_token	*lst_dup(t_token **lst, t_token *node)
 			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 		current_cpy->type = current->type;
 		current_cpy->content = current->content;
-        current_cpy->contents = current->contents;
-        current_cpy->redirections = current->redirections;
+		current_cpy->contents = current->contents;
+		current_cpy->redirections = current->redirections;
 		current_cpy->next = NULL;
 		insert_node_lst(&lst_cpy, current_cpy);
 		current = current->next;

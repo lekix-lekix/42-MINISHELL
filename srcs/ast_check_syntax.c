@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:48:38 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/27 16:55:07 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/28 16:56:14 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ int	check_par_syntax(t_token **lst)
 		current = current->next;
 	}
 	if (par < 0)
-		return (printf("syntax_error : '('\n"), -1);
+		return (print_char_syntax_error("("));
 	if (par > 0)
-		return (printf("syntax_error : ')'\n"), -1);
+		return (print_char_syntax_error(")"));
 	return (0);
 }
 
@@ -75,12 +75,6 @@ void	check_tree_syntax_recursive(t_ast *root, t_ast **syntax_node,
 			node_nb);
 }
 
-int print_ast_syntax_error(t_ast *node)
-{
-    printf("bash: syntax error near unexpected token `%s'\n", node->token_node->content);
-    return (-1);
-}
-
 int	check_tree_syntax(t_ast **tree)
 {
 	t_ast	*root;
@@ -94,32 +88,13 @@ int	check_tree_syntax(t_ast **tree)
 	error_node = NULL;
 	error_node = get_first_node_tree(root);
 	if (error_node->node_type != CMD)
-	{
-        // printf("yo la mifzer\n");
-		// if (!error_node->is_in_par)
-		// 	return (printf("syntax error 1: %s\n",
-		// 			error_node->token_node->content), -1);
-		// else
 		return (print_ast_syntax_error(error_node));
-	}
 	check_tree_syntax_recursive(root, &error_node, &syntax_flag, &node_nb);
-	// printf("syntax flag = %d\n", syntax_flag);
 	error_node = NULL;
-	if (error_node)
-	{
-		if (!error_node->is_in_par)
-			return (print_ast_syntax_error(error_node));
-		else
-			return (-1);
-	}
+	if (error_node && !error_node->is_in_par)
+		return (print_ast_syntax_error(error_node));
 	get_last_node_tree(root, &error_node);
-	if (error_node->node_type != CMD)
-	{
-		if (!error_node->is_in_par)
-			return (print_ast_syntax_error(error_node));
-		else
-			return (-1);
-	}
-	printf("syntax flag after func = %d\n", syntax_flag);
+	if (error_node->node_type != CMD && !error_node->is_in_par)
+		return (print_ast_syntax_error(error_node));
 	return (0);
 }

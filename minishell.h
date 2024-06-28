@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/27 16:53:43 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/28 18:07:52 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,20 +155,18 @@ t_token				*tokenize_input(char *input);
 // Merge combined functions
 void				print_tree(t_ast **tree);
 char				*find_operator(char *str);
-// void				insert_operator_node(t_token **tree, t_token *node);
 int					insert_cmd_node(t_ast **tree, t_ast *node);
 int					ft_strcpy_sep(char *dest, char *input, char *sep);
-// void				clear_tree(t_token **tree);
+void				create_consume_insert_node(t_token **lst, t_token **node,
+						t_ast **tree, t_ast **tree_right);
 t_ast				*build_ast(t_token **lst, int *insert_node);
 void				insert_node_lst(t_token **lst, t_token *node);
 void				print_lst(t_token **lst);
-t_token				*find_closing_par(t_token **lst);
 void				insert_operator_token_node(t_ast **tree, t_ast *node);
 t_ast				*handle_par(t_token **lst, t_ast **tree, int *insert_node);
 t_token				*lst_dup(t_token **lst, t_token *node);
 t_ast				*create_ast_node(t_token *node);
 t_token				*find_operator_token(t_token **lst);
-void				syntax_error(t_token *node);
 t_ast				*get_first_node_tree(t_ast *root);
 int					check_tree_syntax(t_ast **tree);
 int					print_ast_syntax_error(t_ast *node);
@@ -223,13 +221,38 @@ char				*ft_join(char *s1, char *s2);
 int					check_operator_len(char *str);
 char				*skip_spaces(char *str);
 int					print_env(t_env **lst);
+char				*msh_strdup(const char *s, int mlc_lst);
 
 // paths utils
 char				*ft_check_path(char *cmd, char **env);
-
 void				lst_env_add_back(t_env **lst, t_env *new);
 void				consume_node(t_token **lst, t_token *node);
 int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
 						int level);
+// print syntax errors
+int					print_newline_syntax_error(void);
+int					print_char_syntax_error(char *str);
+int					print_ast_syntax_error(t_ast *node);
+int					print_token_syntax_error(t_token *node);
+
+// ast parenthesis
+t_token				*find_closing_par(t_token **lst);
+t_token				*find_right_par(t_token **lst);
+
+// garbage collector
+void				remove_mem_node(t_lst **lst, void *mem_addr);
+void	print_tree(t_ast **tree); // to remove
+
+// parsing redirections
+
+t_redir				*create_redir_node(t_token_type redir_type, char *filename);
+t_redir				*redir_lst_dup(t_redir **lst);
+t_redir				*find_last_redir_node(t_redir **lst);
+t_token				*get_outfile_next_node(t_token **lst);
+void				add_redirection_node(t_redir **lst, t_redir *node);
+int					add_redirection(t_token *cmd_node, t_token *redir_node,
+						char *filename);
+void				set_redir_lst(t_token **lst);
+void				set_args_lst(t_token **lst);
 
 #endif

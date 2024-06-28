@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:17:54 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/04 12:11:29 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/28 17:06:37 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	parse_insert_op_token_node(t_ast *root, t_ast *node, int level)
 	}
 	if (root->node_type <= node->node_type && level == 0)
 		return (1);
-	// add error case
 	return (-1);
 }
 
@@ -39,7 +38,6 @@ void	insert_operator_token_node(t_ast **tree, t_ast *node)
 	root = *tree;
 	if (!root)
 	{
-        // printf("node nest = %s\n", node->right->token_node->content);
 		*tree = node;
 		return ;
 	}
@@ -52,7 +50,6 @@ void	insert_operator_token_node(t_ast **tree, t_ast *node)
 
 int	parse_insert_cmd_node(t_ast *root, t_ast *cmd_node, int level)
 {
-    // printf("root = %s cmd_npde = %s\n", root->token_node->content, cmd_node->token_node->content);
 	if (root->left)
 	{
 		if (parse_insert_cmd_node(root->left, cmd_node, level + 1) == 0)
@@ -78,17 +75,37 @@ int	parse_insert_cmd_node(t_ast *root, t_ast *cmd_node, int level)
 	return (-1);
 }
 
-int insert_cmd_node(t_ast **tree, t_ast *node)
+int	insert_cmd_node(t_ast **tree, t_ast *node)
 {
-    t_ast *root;
-    
-    root = *tree;
-    if (!root)
-    {
-        *tree = node;
-        return (0);
-    }
-    if (parse_insert_cmd_node(root, node, 0) == -1)
-        return (-1);
-    return (0);
+	t_ast	*root;
+
+	root = *tree;
+	if (!root)
+	{
+		*tree = node;
+		return (0);
+	}
+	if (parse_insert_cmd_node(root, node, 0) == -1)
+		return (-1);
+	return (0);
+}
+
+void	create_consume_insert_node(t_token **lst, t_token **node, t_ast **tree,
+		t_ast **tree_right)
+{
+	t_ast	*new_node;
+
+	new_node = create_ast_node(*node);
+	if (*lst == *node)
+	{
+		consume_node(lst, new_node->token_node);
+		*node = NULL;
+	}
+	consume_node(lst, new_node->token_node);
+	if (*tree_right)
+		insert_operator_token_node(tree_right, new_node);
+	else if (*tree && new_node->node_type < (*tree)->node_type)
+		insert_operator_token_node(tree_right, new_node);
+	else
+		insert_operator_token_node(tree, new_node);
 }

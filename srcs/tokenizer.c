@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/27 16:10:09 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/28 12:27:26 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	find_operator_type(char *input, t_token *node)
 		node->type = REDIR_OUTPUT;
 	else if (*input == '>' && op_len == 2)
 		node->type = REDIR_OUTPUT_APPEND;
+    else
+        node->type = CMD;
 }
 
 t_token	*create_operator_node(char **input)

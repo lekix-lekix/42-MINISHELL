@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/27 17:27:31 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/28 16:35:12 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,12 +190,6 @@ int	get_args_flags(t_token **lst)
 	return (0);
 }
 
-int	print_token_syntax_error(t_token *node)
-{
-	printf("bash: syntax error near unexpected token `%s'\n", node->content);
-	return (-1);
-}
-
 void	join_cmd_args(t_token **lst)
 {
 	t_token	*current;
@@ -219,50 +213,19 @@ int	check_redir_syntax(t_token **input)
 	t_token	*current;
 
 	current = *input;
-	while (current->next)
+	while (current)
 	{
-		if (is_a_redir_operator(current) && (!current->next || !current->next->content[0]))
-		{
-			printf("bash: syntax error near unexpected token 'newline'\n");
-			return (-1);
-		}
-        if (is_a_redir_operator(current) && is_a_token_operator(current->next))
-            return (print_token_syntax_error(current->next));
-        if (is_a_redir_operator(current) && is_a_redir_operator(current->next))
-            return (print_token_syntax_error(current->next));
+		if (is_a_redir_operator(current) && (!current->next
+				|| !current->next->content[0]))
+			return (print_newline_syntax_error());
+		if (is_a_redir_operator(current) && is_a_token_operator(current->next))
+			return (print_token_syntax_error(current->next));
+		if (is_a_redir_operator(current) && is_a_redir_operator(current->next))
+			return (print_token_syntax_error(current->next));
 		current = current->next;
 	}
 	return (0);
 }
-
-
-// int	check_lst_syntax(t_token **lst)
-// {
-// 	t_token	*current;
-// 	int		syntax_flag;
-
-// 	syntax_flag = 0;
-// 	current = *lst;
-// 	while (current)
-// 	{
-// 		if (current->type == PAR_LEFT || current->type == PAR_RIGHT)
-// 		{
-// 			current = current->next;
-// 			continue ;
-// 		}
-// 		if (current->type == CMD)
-// 			syntax_flag++;
-// 		if (current->type > CMD)
-// 			syntax_flag--;
-// 		if (syntax_flag > 1 || syntax_flag < 0)
-//         {
-//             printf(:k)
-// 			return (print_token_syntax_error(current));
-//         }
-// 		current = current->next;
-// 	}
-// 	return (0);
-// }
 
 int	start_parsing(char *prompt /* , t_minishell *data */)
 {
@@ -270,6 +233,8 @@ int	start_parsing(char *prompt /* , t_minishell *data */)
 	t_ast	*tree;
 	int		insert_node;
 
+	if (!prompt[0])
+		return (-1);
 	insert_node = 1;
 	if (check_syntax_errors(prompt))
 		return (-1);
@@ -278,8 +243,6 @@ int	start_parsing(char *prompt /* , t_minishell *data */)
 	printf("==== TOKEN LST ====\n");
 	print_lst(&input);
 	printf("===================\n");
-	// if (check_lst_syntax(&input) == -1)
-	// 	return (-1);
 	if (check_redir_syntax(&input) == -1)
 		return (-1);
 	if (check_par_syntax(&input) == -1)
@@ -316,10 +279,11 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		data.prompt = readline("./minishell$ ");
-		if (!data.prompt | !*data.prompt)
-			break ;
-		start_parsing(data.prompt /* , &data */);
-		free(data.prompt);
+		if (data.prompt || *data.prompt)
+		{
+			start_parsing(data.prompt /* , &data */);
+			free(data.prompt);
+		}
 	}
 	free(data.prompt);
 	gbg_coll(NULL, ENV, FLUSH_ALL);

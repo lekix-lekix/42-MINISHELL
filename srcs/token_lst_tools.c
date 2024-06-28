@@ -6,11 +6,32 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:50:13 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/14 13:48:23 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/28 18:18:35 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void    check_clean_lst(t_token **lst)
+{
+    t_token *current;
+    t_token *prev;
+
+    current = *lst;
+	while (current)
+	{
+		if ((!ft_strlen(current->content) || only_spaces(current->content))
+			&& !current->redirections)
+		{
+			prev->next = current->next;
+			gbg_delete_node(current, PARSING);
+			current = *lst;
+			continue ;
+		}
+		prev = current;
+		current = current->next;
+	}
+}
 
 void	clean_lst(t_token **lst)
 {
@@ -27,20 +48,7 @@ void	clean_lst(t_token **lst)
 		gbg_delete_node(current, PARSING);
 		*lst = prev;
 	}
-	current = *lst;
-	while (current)
-	{
-		if ((!ft_strlen(current->content) || only_spaces(current->content))
-			&& !current->redirections)
-		{
-			prev->next = current->next;
-			gbg_delete_node(current, PARSING);
-			current = *lst;
-			continue ;
-		}
-		prev = current;
-		current = current->next;
-	}
+    check_clean_lst(lst);
 }
 
 void	remove_token_node(t_token **lst, t_token *node)
@@ -71,15 +79,6 @@ void	remove_token_node(t_token **lst, t_token *node)
 		current = current->next;
 	}
 }
-
-// int check_if_trim(char *str)
-// {
-//     if (ft_strlen(str) == 0)
-//         return (0);
-//     if (ft_is_space(str[0]) || ft_is_space(str[ft_strlen(str) - 1]))
-//         return (1);
-//     return (0);
-// }
 
 int	trim_token_fields(t_token **lst)
 {
