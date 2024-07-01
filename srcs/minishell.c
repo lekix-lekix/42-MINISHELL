@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/28 16:35:12 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/01 17:02:35 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,184 +50,13 @@ int	init_data(t_minishell *data, char **envp)
 // 	la_status = ft_start_exec(&nodes, data);
 // }
 
-int	print_env(t_env **lst)
-{
-	t_env	*node;
-
-	node = *lst;
-	while (node)
-	{
-		printf("field = %s\n", node->field);
-		printf("content = %s\n", node->content);
-		node = node->next;
-	}
-	return (0);
-}
-
-int	print_real_env(char **env)
-{
-	int	i;
-
-	i = -1;
-	while (env[++i])
-		printf("%s\n", env[i]);
-	return (0);
-}
-
-int	check_quotes(char *str)
-{
-	int		i;
-	char	c;
-
-	i = -1;
-	while (str[++i])
-	{
-		if (str[i] == '\'' || str[i] == '\"')
-		{
-			c = str[i];
-			str = ft_strchr(str + i + 1, c);
-			if (!str)
-			{
-				printf("bash: syntax error near unexpected token `%c'\n", c);
-				return (-1);
-			}
-			i = 0;
-			continue ;
-		}
-	}
-	return (0);
-}
-
-int	check_syntax_errors(char *str)
-{
-	if (check_quotes(str) == -1)
-		return (-1);
-	return (0);
-}
-
-void	print_redir_lst(t_redir **lst)
-{
-	t_redir	*current;
-
-	current = *lst;
-	while (current)
-	{
-		printf("redir type = %d\n", current->redir_type);
-		printf("redir filename = %s\n", current->filename);
-		current = current->next;
-	}
-}
-
-void	print_lst(t_token **lst)
-{
-	t_token	*root;
-
-	root = *lst;
-	while (root)
-	{
-		printf("--------\n");
-		printf("content = '%s'\n", root->content);
-		printf("type = %u\n", root->type);
-		if (root->redirections)
-			print_redir_lst(&root->redirections);
-		root = root->next;
-	}
-}
-
 void	gbg_delete_node(t_token *node, int mlc_lst)
 {
 	gbg_coll(node->content, mlc_lst, FREE);
 	gbg_coll(node, mlc_lst, FREE);
 }
 
-int	get_nb_of_args(t_token **lst)
-{
-	t_token	*current;
-	int		args_nb;
-
-	current = *lst;
-	args_nb = 0;
-	while (current && !is_a_token_operator(current))
-	{
-		if (current->type == ARGS_FLAGS)
-			args_nb++;
-		current = current->next;
-	}
-	return (args_nb);
-}
-
-int	get_args_flags(t_token **lst)
-{
-	t_token	*current;
-	t_token	*cmd_node;
-	t_token	*next;
-	int		nb_of_args;
-	int		i;
-
-	cmd_node = *lst;
-	current = (*lst)->next;
-	nb_of_args = get_nb_of_args(lst);
-	cmd_node->contents = malloc(sizeof(char *) * (nb_of_args + 2));
-	if (!cmd_node->content || gbg_coll(cmd_node->content, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), -1);
-	cmd_node->contents[0] = msh_strdup(cmd_node->content, PARSING);
-	if (nb_of_args == 0)
-	{
-		cmd_node->contents[1] = NULL;
-		*lst = current;
-		return (0);
-	}
-	i = 0;
-	while (current && current->type == ARGS_FLAGS)
-	{
-		next = current->next;
-		cmd_node->contents[++i] = msh_strdup(current->content, PARSING);
-		remove_token_node(lst, current);
-		current = next;
-	}
-	cmd_node->contents[i + 1] = NULL;
-	*lst = current;
-	return (0);
-}
-
-void	join_cmd_args(t_token **lst)
-{
-	t_token	*current;
-	int		i;
-
-	i = 0;
-	current = *lst;
-	while (current)
-	{
-		if (current->type == CMD)
-		{
-			get_args_flags(&current);
-			continue ;
-		}
-		current = current->next;
-	}
-}
-
-int	check_redir_syntax(t_token **input)
-{
-	t_token	*current;
-
-	current = *input;
-	while (current)
-	{
-		if (is_a_redir_operator(current) && (!current->next
-				|| !current->next->content[0]))
-			return (print_newline_syntax_error());
-		if (is_a_redir_operator(current) && is_a_token_operator(current->next))
-			return (print_token_syntax_error(current->next));
-		if (is_a_redir_operator(current) && is_a_redir_operator(current->next))
-			return (print_token_syntax_error(current->next));
-		current = current->next;
-	}
-	return (0);
-}
-
-int	start_parsing(char *prompt /* , t_minishell *data */)
+int	start_parsing(char *prompt/* , t_minishell *data */)
 {
 	t_token	*input;
 	t_ast	*tree;
@@ -236,13 +65,11 @@ int	start_parsing(char *prompt /* , t_minishell *data */)
 	if (!prompt[0])
 		return (-1);
 	insert_node = 1;
-	if (check_syntax_errors(prompt))
+	if (check_quotes(prompt))
 		return (-1);
 	input = tokenize_input(prompt);
 	clean_token_lst(&input);
-	printf("==== TOKEN LST ====\n");
-	print_lst(&input);
-	printf("===================\n");
+    print_lst(&input);
 	if (check_redir_syntax(&input) == -1)
 		return (-1);
 	if (check_par_syntax(&input) == -1)
@@ -253,13 +80,8 @@ int	start_parsing(char *prompt /* , t_minishell *data */)
 	clean_token_lst(&input);
 	join_cmd_args(&input);
 	tree = build_ast(&input, &insert_node);
-	if (tree)
-	{
-		printf("PRINT TREE =========\n");
-		print_tree(&tree);
-		printf("PRINT TREE END =====\n");
-		check_tree_syntax(&tree);
-	}
+	if (tree && check_tree_syntax(&tree) == -1)
+        return (-1);
 	// ft_start_execution(&tree, data);
 	return (0);
 }
@@ -281,7 +103,7 @@ int	main(int argc, char **argv, char **env)
 		data.prompt = readline("./minishell$ ");
 		if (data.prompt || *data.prompt)
 		{
-			start_parsing(data.prompt /* , &data */);
+			start_parsing(data.prompt/* , &data */);
 			free(data.prompt);
 		}
 	}

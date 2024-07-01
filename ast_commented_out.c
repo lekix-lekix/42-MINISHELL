@@ -209,3 +209,23 @@
 // 	return (0);
 // }
 // }
+
+// int	set_next_flags(t_token **lst, t_token *cmd_node)
+// {
+// 	t_token	*current;
+//     t_token *next;
+// 	int		i;
+
+//     current = *lst;
+// 	i = 0;
+// 	while (current && current->type == ARGS_FLAGS)
+// 	{
+// 		next = current->next;
+// 		cmd_node->contents[++i] = msh_strdup(current->content, PARSING);
+// 		remove_token_node(lst, current);
+// 		current = next;
+// 	}
+// 	cmd_node->contents[i + 1] = NULL;
+// 	*lst = current;
+//     return (0);
+// }

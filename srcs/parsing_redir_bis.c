@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_redirections_bis.c                         :+:      :+:    :+:   */
+/*   parsing_redir_bis.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:40:44 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/18 15:43:58 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/01 15:18:28 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ char	*get_filename(t_token *node)
 	return (filename);
 }
 
-int is_a_redir_operator(t_token *node)
+int	is_a_redir_operator(t_token *node)
 {
-    return (node->type >= REDIR_INPUT && node->type < OUTFILE);
+	return (node->type >= REDIR_INPUT && node->type < OUTFILE);
 }
 
 t_token	*find_redir_node(t_token **lst, t_token *redir_node)

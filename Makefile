@@ -6,7 +6,7 @@
 #    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/06/28 17:59:56 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/07/01 14:51:49 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,7 +46,11 @@ SRCS = ./srcs/minishell.c \
 	./srcs/ast_print.c \
 	./srcs/ast_par_utils.c \
 	./srcs/garbage_collector_bis.c \
-	./srcs/str_manipulation.c
+	./srcs/str_manipulation.c \
+	./srcs/parsing_clean_tokens.c \
+	./srcs/parsing_check_syntax.c \
+	./srcs/print_funcs.c \
+	./srcs/parsing_handle_args.c
 
 	# ./srcs/ft_tree_helpers.c \
 	#	./srcs/ft_extra_fts.c \
