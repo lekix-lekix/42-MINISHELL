@@ -1,9 +1,5 @@
 hello && ( &&) --> wrong syntax_error
-hello &&
-ls () ---> empty par : should be a syntax error
-
-
-
+ls () ---> syntax error near unexpected  token ')'
 
 
 AST TESTS :
@@ -23,6 +19,7 @@ ls && (toi && moi) | pwd || (vous && moi) --> works
 
 <ls : crash --> done and working
 < infile > outfile > gjojo ls -a -e -e | > outfile1 ls > outfileee | (echo a && echo b) -->crash
+(ls) > outfile
 
  : doublons dans lst si plus d4une redir + par
 

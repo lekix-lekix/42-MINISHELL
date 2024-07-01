@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 15:04:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/10 15:08:52 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/06/27 12:36:43 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,3 @@ char	*msh_strdup(const char *s, int mlc_lst)
 	ft_strlcpy(final_str, s, s_len + 1);
 	return (final_str);
 }
-
-

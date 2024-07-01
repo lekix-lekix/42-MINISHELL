@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+         #
+#    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/07/01 05:49:39 by sabakar-         ###   ########.fr        #
+#    Updated: 2024/07/01 17:53:12 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,8 +21,8 @@ SRCS = ./srcs/minishell.c \
 	./srcs/Builtins/do_pwd.c \
 	./srcs/Builtins/env_utils.c \
 	./srcs/Builtins/ft_export.c \
-	./srcs/execs/exec_non_builtins.c \
 	./srcs/Builtins/ft_unset.c \
+	./srcs/execs/exec_non_builtins.c \
 	./srcs/execs/start_exec.c \
 	./srcs/general_utils.c \
 	./srcs/non_builtins/paths_utils.c \
@@ -38,12 +38,23 @@ SRCS = ./srcs/minishell.c \
 	./srcs/ast_tools_bis.c \
 	./srcs/msh_strtrim.c \
 	./srcs/msh_split.c \
-	./srcs/parsing_redirections.c \
-	./srcs/parsing_redirections_bis.c \
 	./srcs/execs/exec_redirections.c \
 	./srcs/execs/init_tree.c \
 	./srcs/execs/exec_utils.c \
-	./srcs/expanders/heredoc_utils.c 
+	./srcs/expanders/heredoc_utils.c \
+	./srcs/parsing_redir.c \
+	./srcs/parsing_redir_bis.c \
+	./srcs/parsing_redir_utils.c \
+	./srcs/parsing_redir_utils_bis.c \
+	./srcs/print_syntax_errors.c \
+	./srcs/ast_print.c \
+	./srcs/ast_par_utils.c \
+	./srcs/garbage_collector_bis.c \
+	./srcs/str_manipulation.c \
+	./srcs/parsing_clean_tokens.c \
+	./srcs/parsing_check_syntax.c \
+	./srcs/print_funcs.c \
+	./srcs/parsing_handle_args.c
 
 	
 	# .srcs/execs/heredoc_expander.c \
@@ -67,7 +78,6 @@ LIBS = -lreadline
 all : 
 	git submodule update --init
 	make $(NAME)
-	# make clean	
 
 $(NAME) : $(OBJ)
 	make -C $(PATH_LIBFT)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_non_builtins.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/01 04:37:34 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/01 18:07:35 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_exec_non_builtins(char **args, t_minishell *data, t_redir *redirections)
 	}
 	else
 		waitpid(la_fork, &la_status, 0);
-		// printf("It's here 50\n");
+	// printf("It's here 50\n");
 	if (WIFEXITED(la_status))
 		return (WEXITSTATUS(la_status));
 	else if (WIFSIGNALED(la_status))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/01 17:13:13 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/01 17:54:59 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,27 +163,27 @@ t_minishell			*ft_shell(void);
 int					gbg_coll(void *mem_addr, int which_list, int rule);
 t_env				*get_env_lst(char **envp);
 int					ft_strlen_sep(char *str, char *sep);
+
+// tokenization
+int					trim_token_fields(t_token **lst);
 t_token				*tokenize_input(char *input);
 
 // Merge combined functions
 void				print_tree(t_ast **tree);
 char				*find_operator(char *str);
-// void				insert_operator_node(t_token **tree, t_token *node);
 int					insert_cmd_node(t_ast **tree, t_ast *node);
 int					ft_strcpy_sep(char *dest, char *input, char *sep);
-// void				clear_tree(t_token **tree);
+void				create_consume_insert_node(t_token **lst, t_token **node,
+						t_ast **tree, t_ast **tree_right);
 t_ast				*build_ast(t_token **lst, int *insert_node);
 void				insert_node_lst(t_token **lst, t_token *node);
 void				print_lst(t_token **lst);
-t_token				*find_closing_par(t_token **lst);
 void				insert_operator_token_node(t_ast **tree, t_ast *node);
 t_ast				*handle_par(t_token **lst, t_ast **tree, int *insert_node);
 t_token				*lst_dup(t_token **lst, t_token *node);
 t_ast				*create_ast_node(t_token *node);
 t_token				*find_operator_token(t_token **lst);
-void				syntax_error(t_token *node);
 t_ast				*get_first_node_tree(t_ast *root);
-int					check_tree_syntax(t_ast **tree);
 int					ft_is_space(char c);
 char				*skip_spaces(char *str);
 int					is_an_operator(char c);
@@ -195,7 +195,6 @@ char				*get_filename(t_token *node);
 t_token				*find_redir_node(t_token **lst, t_token *redir_node);
 void				remove_token_node(t_token **lst, t_token *node);
 int					only_spaces(char *str);
-int					check_par_syntax(t_token **lst);
 void				gbg_delete_node(t_token *node, int mlc_lst);
 int					clean_token_lst(t_token **lst);
 int					is_a_redir_operator(t_token *node);
@@ -233,12 +232,57 @@ void				ft_free(char **arr);
 void				ft_print_err(char *str);
 char				**env_lst_to_arr(t_env **lst);
 char				*ft_join(char *s1, char *s2);
-int					check_operator_len(char *str, int *op_len);
+int					check_operator_len(char *str);
 char				*skip_spaces(char *str);
 int					print_env(t_env **lst);
+char				*msh_strdup(const char *s, int mlc_lst);
 
 // paths utils
 char				*ft_check_path(char *cmd, char **env);
+void				lst_env_add_back(t_env **lst, t_env *new);
+void				consume_node(t_token **lst, t_token *node);
+int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
+						int level);
+// print syntax errors
+int					print_newline_syntax_error(void);
+int					print_char_syntax_error(char *str);
+int					print_ast_syntax_error(t_ast *node);
+int					print_token_syntax_error(t_token *node);
+
+// handle args
+void				join_cmd_args(t_token **lst);
+
+// Check syntax
+int					check_tree_syntax(t_ast **tree);
+int					print_ast_syntax_error(t_ast *node);
+int					check_par_syntax(t_token **lst);
+int					check_quotes(char *str);
+int					check_redir_syntax(t_token **input);
+
+// ast parenthesis
+t_token				*find_closing_par(t_token **lst);
+t_token				*find_right_par(t_token **lst);
+
+// garbage collector
+void				remove_mem_node(t_lst **lst, void *mem_addr);
+void				print_tree(t_ast **tree); // to remove
+
+// parsing redirections
+
+t_redir				*create_redir_node(t_token_type redir_type, char *filename);
+t_redir				*redir_lst_dup(t_redir **lst);
+t_redir				*find_last_redir_node(t_redir **lst);
+t_token				*get_outfile_next_node(t_token **lst);
+void				add_redirection_node(t_redir **lst, t_redir *node);
+int					add_redirection(t_token *cmd_node, t_token *redir_node,
+						char *filename);
+void				set_redir_lst(t_token **lst);
+void				set_args_lst(t_token **lst);
+
+// print functions
+void				print_redir_lst(t_redir **lst);
+
+void	find_operator_type(char *input, t_token *node);
 
 void				lst_env_add_back(t_env **lst, t_env *new);
 void				consume_node(t_token **lst, t_token *node);

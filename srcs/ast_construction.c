@@ -3,45 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ast_construction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/18 17:09:03 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/01 17:57:52 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	print_contents(t_ast *node)
-{
-	int	i;
-
-	i = -1;
-	while (node->token_node->contents[++i])
-		printf("contents[%d] = %s\n", i, node->token_node->contents[i]);
-}
-
-void	traverse_print(t_ast *node, int level)
-{
-	if (node->left)
-		traverse_print(node->left, level + 1);
-	printf("----NODE-------\n");
-	printf("node content = %s, level = %d\n", node->token_node->content, level);
-	if (node->token_node->contents)
-		print_contents(node);
-	if (node->token_node->redirections)
-		print_redir_lst(&node->token_node->redirections);
-	if (node->right)
-		traverse_print(node->right, level + 1);
-}
-
-void	print_tree(t_ast **tree)
-{
-	t_ast	*node;
-
-	node = *tree;
-	traverse_print(node, 0);
-}
 
 void	consume_node(t_token **lst, t_token *node)
 {
@@ -63,32 +32,6 @@ void	consume_node(t_token **lst, t_token *node)
 		prev = current;
 		current = current->next;
 	}
-}
-
-void	create_consume_insert_node(t_token **lst, t_token **node, t_ast **tree,
-		t_ast **tree_right)
-{
-	t_ast	*new_node;
-
-	(void)tree_right;
-	new_node = create_ast_node(*node);
-	if (*lst == *node)
-	{
-		consume_node(lst, new_node->token_node);
-		*node = NULL;
-	}
-	consume_node(lst, new_node->token_node);
-	if (*tree_right)
-		insert_operator_token_node(tree_right, new_node);
-	else if (*tree && new_node->node_type < (*tree)->node_type)
-		insert_operator_token_node(tree_right, new_node);
-	else
-		insert_operator_token_node(tree, new_node);
-}
-
-void	syntax_error(t_token *node)
-{
-	printf("error syntax : %s\n", node->content);
 }
 
 t_ast	*build_operator_tree(t_token **lst)
@@ -131,8 +74,6 @@ int	create_insert_ast_node_par(t_ast **tree, t_token *current)
 		*tree = NULL;
 		return (-1);
 	}
-	if (insert_node && insert_cmd_node(tree, cmd_node) == -1)
-		return (syntax_error(get_first_node_tree(cmd_node)->token_node), -1);
 	return (0);
 }
 
@@ -169,19 +110,7 @@ t_ast	*build_ast(t_token **lst, int *insert_node)
 	t_ast	*tree;
 
 	tree = build_operator_tree(lst);
-	// if (!tree)
-	// {`
-	// printf("no operat`or tree\n");
-	// return (NULL);
-	// }`
 	if (build_cmd_tree(&tree, lst) == -1)
 		*insert_node = 0;
 	return (tree);
 }
-
-// cmd1 | cmd2 || cmd3 | cmd4
-// (1 && 2) | (3 && 4)
-// (1 && 2) || (3 && 4)
-// ((1 && 2) || 4) | 4
-// ((1 && 2) || (3 && 4) || 5) SIGSEV
-// (((1 || 2) || 3) || 4)

@@ -3,108 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   token_lst_tools.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:50:13 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/25 14:58:58 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/01 17:56:43 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	clean_lst(t_token **lst)
-{
-	t_token	*current;
-	t_token	*prev;
-
-	if (!*lst)
-		return ;
-	current = *lst;
-	if ((!ft_strlen(current->content) || only_spaces(current->content))
-		&& !current->redirections)
-	{
-		prev = current->next;
-		gbg_delete_node(current, PARSING);
-		*lst = prev;
-	}
-	current = *lst;
-	while (current)
-	{
-		if ((!ft_strlen(current->content) || only_spaces(current->content))
-			&& !current->redirections)
-		{
-			prev->next = current->next;
-			gbg_delete_node(current, PARSING);
-			current = *lst;
-			continue ;
-		}
-		prev = current;
-		current = current->next;
-	}
-}
-
-void	remove_token_node(t_token **lst, t_token *node)
-{
-	t_token	*current;
-	t_token	*prev;
-
-	if (!*lst)
-		return ;
-	current = *lst;
-	if (current == node)
-	{
-		prev = current->next;
-		gbg_delete_node(current, PARSING);
-		*lst = prev;
-		return ;
-	}
-	current = *lst;
-	while (current)
-	{
-		if (current == node)
-		{
-			prev->next = current->next;
-			gbg_delete_node(current, PARSING);
-			return ;
-		}
-		prev = current;
-		current = current->next;
-	}
-}
-
-// int check_if_trim(char *str)
-// {
-//     if (ft_strlen(str) == 0)
-//         return (0);
-//     if (ft_is_space(str[0]) || ft_is_space(str[ft_strlen(str) - 1]))
-//         return (1);
-//     return (0);
-// }
-
-int	trim_token_fields(t_token **lst)
-{
-	t_token	*current;
-	char	*str;
-
-	current = *lst;
-	while (current)
-	{
-		if (current->content && ft_strlen(current->content))
-		{
-			str = msh_strtrim(current->content, " ");
-			gbg_coll(current->content, PARSING, FREE);
-			current->content = str;
-		}
-		if (current->filename && ft_strlen(current->content))
-		{
-			str = msh_strtrim(current->filename, " ");
-			gbg_coll(current->filename, PARSING, FREE);
-			current->filename = str;
-		}
-		current = current->next;
-	}
-	return (0);
-}
 
 t_token	*find_last_node(t_token **lst)
 {
@@ -164,13 +70,6 @@ void	split_lst_contents(t_token **lst)
 	}
 }
 
-int	clean_token_lst(t_token **lst)
-{
-	clean_lst(lst);
-	trim_token_fields(lst);
-	return (0);
-}
-
 void	insert_node_lst(t_token **lst, t_token *node)
 {
 	t_token	*root;
@@ -184,4 +83,31 @@ void	insert_node_lst(t_token **lst, t_token *node)
 	while (root->next)
 		root = root->next;
 	root->next = node;
+}
+
+void	find_operator_type(char *input, t_token *node)
+{
+	int	op_len;
+
+	op_len = check_operator_len(input);
+	if (*input == '(')
+		node->type = PAR_LEFT;
+	else if (*input == ')')
+		node->type = PAR_RIGHT;
+	else if (*input == '|' && op_len == 1)
+		node->type = PIPE;
+	else if (*input == '|' && op_len == 2)
+		node->type = OR;
+	else if (*input == '&' && op_len == 2)
+		node->type = AND;
+	else if (*input == '<' && op_len == 1)
+		node->type = REDIR_INPUT;
+	else if (*input == '<' && op_len == 2)
+		node->type = REDIR_HEREDOC;
+	else if (*input == '>' && op_len == 1)
+		node->type = REDIR_OUTPUT;
+	else if (*input == '>' && op_len == 2)
+		node->type = REDIR_OUTPUT_APPEND;
+	else
+		node->type = CMD;
 }
