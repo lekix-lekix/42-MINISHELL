@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/25 12:37:52 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/01 17:13:13 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,20 @@
 # define MINISHELL_H
 
 # include "./42-MEGALIBFT/megalibft.h"
+# include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <termios.h>
 # include <unistd.h>
 
 # define PER_ERR \
@@ -140,15 +143,22 @@ typedef enum e_cmd_pipe_directions
 typedef struct s_minishell
 {
 	t_env			*env_lst;
+	t_token			*les_token;
 	int				exit_status;
 	char			*prompt;
 	char			*path;
 	int				*pids;
-	int				heredoc;
 	int				pids_num;
 	int				stdin;
 	int				stdout;
+	int				heredoc;
+	t_ast			*node;
+	bool			signint_child;
+	bool			heredoc_sigint;
+	struct termios	original_term;
 }					t_minishell;
+
+t_minishell			*ft_shell(void);
 
 int					gbg_coll(void *mem_addr, int which_list, int rule);
 t_env				*get_env_lst(char **envp);
@@ -202,8 +212,7 @@ void				ft_update_envlst(char *field, char *content, bool create,
 						t_minishell *data);
 int					print_env(t_env **lst);
 int					ft_exec_export(char **args, t_minishell *data);
-int					ft_exec_builtins(char **args, t_minishell *data,
-						t_redir *redirections);
+int					ft_exec_builtins(char **args, t_minishell *data);
 char				*ft_extract_val(char *str);
 char				*ft_extract_key(char *str);
 int					ft_strcmp(const char *s1, const char *s2);
@@ -237,5 +246,11 @@ int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
 						int level);
 int					ft_check_redirections(t_redir *redirections,
 						t_minishell *data);
+bool				ft_is_delimiter(char *delimiter, char *str);
+void				ft_init_tree(t_ast *data);
+void	ft_reset_ports(bool piped);
+
+// Expanders
+void				ft_heredoc_expander(char *str, int fd);
 
 #endif

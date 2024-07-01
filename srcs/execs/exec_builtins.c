@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:31:03 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/25 11:28:42 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/29 15:25:07 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,8 @@ static int	ft_strncmp_loco(const char *s1, const char *s2, size_t n)
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
-int	ft_exec_builtins(char **args, t_minishell *data, t_redir *redirections)
-{
-	// int	le_status;
-	(void)redirections;
-	
-	// le_status = ft_check_redirections(redirections, data);
-	// if (le_status != ENO_SUCCESS)
-	// 	return (le_status);
+int	ft_exec_builtins(char **args, t_minishell *data)
+{	
 	if (ft_strncmp_loco(args[0], "echo", ft_strlen(args[0])) == 0)
 		return (ft_exec_echo(args));
 	if (ft_strncmp_loco(args[0], "pwd", ft_strlen(args[0])) == 0)

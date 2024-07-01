@@ -6,11 +6,18 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/25 15:28:36 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/01 17:36:52 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+t_minishell *ft_shell(void)
+{
+	static t_minishell data;
+
+	return (&data);
+}
 
 char	*get_path(char **envp)
 {
@@ -49,6 +56,10 @@ static void	ft_start_execution(t_ast **tree, t_minishell *data)
 	int		la_status;
 
 	nodes = *tree;
+
+	// printf("Starting to excuate\n");
+	ft_init_tree(nodes);
+	printf("It's here 12\n");
 	la_status = ft_start_exec(&nodes, data);
 }
 
@@ -226,7 +237,7 @@ int	start_parsing(char *prompt, t_minishell *data)
 	if (tree)
 	{
 		// printf("PRINT TREE =========\n");
-		print_tree(&tree);
+		// print_tree(&tree);
 		// printf("PRINT TREE END =====\n");
 		check_tree_syntax(&tree);
 	}
@@ -242,19 +253,20 @@ void	ft_exit(void)
 
 int	main(int argc, char **argv, char **env)
 {
-	t_minishell	data;
+	t_minishell	*data;
 
+	data = ft_shell();
 	((void)argc, (void)argv);
-	init_data(&data, env);
+	init_data(data, env);
 	while (1)
 	{
-		data.prompt = readline("./minishell$ ");
-		if (!data.prompt | !*data.prompt)
+		data->prompt = readline("./minishell$ ");
+		if (!data->prompt | !*data->prompt)
 			break ;
-		start_parsing(data.prompt, &data);
-		free(data.prompt);
+		start_parsing(data->prompt, data);
+		free(data->prompt);
 	}
-	free(data.prompt);
+	free(data->prompt);
 	gbg_coll(NULL, ENV, FLUSH_ALL);
 	gbg_coll(NULL, PARSING, FLUSH_ALL);
 	gbg_coll(NULL, ENV, FREE);
