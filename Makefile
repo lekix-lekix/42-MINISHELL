@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
+#    By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/06/18 16:43:22 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/07/01 05:49:39 by sabakar-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,8 +39,14 @@ SRCS = ./srcs/minishell.c \
 	./srcs/msh_strtrim.c \
 	./srcs/msh_split.c \
 	./srcs/parsing_redirections.c \
-	./srcs/parsing_redirections_bis.c
+	./srcs/parsing_redirections_bis.c \
+	./srcs/execs/exec_redirections.c \
+	./srcs/execs/init_tree.c \
+	./srcs/execs/exec_utils.c \
+	./srcs/expanders/heredoc_utils.c 
 
+	
+	# .srcs/execs/heredoc_expander.c \
 	# ./srcs/ft_tree_helpers.c \
 	#	./srcs/ft_extra_fts.c \
 

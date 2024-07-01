@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/18 16:35:42 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/01 17:13:13 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,20 @@
 # define MINISHELL_H
 
 # include "./42-MEGALIBFT/megalibft.h"
+# include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <termios.h>
 # include <unistd.h>
 
 # define PER_ERR \
@@ -140,12 +143,22 @@ typedef enum e_cmd_pipe_directions
 typedef struct s_minishell
 {
 	t_env			*env_lst;
+	t_token			*les_token;
 	int				exit_status;
 	char			*prompt;
-    char            *path;
+	char			*path;
 	int				*pids;
 	int				pids_num;
+	int				stdin;
+	int				stdout;
+	int				heredoc;
+	t_ast			*node;
+	bool			signint_child;
+	bool			heredoc_sigint;
+	struct termios	original_term;
 }					t_minishell;
+
+t_minishell			*ft_shell(void);
 
 int					gbg_coll(void *mem_addr, int which_list, int rule);
 t_env				*get_env_lst(char **envp);
@@ -210,7 +223,8 @@ int					ft_check_key(char *str);
 char				*ft_get_envlst_content(char *content, t_minishell *data);
 
 // The non-builtins
-int					ft_exec_non_builtins(char **args, t_minishell *data);
+int					ft_exec_non_builtins(char **args, t_minishell *data,
+						t_redir *redirections);
 
 // utils
 void				ft_print_err(char *str);
@@ -223,13 +237,20 @@ int					check_operator_len(char *str, int *op_len);
 char				*skip_spaces(char *str);
 int					print_env(t_env **lst);
 
-
 // paths utils
 char				*ft_check_path(char *cmd, char **env);
 
-void	lst_env_add_back(t_env **lst, t_env *new);
-void	consume_node(t_token **lst, t_token *node);
-int	parse_insert_cmd_node(t_ast *root, t_ast *cmd_node, int level);
+void				lst_env_add_back(t_env **lst, t_env *new);
+void				consume_node(t_token **lst, t_token *node);
+int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
+						int level);
+int					ft_check_redirections(t_redir *redirections,
+						t_minishell *data);
+bool				ft_is_delimiter(char *delimiter, char *str);
+void				ft_init_tree(t_ast *data);
+void	ft_reset_ports(bool piped);
+
+// Expanders
+void				ft_heredoc_expander(char *str, int fd);
 
 #endif
-

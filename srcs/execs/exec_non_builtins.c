@@ -6,13 +6,13 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/18 14:10:32 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/01 04:37:34 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int	ft_exec_non_builtins(char **args, t_minishell *data)
+int	ft_exec_non_builtins(char **args, t_minishell *data, t_redir *redirections)
 {
 	char	*la_path;
 	char	**env;
@@ -22,6 +22,9 @@ int	ft_exec_non_builtins(char **args, t_minishell *data)
 	la_fork = fork();
 	if (la_fork == 0)
 	{
+		la_status = ft_check_redirections(redirections, data);
+		if (la_status != ENO_SUCCESS)
+			(exit(ENO_GENERAL));
 		env = env_lst_to_arr(&data->env_lst);
 		if (args == NULL || args[0] == NULL)
 			(ft_free(args));
@@ -33,6 +36,7 @@ int	ft_exec_non_builtins(char **args, t_minishell *data)
 	}
 	else
 		waitpid(la_fork, &la_status, 0);
+		// printf("It's here 50\n");
 	if (WIFEXITED(la_status))
 		return (WEXITSTATUS(la_status));
 	else if (WIFSIGNALED(la_status))

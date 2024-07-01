@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:31:03 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/18 14:11:43 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/06/29 15:25:07 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	ft_strncmp_loco(const char *s1, const char *s2, size_t n)
 }
 
 int	ft_exec_builtins(char **args, t_minishell *data)
-{
+{	
 	if (ft_strncmp_loco(args[0], "echo", ft_strlen(args[0])) == 0)
 		return (ft_exec_echo(args));
 	if (ft_strncmp_loco(args[0], "pwd", ft_strlen(args[0])) == 0)

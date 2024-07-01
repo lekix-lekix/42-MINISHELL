@@ -6,11 +6,18 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/18 17:09:37 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/01 17:36:52 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+t_minishell *ft_shell(void)
+{
+	static t_minishell data;
+
+	return (&data);
+}
 
 char	*get_path(char **envp)
 {
@@ -33,6 +40,8 @@ char	*get_path(char **envp)
 int	init_data(t_minishell *data, char **envp)
 {
 	data->path = get_path(envp);
+	data->stdin = dup(0);
+	data->stdout = dup(1);
 	if (!data->path)
 		return (-1);
 	data->env_lst = get_env_lst(envp);
@@ -47,6 +56,10 @@ static void	ft_start_execution(t_ast **tree, t_minishell *data)
 	int		la_status;
 
 	nodes = *tree;
+
+	// printf("Starting to excuate\n");
+	ft_init_tree(nodes);
+	printf("It's here 12\n");
 	la_status = ft_start_exec(&nodes, data);
 }
 
@@ -57,8 +70,8 @@ int	print_env(t_env **lst)
 	node = *lst;
 	while (node)
 	{
-		printf("field = %s\n", node->field);
-		printf("content = %s\n", node->content);
+		printf("%s", node->field);
+		printf("%s\n", node->content);
 		node = node->next;
 	}
 	return (0);
@@ -132,7 +145,6 @@ void	gbg_delete_node(t_token *node, int mlc_lst)
 	gbg_coll(node->content, mlc_lst, FREE);
 	gbg_coll(node, mlc_lst, FREE);
 }
-
 
 int     get_nb_of_args(t_token **lst)
 {
@@ -212,6 +224,7 @@ int	start_parsing(char *prompt, t_minishell *data)
 	if (check_syntax_errors(prompt))
 		return (-1);
 	input = tokenize_input(prompt);
+	// print_lst(&input);
 	if (check_par_syntax(&input) == -1)
 		return (-1);
 	clean_token_lst(&input);
@@ -228,7 +241,7 @@ int	start_parsing(char *prompt, t_minishell *data)
 		// printf("PRINT TREE END =====\n");
 		check_tree_syntax(&tree);
 	}
-    ft_start_execution(&tree, data);
+	ft_start_execution(&tree, data);
 	return (0);
 }
 
@@ -240,21 +253,21 @@ void	ft_exit(void)
 
 int	main(int argc, char **argv, char **env)
 {
-	t_minishell	data;
+	t_minishell	*data;
 
+	data = ft_shell();
 	((void)argc, (void)argv);
-	data.env_lst = get_env_lst(env);
+	init_data(data, env);
 	while (1)
 	{
-		data.prompt = readline("./minishell$ ");
-		if (!data.prompt | !*data.prompt)
+		data->prompt = readline("./minishell$ ");
+		if (!data->prompt | !*data->prompt)
 			break ;
-		start_parsing(data.prompt, &data);
-		free(data.prompt);
+		start_parsing(data->prompt, data);
+		free(data->prompt);
 	}
-	free(data.prompt);
+	free(data->prompt);
 	gbg_coll(NULL, ENV, FLUSH_ALL);
 	gbg_coll(NULL, PARSING, FLUSH_ALL);
 	gbg_coll(NULL, ENV, FREE);
-
 }
