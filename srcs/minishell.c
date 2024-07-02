@@ -6,15 +6,15 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/01 18:05:06 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/02 17:34:54 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_minishell *ft_shell(void)
+t_minishell	*ft_shell(void)
 {
-	static t_minishell data;
+	static t_minishell	data;
 
 	return (&data);
 }
@@ -56,11 +56,14 @@ static void	ft_start_execution(t_ast **tree, t_minishell *data)
 	int		la_status;
 
 	nodes = *tree;
-
 	// printf("Starting to excuate\n");
 	ft_init_tree(nodes);
 	printf("It's here 12\n");
-	la_status = ft_start_exec(&nodes, data);
+	if (nodes->node_type == CMD && !ft_is_builtin(nodes->token_node->contents[0]))
+		la_status = ft_exec_non_builtins_single_cmd(nodes->token_node->contents,
+				data, nodes->token_node->redirections);
+	else
+		la_status = ft_start_exec(&nodes, data);
 }
 
 void	gbg_delete_node(t_token *node, int mlc_lst)
@@ -82,7 +85,7 @@ int	start_parsing(char *prompt, t_minishell *data)
 		return (-1);
 	input = tokenize_input(prompt);
 	clean_token_lst(&input);
-    print_lst(&input);
+	print_lst(&input);
 	if (check_redir_syntax(&input) == -1)
 		return (-1);
 	if (check_par_syntax(&input) == -1)
@@ -94,7 +97,7 @@ int	start_parsing(char *prompt, t_minishell *data)
 	join_cmd_args(&input);
 	tree = build_ast(&input, &insert_node);
 	if (tree && check_tree_syntax(&tree) == -1)
-        return (-1);
+		return (-1);
 	ft_start_execution(&tree, data);
 	return (0);
 }
@@ -116,13 +119,13 @@ int	main(int argc, char **argv, char **env)
 	{
 		data->prompt = readline("./minishell$ ");
 		if (data->prompt || *data->prompt)
-        {
-		    start_parsing(data->prompt, data);
-            gbg_coll(NULL, PARSING, FLUSH_ALL);
-		    free(data->prompt);
-        }
+		{
+			start_parsing(data->prompt, data);
+			gbg_coll(NULL, PARSING, FLUSH_ONE);
+			free(data->prompt);
+		}
 	}
-	free(data->prompt);
+	// free(data->prompt);
 	gbg_coll(NULL, ENV, FLUSH_ALL);
 	gbg_coll(NULL, PARSING, FLUSH_ALL);
 	gbg_coll(NULL, ENV, FREE);

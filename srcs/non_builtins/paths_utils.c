@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   paths_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:19:27 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/18 14:00:38 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/02 13:46:53 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,14 @@ char	*ft_check_path(char *cmd, char **env)
 	char	**paths;
 	char	*fpath;
 
-	fpath = check_cmd_access(cmd);
+    printf("cmd = %s\n", cmd);
+	fpath = check_cmd_access(cmd); // absolute path check
 	if (fpath != NULL)
 		return (fpath);
-	fpath = check_cmd_path(cmd);
+	fpath = check_cmd_path(cmd); // unknown test
 	if (fpath != NULL)
 		return (fpath);
-	paths = ft_get_paths(env);
+	paths = ft_get_paths(env); // getting path
 	if (!paths || paths[0] == NULL)
 		return (cmd);
 	fpath = check_paths(paths, cmd);
@@ -48,7 +49,7 @@ char	**ft_get_paths(char **env)
 	{
 		if (ft_strncmp("PATH", env[x], 4) == 0)
 		{
-			path = ft_split(env[x] + 5, ':');
+			path = msh_split(env[x] + 5, ':', PARSING);
 			return (path);
 		}
 		x++;
@@ -67,7 +68,7 @@ char	*check_cmd_path(char *cmd)
 {
 	if (ft_strncmp(cmd, "/", 5) == 0)
 	{
-		if (access(cmd, F_OK | R_OK | X_OK) == 0)
+		if (access(cmd, F_OK | R_OK | X_OK) == 0)       // ???
 			return (cmd);
 		(ft_print_err("Error in the command path"));
 	}

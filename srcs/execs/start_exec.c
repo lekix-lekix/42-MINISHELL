@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/01 18:03:19 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/02 17:35:24 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,11 @@ int	ft_exec_pipe(t_ast *node)
 	la_status = 0;
 	pipe(pids);
 	pipe_l = fork();
+	write(2, "FORKING\n", 8);
 	if (pipe_l == 0)
 		ft_exec_pipe_child(node->left, pids, P_CMD_LEFT);
 	pipe_r = fork();
+	write(2, "FORKING\n", 8);
 	if (pipe_r == 0)
 		ft_exec_pipe_child(node->right, pids, P_CMD_RIGHT);
 	(close(pids[0]), close(pids[1]));
@@ -86,7 +88,7 @@ int	ft_check_cmds(t_token *token_node, t_minishell *data)
 		return (ft_reset_ports(false), le_satus);
 	}
 	else
-	{	
+	{
 		return (ft_exec_non_builtins(token_node->contents, data,
 				token_node->redirections));
 	}
@@ -102,7 +104,10 @@ int	ft_start_exec(t_ast **tree, t_minishell *data)
 	if (!nodes)
 		return (1);
 	if (nodes->node_type == PIPE)
+	{
+		// write(2, "PIPEFUNC\n", 9);
 		return (ft_exec_pipe(nodes));
+	}
 	else if (nodes->node_type == AND)
 	{
 		la_status = ft_start_exec(&nodes->left, data);
@@ -118,8 +123,6 @@ int	ft_start_exec(t_ast **tree, t_minishell *data)
 		return (ft_start_exec(&nodes->right, data));
 	}
 	else
-	{
 		return (ft_check_cmds(nodes->token_node, data));
-	}
 	return (ENO_GENERAL);
 }

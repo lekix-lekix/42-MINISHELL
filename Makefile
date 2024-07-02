@@ -6,7 +6,7 @@
 #    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/07/01 17:53:12 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/07/02 14:02:31 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,7 +54,8 @@ SRCS = ./srcs/minishell.c \
 	./srcs/parsing_clean_tokens.c \
 	./srcs/parsing_check_syntax.c \
 	./srcs/print_funcs.c \
-	./srcs/parsing_handle_args.c
+	./srcs/parsing_handle_args.c \
+	./srcs/exec_print_errors.c
 
 	
 	# .srcs/execs/heredoc_expander.c \

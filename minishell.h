@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/01 17:54:59 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/02 17:30:31 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 # define PER_ERR \
 	"Permission denied, you can't \
 open this file! Or file doesn't exit, Or it's a directory"
-# define CMD_ERR "Command not found!"
+# define CMD_ERR "command not found"
 # define OPEN_ERR "Error opening file"
 # define DUP_ERR "An err has occoured with dup2"
 # define FORK_C2 "An Error has occuered with Fork child2"
@@ -249,6 +249,9 @@ int					print_char_syntax_error(char *str);
 int					print_ast_syntax_error(t_ast *node);
 int					print_token_syntax_error(t_token *node);
 
+// print bash errors
+void				print_cmd_not_found(char *cmd);
+
 // handle args
 void				join_cmd_args(t_token **lst);
 
@@ -265,7 +268,7 @@ t_token				*find_right_par(t_token **lst);
 
 // garbage collector
 void				remove_mem_node(t_lst **lst, void *mem_addr);
-void				print_tree(t_ast **tree); // to remove
+void	print_tree(t_ast **tree); // to remove
 
 // parsing redirections
 
@@ -282,7 +285,7 @@ void				set_args_lst(t_token **lst);
 // print functions
 void				print_redir_lst(t_redir **lst);
 
-void	find_operator_type(char *input, t_token *node);
+void				find_operator_type(char *input, t_token *node);
 
 void				lst_env_add_back(t_env **lst, t_env *new);
 void				consume_node(t_token **lst, t_token *node);
@@ -292,9 +295,11 @@ int					ft_check_redirections(t_redir *redirections,
 						t_minishell *data);
 bool				ft_is_delimiter(char *delimiter, char *str);
 void				ft_init_tree(t_ast *data);
-void	ft_reset_ports(bool piped);
+void				ft_reset_ports(bool piped);
 
 // Expanders
 void				ft_heredoc_expander(char *str, int fd);
+
+int	ft_exec_non_builtins_single_cmd(char **args, t_minishell *data, t_redir *redirections);
 
 #endif
