@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/01 17:22:47 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/02 10:01:59 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,9 @@ int	ft_out(t_redir *redirections, int *status)
 	return (*status);
 }
 
-int	ft_check_redirections(t_redir *redirections, t_minishell *data)
+int	ft_check_redirections(t_redir *redirections)
 {
 	int	le_status;
-	(void)data;
 
 	while (redirections)
 	{
@@ -102,12 +101,7 @@ int	ft_check_redirections(t_redir *redirections, t_minishell *data)
 			&& ft_append(redirections, &le_status) != ENO_SUCCESS)
 			return (le_status);
 		else if (redirections->redir_type == REDIR_HEREDOC)
-		{	
-			printf("It's a heredoc\n");
 			(dup2((ft_shell())->heredoc, 0), close((ft_shell())->heredoc));
-			// close(1);
-			// ft_reset_ports(false);
-		}
 		redirections = redirections->next;
 	}
 	return (ENO_SUCCESS);

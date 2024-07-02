@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/01 18:05:06 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/02 10:37:48 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,17 +50,15 @@ int	init_data(t_minishell *data, char **envp)
 	return (0);
 }
 
-static void	ft_start_execution(t_ast **tree, t_minishell *data)
+static void	ft_start_execution(t_ast **tree)
 {
 	t_ast	*nodes;
 	int		la_status;
 
 	nodes = *tree;
-
-	// printf("Starting to excuate\n");
 	ft_init_tree(nodes);
-	printf("It's here 12\n");
-	la_status = ft_start_exec(&nodes, data);
+	printf("12\n");
+	la_status = ft_start_exec(&nodes);
 }
 
 void	gbg_delete_node(t_token *node, int mlc_lst)
@@ -69,7 +67,7 @@ void	gbg_delete_node(t_token *node, int mlc_lst)
 	gbg_coll(node, mlc_lst, FREE);
 }
 
-int	start_parsing(char *prompt, t_minishell *data)
+int	start_parsing(char *prompt)
 {
 	t_token	*input;
 	t_ast	*tree;
@@ -82,7 +80,6 @@ int	start_parsing(char *prompt, t_minishell *data)
 		return (-1);
 	input = tokenize_input(prompt);
 	clean_token_lst(&input);
-    print_lst(&input);
 	if (check_redir_syntax(&input) == -1)
 		return (-1);
 	if (check_par_syntax(&input) == -1)
@@ -95,7 +92,7 @@ int	start_parsing(char *prompt, t_minishell *data)
 	tree = build_ast(&input, &insert_node);
 	if (tree && check_tree_syntax(&tree) == -1)
         return (-1);
-	ft_start_execution(&tree, data);
+	ft_start_execution(&tree);
 	return (0);
 }
 
@@ -117,7 +114,7 @@ int	main(int argc, char **argv, char **env)
 		data->prompt = readline("./minishell$ ");
 		if (data->prompt || *data->prompt)
         {
-		    start_parsing(data->prompt, data);
+		    start_parsing(data->prompt);
             gbg_coll(NULL, PARSING, FLUSH_ALL);
 		    free(data->prompt);
         }

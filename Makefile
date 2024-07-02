@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
+#    By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/07/01 17:53:12 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/07/02 10:40:41 by sabakar-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,11 +56,6 @@ SRCS = ./srcs/minishell.c \
 	./srcs/print_funcs.c \
 	./srcs/parsing_handle_args.c
 
-	
-	# .srcs/execs/heredoc_expander.c \
-	# ./srcs/ft_tree_helpers.c \
-	#	./srcs/ft_extra_fts.c \
-
 OBJ = $(SRCS:.c=.o)
 
 OBJ_BONUS = $(SRCS_BONUS:.c=.o)
@@ -92,6 +87,7 @@ clean :
 	rm -f ./srcs/Builtins/*o
 	rm -f ./srcs/execs/*o
 	rm -f ./srcs/non_builtins/*o
+	rm -f ./srcs/expanders/*o
 	
 fclean : clean
 	make -sC $(PATH_LIBFT) fclean

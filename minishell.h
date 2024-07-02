@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/01 17:54:59 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/02 10:28:38 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,12 +222,11 @@ int					ft_check_key(char *str);
 char				*ft_get_envlst_content(char *content, t_minishell *data);
 
 // The non-builtins
-int					ft_exec_non_builtins(char **args, t_minishell *data,
-						t_redir *redirections);
+int					ft_exec_non_builtins(char **args, t_redir *redirections);
 
 // utils
 void				ft_print_err(char *str);
-int					ft_start_exec(t_ast **tree, t_minishell *data);
+int					ft_start_exec(t_ast **tree);
 void				ft_free(char **arr);
 void				ft_print_err(char *str);
 char				**env_lst_to_arr(t_env **lst);
@@ -265,7 +264,7 @@ t_token				*find_right_par(t_token **lst);
 
 // garbage collector
 void				remove_mem_node(t_lst **lst, void *mem_addr);
-void				print_tree(t_ast **tree); // to remove
+void	print_tree(t_ast **tree); // to remove
 
 // parsing redirections
 
@@ -282,17 +281,16 @@ void				set_args_lst(t_token **lst);
 // print functions
 void				print_redir_lst(t_redir **lst);
 
-void	find_operator_type(char *input, t_token *node);
+void				find_operator_type(char *input, t_token *node);
 
 void				lst_env_add_back(t_env **lst, t_env *new);
 void				consume_node(t_token **lst, t_token *node);
 int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
 						int level);
-int					ft_check_redirections(t_redir *redirections,
-						t_minishell *data);
+int					ft_check_redirections(t_redir *redirections);
 bool				ft_is_delimiter(char *delimiter, char *str);
 void				ft_init_tree(t_ast *data);
-void	ft_reset_ports(bool piped);
+void				ft_reset_ports(bool piped);
 
 // Expanders
 void				ft_heredoc_expander(char *str, int fd);

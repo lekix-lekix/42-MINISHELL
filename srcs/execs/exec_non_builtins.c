@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_non_builtins.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/01 18:07:35 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/02 10:35:40 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int	ft_exec_non_builtins(char **args, t_minishell *data, t_redir *redirections)
+int	ft_exec_non_builtins(char **args, t_redir *redirections)
 {
 	char	*la_path;
 	char	**env;
@@ -22,10 +22,10 @@ int	ft_exec_non_builtins(char **args, t_minishell *data, t_redir *redirections)
 	la_fork = fork();
 	if (la_fork == 0)
 	{
-		la_status = ft_check_redirections(redirections, data);
+		la_status = ft_check_redirections(redirections);
 		if (la_status != ENO_SUCCESS)
 			(exit(ENO_GENERAL));
-		env = env_lst_to_arr(&data->env_lst);
+		env = env_lst_to_arr(&(ft_shell())->env_lst);
 		if (args == NULL || args[0] == NULL)
 			(ft_free(args));
 		la_path = ft_check_path(args[0], env);
@@ -36,7 +36,6 @@ int	ft_exec_non_builtins(char **args, t_minishell *data, t_redir *redirections)
 	}
 	else
 		waitpid(la_fork, &la_status, 0);
-	// printf("It's here 50\n");
 	if (WIFEXITED(la_status))
 		return (WEXITSTATUS(la_status));
 	else if (WIFSIGNALED(la_status))
