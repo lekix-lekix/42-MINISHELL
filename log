@@ -1,11 +1,8 @@
-143163 execve("./minishell", ["./minishell"], 0x7ffdb030f610 /* 65 vars */) = 0
-143163 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f3920482a10) = 143188
-143188 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f3920482a10) = 143189
-143189 execve("/usr/bin/ls", ["ls"], 0x7ffc42415e68 /* 65 vars */ <detached ...>
-143188 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=143189, si_uid=106439, si_status=0, si_utime=0, si_stime=0} ---
-143188 +++ exited with 0 +++
-143163 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=143188, si_uid=106439, si_status=0, si_utime=0, si_stime=0} ---
-143163 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f3920482a10) = 143190
-143190 execve("/usr/bin/cat", ["cat", "-e"], 0x7ffc42415e68 /* 65 vars */ <detached ...>
-143163 --- SIGINT {si_signo=SIGINT, si_code=SI_KERNEL} ---
-143163 +++ killed by SIGINT +++
+46346 execve("./minishell", ["./minishell"], 0x7ffcea018390 /* 63 vars */) = 0
+46346 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7fde1a884a10) = 46369
+46346 --- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=NULL} ---
+46369 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7fde1a884a10) = 46371
+46371 execve("/usr/bin/ls", ["ls"], 0x7ffcfda56458 /* 63 vars */ <detached ...>
+46369 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=46371, si_uid=106439, si_status=0, si_utime=0, si_stime=0} ---
+46369 +++ exited with 0 +++
+46346 +++ killed by SIGSEGV (core dumped) +++

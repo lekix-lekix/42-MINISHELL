@@ -6,12 +6,13 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/04 18:38:54 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/05 11:46:20 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-int	iterate_exec_ast_lst(t_ast **lst, int *la_status);
+
+int		iterate_exec_ast_lst(t_ast **lst, int *la_status);
 
 void	ft_reset_ports(bool piped)
 {
@@ -165,7 +166,8 @@ void	add_ast_lst(t_ast **ast_lst, t_ast *node)
 	current->next = node;
 }
 
-void	ft_start_exec_tree(t_ast *root, t_ast **to_exec, int *la_status, int *first_exec)
+void	ft_start_exec_tree(t_ast *root, t_ast **to_exec, int *la_status,
+		int *first_exec)
 {
 	if (root->left /* && root->left->visited == 0 */)
 	{
@@ -177,14 +179,15 @@ void	ft_start_exec_tree(t_ast *root, t_ast **to_exec, int *la_status, int *first
 		printf("adding node to lst\n");
 		add_ast_lst(to_exec, root);
 	}
+	// *la_status = iterate_exec_ast_lst(to_exec, la_status);
 	// root->visited = 1
 	if ((root->node_type == AND || root->node_type == OR) && !root->is_in_par)
 	{
-		if (*first_exec) 
+		if (*first_exec)
 		{
 			printf("first exec\n");
 			iterate_exec_ast_lst(to_exec, la_status);
-			*to_exec = NULL ;
+			*to_exec = NULL;
 			*first_exec = 0;
 		}
 		else if (!*first_exec)
@@ -193,28 +196,27 @@ void	ft_start_exec_tree(t_ast *root, t_ast **to_exec, int *la_status, int *first
 			if (root->node_type == AND && la_status == 0)
 			{
 				*la_status = iterate_exec_ast_lst(to_exec, la_status);
-				*to_exec = NULL ;
+				*to_exec = NULL;
 			}
 			if (root->node_type == OR && la_status != 0)
 			{
 				*la_status = iterate_exec_ast_lst(to_exec, la_status);
-				*to_exec = NULL ;
+				*to_exec = NULL;
 			}
 		}
 	}
-	
-	if (root->right/*  && root->right->visited == 0 */)
+	if (root->right /*  && root->right->visited == 0 */)
 	{
 		printf("going right\n");
 		ft_start_exec_tree(root->right, to_exec, la_status, first_exec);
 	}
 	if ((root->node_type == AND || root->node_type == OR) && !root->is_in_par)
 	{
-		if (*first_exec) 
+		if (*first_exec)
 		{
 			printf("first exec\n");
 			iterate_exec_ast_lst(to_exec, la_status);
-			*to_exec = NULL ;
+			*to_exec = NULL;
 			*first_exec = 0;
 		}
 		else if (!*first_exec)
@@ -226,12 +228,12 @@ void	ft_start_exec_tree(t_ast *root, t_ast **to_exec, int *la_status, int *first
 			{
 				printf("went throught\n");
 				*la_status = iterate_exec_ast_lst(to_exec, la_status);
-				*to_exec = NULL ;
+				*to_exec = NULL;
 			}
 			if (root->node_type == OR && *la_status != 0)
 			{
 				*la_status = iterate_exec_ast_lst(to_exec, la_status);
-				*to_exec = NULL ;
+				*to_exec = NULL;
 			}
 		}
 	}
@@ -304,7 +306,7 @@ int	iterate_exec_ast_lst(t_ast **lst, int *la_status)
 
 void	init_pids_tab(t_ast **tree)
 {
-	t_ast *current;
+	t_ast	*current;
 
 	current = *tree;
 	while (current)
@@ -324,9 +326,11 @@ int	ft_start_exec(t_ast **tree)
 	t_ast *root;
 	t_ast *to_exec;
 	int la_status;
-	int	first_exec;
+	int first_exec;
+	int x;
 	// int cmd_list;
 
+	x = -1;
 	root = *tree;
 	to_exec = NULL;
 	if (root->node_type == CMD)
@@ -334,10 +338,12 @@ int	ft_start_exec(t_ast **tree)
 		la_status = ft_check_cmds(root->token_node);
 		return (la_status);
 	}
+
 	ft_shell()->pids_num = 0;
 	first_exec = 1;
 	init_pids_tab(&to_exec);
 	print_ast_lst(&to_exec);
 	ft_start_exec_tree(root, &to_exec, &la_status, &first_exec);
+
 	return (la_status);
 }
