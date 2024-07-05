@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:02:12 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/04 14:41:29 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/05 13:35:32 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,21 @@ static void	ft_export_list(t_minishell *data)
 	list = data->env_lst;
 	while (list)
 	{
-		if (list->field != NULL && (ft_strcmp(list->content, "_") != 0))
+		if (list->content != NULL && (ft_strcmp(list->field, "_") != 0))
 		{
-			printf("export %s=\"", list->content);
+			printf("export %s\"", list->field);
 			i = 0;
-			while ((list->field)[i])
+			while ((list->content)[i])
 			{
-				if ((list->field)[i] == '$' || (list->field)[i] == '"')
-					printf("\\%c", (list->field)[i++]);
+				if ((list->content)[i] == '$' || (list->content)[i] == '"')
+					printf("\\%c", (list->content)[i++]);
 				else
-					printf("%c", (list->field)[i++]);
+					printf("%c", (list->content)[i++]);
 			}
 			printf("\"\n");
 		}
-		else if (list->field == NULL && (ft_strcmp(list->content, "_") != 0))
-			printf("export %s\n", list->content);
+		else if (list->content == NULL && (ft_strcmp(list->field, "_") != 0))
+			printf("export F %s\n", list->field);
 		list = list->next;
 	}
 }
@@ -81,10 +81,14 @@ int	ft_exec_export(char **args, t_minishell *data)
 			exit_s = ft_export_err_msg(args[i]);
 		else
 		{
-			printf("The crash\n");
 			key = ft_extract_val(args[i]);
-			if (ft_env_entry_exists(key, data))
+			printf("The key: %s\n", key);
+			printf("The key of: %s\n", (ft_shell())->env_lst->field);
+			if (ft_env_entry_exists(key, ft_shell()))
+			{	
+				printf("The crash\n");
 				ft_update_envlst(ft_extract_key(args[i]), key, false, data);
+			}
 			else
 				ft_update_envlst(ft_extract_key(args[i]), key, true, data);
 		}

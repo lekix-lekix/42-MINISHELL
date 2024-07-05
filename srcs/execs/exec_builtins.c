@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:31:03 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/04 14:52:39 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/05 11:53:31 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	ft_exec_builtins(char **args, t_minishell *data)
 {
 	// int x = -1;
 	// while (args[++x])
-		dprintf(2, "The bultin cmd is: %s\n", args[0]);	
+		// dprintf(2, "The bultin cmd is: %s\n", args[0]);	
 	if (ft_strncmp_loco(args[0], "echo", ft_strlen(args[0])) == 0)
 		return (ft_exec_echo(args));
 	if (ft_strncmp_loco(args[0], "pwd", ft_strlen(args[0])) == 0)
@@ -51,7 +51,7 @@ int	ft_exec_builtins(char **args, t_minishell *data)
 
 bool	ft_is_builtin(char *arg)
 {
-	dprintf(2, "arg = %s\n", arg);
+	// dprintf(2, "arg = %s\n", arg);
 	if (!ft_strncmp_loco(arg, "cd", ft_strlen(arg)) || !ft_strncmp_loco(arg,
 			"pwd", ft_strlen(arg)) || !ft_strncmp_loco("echo", arg,
 			ft_strlen(arg)) || !ft_strncmp_loco(arg, "export", ft_strlen(arg))

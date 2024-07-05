@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:14:54 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/28 17:45:10 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/05 13:33:43 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,29 @@ char	*ft_join(char *s1, char *s2)
 	return (new_arr);
 }
 
+// bool	ft_env_entry_exists(char *field, t_minishell *data)
+// {
+// 	t_env	*envlst;
+
+// 	envlst = data->env_lst;
+// 	printf("the field: %s\n", data->env_lst->content);
+// 	while (envlst && envlst->next)
+// 	{
+// 		if (!ft_strcmp_m(field, envlst->content))
+// 			return (true);
+// 		envlst = envlst->next;
+// 	}
+// 	return (false);
+// }
+
 bool	ft_env_entry_exists(char *content, t_minishell *data)
 {
 	t_env	*envlst;
-
-	envlst = data->env_lst;
-	while (envlst)
+	(void)data;
+	
+	envlst = (ft_shell())->env_lst;
+	printf("The coming key: %s\n", content);
+	while (envlst->field != NULL && envlst)
 	{
 		if (!ft_strcmp(content, envlst->content))
 			return (true);

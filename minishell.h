@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/04 17:20:19 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/05 18:22:09 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,5 +299,7 @@ void				ft_reset_ports(bool piped);
 void				ft_heredoc_expander(char *str, int fd);
 int					ft_exec_non_builtins_single_cmd(char **args,
 						t_redir *redirections);
+
+void				set_is_in_par(t_ast *root, int flag);
 
 #endif

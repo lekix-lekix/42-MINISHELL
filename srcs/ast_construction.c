@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_construction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/01 17:57:52 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/05 16:30:11 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int	create_insert_ast_node_par(t_ast **tree, t_token *current)
 		*tree = NULL;
 		return (-1);
 	}
+	insert_cmd_node(tree, cmd_node);
 	return (0);
 }
 

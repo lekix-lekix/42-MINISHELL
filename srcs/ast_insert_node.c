@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_insert_node.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:17:54 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/28 17:06:37 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/05 16:22:57 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,9 @@ void	create_consume_insert_node(t_token **lst, t_token **node, t_ast **tree,
 		t_ast **tree_right)
 {
 	t_ast	*new_node;
+	int		plus_flag;
 
+	plus_flag = 0;
 	new_node = create_ast_node(*node);
 	if (*lst == *node)
 	{
@@ -102,10 +104,17 @@ void	create_consume_insert_node(t_token **lst, t_token **node, t_ast **tree,
 		*node = NULL;
 	}
 	consume_node(lst, new_node->token_node);
+	if (new_node->node_type == AND)
+	{
+		new_node->node_type += 1;
+		plus_flag = 1;
+	}
 	if (*tree_right)
 		insert_operator_token_node(tree_right, new_node);
 	else if (*tree && new_node->node_type < (*tree)->node_type)
 		insert_operator_token_node(tree_right, new_node);
 	else
 		insert_operator_token_node(tree, new_node);
+	if (plus_flag)
+		new_node->node_type -= 1;
 }

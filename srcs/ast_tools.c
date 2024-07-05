@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:27:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/04 16:34:12 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/05 18:09:59 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,10 @@ t_ast	*create_ast_node(t_token *node)
 	new_node->left = NULL;
 	new_node->right = NULL;
 	new_node->next = NULL;
-	new_node->is_in_par = 0;
 	new_node->visited = 0;
 	new_node->node_type = node->type;
 	if (node->redirections)
 		new_node->redirections = node->redirections;
+	new_node->is_in_par = 0;
 	return (new_node);
 }

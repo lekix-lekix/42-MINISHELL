@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_parenthesis.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:19:53 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/28 17:12:21 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/05 18:22:16 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,15 @@ int	check_par_lst(t_token **par_lst)
 	return (0);
 }
 
+void	set_is_in_par(t_ast *root, int flag)
+{
+	if (root->left)
+		set_is_in_par(root->left, flag);
+	root->is_in_par = flag;
+	if (root->right)
+		set_is_in_par(root->right, flag);
+}
+
 t_ast	*handle_par(t_token **lst, t_ast **tree, int *insert_node)
 {
 	t_token	*par_lst;
@@ -58,7 +67,7 @@ t_ast	*handle_par(t_token **lst, t_ast **tree, int *insert_node)
 	par_tree = build_ast(&par_lst, insert_node);
 	if (!par_tree)
 		return (NULL);
-	par_tree->is_in_par = 1;
+	set_is_in_par(par_tree, 1);
 	if (!*tree)
 		*tree = par_tree;
 	if (check_tree_syntax(&par_tree) == -1)
