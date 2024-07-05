@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/02 10:28:38 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/04 17:20:19 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,10 @@ typedef struct s_ast
 	t_token_type	node_type;
 	t_redir			*redirections;
 	int				is_in_par;
+	int				visited;
 	struct s_ast	*left;
 	struct s_ast	*right;
+	struct s_ast	*next;
 }					t_ast;
 
 typedef enum e_gbg_rules
@@ -147,7 +149,7 @@ typedef struct s_minishell
 	int				exit_status;
 	char			*prompt;
 	char			*path;
-	int				*pids;
+	pid_t			*pids;
 	int				pids_num;
 	int				stdin;
 	int				stdout;
@@ -155,6 +157,7 @@ typedef struct s_minishell
 	t_ast			*node;
 	bool			signint_child;
 	bool			heredoc_sigint;
+	char			**env_args;
 	struct termios	original_term;
 }					t_minishell;
 
@@ -294,5 +297,7 @@ void				ft_reset_ports(bool piped);
 
 // Expanders
 void				ft_heredoc_expander(char *str, int fd);
+int					ft_exec_non_builtins_single_cmd(char **args,
+						t_redir *redirections);
 
 #endif

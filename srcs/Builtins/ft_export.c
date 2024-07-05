@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:02:12 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/18 14:14:08 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/04 14:41:29 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ int	ft_exec_export(char **args, t_minishell *data)
 
 	exit_s = 0;
 	i = 1;
+	dprintf(2, "The cmd is: %s\n", args[0]);	
+	dprintf(2, "The cmd is: %s\n", args[1]);
 	if (!args[1])
 		return (ft_export_list(data), 0);
 	while (args[i])
@@ -79,6 +81,7 @@ int	ft_exec_export(char **args, t_minishell *data)
 			exit_s = ft_export_err_msg(args[i]);
 		else
 		{
+			printf("The crash\n");
 			key = ft_extract_val(args[i]);
 			if (ft_env_entry_exists(key, data))
 				ft_update_envlst(ft_extract_key(args[i]), key, false, data);

@@ -6,7 +6,7 @@
 #    By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/07/02 10:40:41 by sabakar-         ###   ########.fr        #
+#    Updated: 2024/07/03 14:08:41 by sabakar-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ SRCS = ./srcs/minishell.c \
 	./srcs/execs/exec_redirections.c \
 	./srcs/execs/init_tree.c \
 	./srcs/execs/exec_utils.c \
-	./srcs/expanders/heredoc_utils.c \
+	./srcs/expanders/heredoc_expander.c \
 	./srcs/parsing_redir.c \
 	./srcs/parsing_redir_bis.c \
 	./srcs/parsing_redir_utils.c \

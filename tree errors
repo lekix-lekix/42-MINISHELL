@@ -61,3 +61,7 @@ b
 THINGS TO CHECK:
     - env | grep PATH > file0 > file1
     - pwd with any extra command should display an error "pwd: too many arguments"
+    - strace -e fork,vfork,clone,execve -fb execve -o log "A command to check how many times a program forks"
+
+
+   

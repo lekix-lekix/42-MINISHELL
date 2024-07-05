@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/02 10:37:21 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/03 16:28:54 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ static void	ft_init_leaf(t_ast *node)
 		{
 			pipe(p);
 			(ft_shell())->signint_child = true;
-			pid = (signal(SIGQUIT, SIG_IGN), fork());
+			signal(SIGQUIT, SIG_IGN),
+			pid = (fork());
 			if (!pid)
 				ft_heredoc(io, p);
 			if (ft_leave_leaf(p, &pid))

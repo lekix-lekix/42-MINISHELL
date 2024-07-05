@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/02 10:37:48 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/04 17:26:49 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	init_data(t_minishell *data, char **envp)
 	if (!data->path)
 		return (-1);
 	data->env_lst = get_env_lst(envp);
+	data->env_args = envp;
 	if (!data->env_lst)
 		return (-1);
 	return (0);
@@ -58,7 +59,13 @@ static void	ft_start_execution(t_ast **tree)
 	nodes = *tree;
 	ft_init_tree(nodes);
 	printf("12\n");
-	la_status = ft_start_exec(&nodes);
+	// if (nodes->token_node && nodes->token_node->type == CMD)
+	// {
+	// 	printf("It was a single cmd\n");
+	// 	la_status = ft_exec_non_builtins_single_cmd(nodes->token_node->contents, nodes->redirections);
+	// }
+	// else
+		la_status = ft_start_exec(&nodes);
 }
 
 void	gbg_delete_node(t_token *node, int mlc_lst)
