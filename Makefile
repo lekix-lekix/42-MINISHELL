@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+         #
+#    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/07/03 14:08:41 by sabakar-         ###   ########.fr        #
+#    Updated: 2024/07/08 14:27:33 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRCS = ./srcs/minishell.c \
 	./srcs/Builtins/ft_unset.c \
 	./srcs/execs/exec_non_builtins.c \
 	./srcs/execs/start_exec.c \
+	./srcs/execs/exec_ast_tools.c \
 	./srcs/general_utils.c \
 	./srcs/non_builtins/paths_utils.c \
 	./srcs/tokenizer.c \

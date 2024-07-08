@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/05 18:46:56 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/08 18:45:56 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static void	ft_start_execution(t_ast **tree)
 	// 	la_status = ft_exec_non_builtins_single_cmd(nodes->token_node->contents, nodes->redirections);
 	// }
 	// else
-		la_status = ft_start_exec(&nodes);
+	la_status = ft_start_exec(&nodes);
 }
 
 void	gbg_delete_node(t_token *node, int mlc_lst)
@@ -122,7 +122,7 @@ int	main(int argc, char **argv, char **env)
 		if (data->prompt || *data->prompt)
         {
 		    start_parsing(data->prompt);
-            gbg_coll(NULL, PARSING, FLUSH_ALL);
+            gbg_coll(NULL, PARSING, FLUSH_ONE);
 		    free(data->prompt);
         }
 	}

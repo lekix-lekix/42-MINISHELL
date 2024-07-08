@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/05 18:22:09 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/08 14:29:25 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -300,6 +300,11 @@ void				ft_heredoc_expander(char *str, int fd);
 int					ft_exec_non_builtins_single_cmd(char **args,
 						t_redir *redirections);
 
+// Exec AST tools
 void				set_is_in_par(t_ast *root, int flag);
+void				add_ast_lst(t_ast **ast_lst, t_ast *node);
+t_ast				*find_top_node(t_ast **lst);
+void				set_next_null(t_ast *root);
+void				init_pids_tab(t_ast **tree);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_exec.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/05 18:47:20 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/08 18:56:26 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,123 +83,102 @@ int	ft_get_la_status(int la_status)
 // 	return (la_status);
 // }
 
-int	ft_check_cmds(t_token *token_node)
-{
-	int	le_satus;
-
-	// int	x;
-	// x = -1;
-	// while (token_node->contents[++x])
-	// 	printf("The token is: %s\n", token_node->contents[x]);
-	if (!token_node->contents)
-	{
-		// printf("no content\n");
-		le_satus = ft_check_redirections(token_node->redirections);
-		return (ft_reset_ports(false), (le_satus && ENO_GENERAL));
-	}
-	if (ft_is_builtin(token_node->contents[0]))
-	{
-		// printf("It's a builtin\n");
-		le_satus = ft_check_redirections(token_node->redirections);
-		if (le_satus != ENO_SUCCESS)
-			return (ft_reset_ports(false), ENO_GENERAL);
-		le_satus = ft_exec_builtins(token_node->contents, (ft_shell()));
-		return (ft_reset_ports(false), le_satus);
-	}
-	else
-	{
-		// printf("It's a non builtin\n");
-		return (ft_exec_non_builtins(token_node->contents,
-				token_node->redirections));
-	}
-}
-
-// int	ft_start_exec(t_ast **tree)
+// int	ft_check_cmds(t_token *token_node)
 // {
-// 	t_ast	*nodes;
-// 	int		la_status;
+// 	int	la_status;
 
-// 	la_status = -1;
-// 	nodes = *tree;
-// 	if (!nodes)
-// 		return (1);
-// 	if (nodes->node_type == PIPE)
+// 	// int	x;
+// 	// x = -1;
+// 	// while (token_node->contents[++x])
+// 	// 	printf("The token is: %s\n", token_node->contents[x]);
+// 	if (!token_node->contents)
 // 	{
-// 		// printf("It's a pipe\n");
-// 		return (ft_exec_pipe(nodes));
+// 		// printf("no content\n");
+// 		la_status = ft_check_redirections(token_node->redirections);
+// 		return (ft_reset_ports(false), (la_status && ENO_GENERAL));
 // 	}
-// 	else if (nodes->node_type == AND)
+// 	if (ft_is_builtin(token_node->contents[0]))
 // 	{
-// 		// printf("It's an AND\n");
-// 		la_status = ft_start_exec(&nodes->left);
-// 		if (la_status == ENO_SUCCESS)
-// 			return (ft_start_exec(&nodes->right));
-// 		return (la_status);
-// 	}
-// 	else if (nodes->node_type == OR)
-// 	{
-// 		// printf("It's a OR\n");
-// 		la_status = ft_start_exec(&nodes->left);
-// 		if (la_status == ENO_SUCCESS)
-// 			return (la_status);
-// 		return (ft_start_exec(&nodes->right));
+// 		// printf("It's a builtin\n");
+// 		la_status = ft_check_redirections(token_node->redirections);
+// 		if (la_status != ENO_SUCCESS)
+// 			return (ft_reset_ports(false), ENO_GENERAL);
+// 		la_status = ft_exec_builtins(token_node->contents, ft_shell());
+// 		return (ft_reset_ports(false), la_status);
 // 	}
 // 	else
 // 	{
-// 		// printf("It's a simple cmd\n");
-// 		return (ft_check_cmds(nodes->token_node));
+// 		// printf("It's a non builtin\n");
+// 		return (ft_exec_non_builtins(token_node->contents,
+// 				token_node->redirections));
 // 	}
-// 	return (ENO_GENERAL);
 // }
 
-void	add_ast_lst(t_ast **ast_lst, t_ast *node)
+int	ft_check_cmds(t_token *token_node)
 {
-	t_ast	*current;
+	int		la_status;
+	pid_t	pid;
 
-	current = *ast_lst;
-	if (!current)
+	pid = fork();
+	if (pid == -1)
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), perror("bash: fork: "),
+			exit(255), -1);
+	if (pid == 0)
 	{
-		*ast_lst = node;
-		return ;
+		la_status = ft_check_redirections(token_node->redirections);
+		if (la_status != ENO_SUCCESS)
+			gbg_coll(NULL, ALL, FLUSH_ALL), exit(la_status);
+		if (ft_is_builtin(token_node->contents[0]))
+		{
+			la_status = ft_exec_builtins(token_node->contents, ft_shell());
+			exit(la_status);
+		}
+		else
+		{
+			la_status = ft_exec_non_builtins(token_node->contents,
+					token_node->redirections);
+			exit(la_status);
+		}
 	}
-	while (current->next)
-		current = current->next;
-	current->next = node;
+	return (pid);
 }
 
 int	check_operator_exec(t_ast *root, t_ast **exec_lst, int *first_exec,
 		int *la_status)
 {
-	// printf("check operator node = %u\n", root->node_type);
-	if ((root->node_type == AND || root->node_type == OR) && !root->is_in_par)
+	if (!root->is_in_par && (root->node_type == AND || root->node_type == OR))
 	{
 		if (*first_exec)
 		{
-			// printf("first exec\n");
 			iterate_exec_ast_lst(exec_lst, la_status);
 			*exec_lst = NULL;
 			*first_exec = 0;
 			return (1);
 		}
-		else
+		else if ((root->node_type == AND && *la_status == 0)
+			|| (root->node_type == OR && *la_status != 0))
 		{
-			printf("second exec | la status = %d\n", *la_status);
-			if (root->node_type == AND && *la_status == 0)
-			{
-				iterate_exec_ast_lst(exec_lst, la_status);
-				*exec_lst = NULL;
-				return (1);
-			}
-			if (root->node_type == OR && *la_status != 0)
-			{
-				iterate_exec_ast_lst(exec_lst, la_status);
-				*exec_lst = NULL;
-				return (1);
-			}
+			iterate_exec_ast_lst(exec_lst, la_status);
 			*exec_lst = NULL;
+			return (1);
 		}
 	}
 	return (0);
+}
+
+int	ast_list_size(t_ast **lst)
+{
+	t_ast	*current;
+	int		i;
+
+	current = *lst;
+	i = 0;
+	while (current)
+	{
+		current = current->next;
+		i++;
+	}
+	return (i);
 }
 
 void	ft_start_exec_tree(t_ast *root, t_ast **exec_lst, int *la_status,
@@ -209,7 +188,7 @@ void	ft_start_exec_tree(t_ast *root, t_ast **exec_lst, int *la_status,
 		ft_start_exec_tree(root->left, exec_lst, la_status, first_exec);
 	if (root->node_type == CMD)
 		add_ast_lst(exec_lst, root);
-	if ((root->node_type == AND || root->node_type == OR) && root->is_in_par)
+	if (root->is_in_par && (root->node_type == AND || root->node_type == OR))
 		add_ast_lst(exec_lst, root);
 	check_operator_exec(root, exec_lst, first_exec, la_status);
 	if (root->right)
@@ -217,31 +196,21 @@ void	ft_start_exec_tree(t_ast *root, t_ast **exec_lst, int *la_status,
 	check_operator_exec(root, exec_lst, first_exec, la_status);
 }
 
-void	print_ast_lst(t_ast **lst)
+int	init_only_child(t_token *node)
 {
-	t_ast	*current;
+	pid_t	pid;
+	int		status;
 
-	current = *lst;
-	while (current)
-	{
-		printf("current ast = %s\n", current->token_node->contents[0]);
-		current = current->next;
-	}
-}
-
-int	ast_lst_size(t_ast **lst)
-{
-	t_ast	*current;
-	int		i;
-
-	i = 0;
-	current = *lst;
-	while (current)
-	{
-		i++;
-		current = current->next;
-	}
-	return (i);
+	ft_shell()->exit_status = ft_check_redirections(node->redirections);
+	if (!node->contents[0])
+		return (ft_reset_ports(false), 0);
+	if (ft_is_builtin(node->contents[0]))
+		return (ft_exec_builtins(node->contents, ft_shell()));
+	pid = ft_exec_non_builtins(node->contents, node->redirections);
+	waitpid(pid, &status, WUNTRACED);
+	if (WIFEXITED(status))
+		ft_shell()->exit_status = WEXITSTATUS(status);
+	return (0);
 }
 
 int	init_first_child(t_ast *node)
@@ -249,6 +218,7 @@ int	init_first_child(t_ast *node)
 	printf("FIRST CHILD = %s!\n", node->token_node->contents[0]);
 	return (0);
 }
+
 int	init_middle_child(t_ast *node)
 {
 	printf("MIDDLE CHILD = %s!\n", node->token_node->contents[0]);
@@ -257,53 +227,46 @@ int	init_middle_child(t_ast *node)
 
 int	init_last_child(t_ast *node)
 {
-
 	printf("LAST CHILD = %s!\n", node->token_node->contents[0]);
 	return (0);
 }
 
-t_ast	*find_top_node(t_ast **lst)
+int	**alloc_pipes_tab(int size)
 {
-	t_ast	*current;
-	t_ast	*top_node;
-	t_ast	*prev;
+	int	**tab;
+	int	i;
+	int	j;
 
-	current = *lst;
-	top_node = NULL;
-	while (current)
+	i = -1;
+	tab = malloc(sizeof(int *) * (size + 1));
+	if (!tab || gbg_coll(tab, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+	while (++i < size)
 	{
-		if ((current->node_type == AND || current->node_type == OR)
-			&& current->is_in_par)
-		{
-			top_node = current;
-		}
-		if (!current->is_in_par)
-		{
-			*lst = current;
-			top_node->next = NULL;
-			return (top_node);
-		}
-		prev = current;
-		current = current->next;
+		tab[i] = malloc(sizeof(int) * 2);
+		if (!tab[i] || gbg_coll(tab[i], PARSING, ADD))
+			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		j = -1;
+		while (++j < 2)
+			tab[i][j] = 0;
 	}
-	return (NULL);
-}
-
-void	set_next_null(t_ast *root)
-{
-	if (root->left)
-		set_next_null(root->left);
-	root->next = NULL;
-	if (root->right)
-		set_next_null(root->right);
+	tab[i] = NULL;
+	return (tab);
 }
 
 int	iterate_exec_ast_lst(t_ast **lst, int *la_status)
 {
 	t_ast	*current;
 	t_ast	*par_sub_tree;
+	int		**pipes;
+	int		cmd_nb;
+	int		i;
 
 	current = *lst;
+	cmd_nb = ast_list_size(lst);
+    printf("cmd nb = %d\n", cmd_nb);
+	pipes = alloc_pipes_tab(ast_list_size(lst));
+	i = 0;
 	while (current)
 	{
 		if (current->is_in_par)
@@ -326,41 +289,20 @@ int	iterate_exec_ast_lst(t_ast **lst, int *la_status)
 	return (1);
 }
 
-void	init_pids_tab(t_ast **tree)
-{
-	t_ast	*current;
-
-	current = *tree;
-	while (current)
-	{
-		if (current->node_type == CMD)
-			ft_shell()->pids_num += 1;
-		current = current->next;
-	}
-	printf("pids tab size = %d\n", ft_shell()->pids_num);
-	ft_shell()->pids = malloc(sizeof(pid_t) * ft_shell()->pids_num - 1);
-	// if (!ft_shell()->pids || gbg_coll(ft_shell()->pids, ADD, PARSING))
-	// 	(gbg_coll(NULL, ALL, FLUSH_ALL), exit(255));
-}
-
 int	ft_start_exec(t_ast **tree)
 {
-	t_ast *root;
-	t_ast *exec_lst;
-	int la_status;
-	int first_exec;
+	t_ast	*root;
+	t_ast	*exec_lst;
+	int		la_status;
+	int		first_exec;
 
 	root = *tree;
 	exec_lst = NULL;
 	if (root->node_type == CMD)
-	{
-		la_status = ft_check_cmds(root->token_node);
-		return (la_status);
-	}
+		return (init_only_child(root->token_node));
 	ft_shell()->pids_num = 0;
 	first_exec = 1;
 	init_pids_tab(&exec_lst);
-	print_ast_lst(&exec_lst);
 	ft_start_exec_tree(root, &exec_lst, &la_status, &first_exec);
 	if (exec_lst)
 		la_status = iterate_exec_ast_lst(&exec_lst, &la_status);

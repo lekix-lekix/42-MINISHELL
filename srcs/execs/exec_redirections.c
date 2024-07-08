@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/02 10:01:59 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/08 18:56:09 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	ft_check_redirections(t_redir *redirections)
 			return (le_status);
 		else if (redirections->redir_type == REDIR_OUTPUT
 			&& ft_out(redirections, &le_status) != ENO_SUCCESS)
-			return (le_status);
+	    		return (le_status);
 		else if (redirections->redir_type == REDIR_OUTPUT_APPEND
 			&& ft_append(redirections, &le_status) != ENO_SUCCESS)
 			return (le_status);
