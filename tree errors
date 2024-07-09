@@ -64,4 +64,4 @@ THINGS TO CHECK:
     - strace -e fork,vfork,clone,execve -fb execve -o log "A command to check how many times a program forks"
 
 
-   
+ls | cat -e | wc -l && pwd

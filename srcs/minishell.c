@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/08 18:45:56 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/09 17:36:28 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ static void	ft_start_execution(t_ast **tree)
 
 	nodes = *tree;
 	ft_init_tree(nodes);
-	printf("12\n");
 	// if (nodes->token_node && nodes->token_node->type == CMD)
 	// {
 	// 	printf("It was a single cmd\n");

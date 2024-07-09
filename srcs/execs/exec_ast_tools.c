@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 14:20:35 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/08 14:26:52 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/09 14:25:44 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,11 @@ void	set_next_null(t_ast *root)
 		set_next_null(root->right);
 }
 
-void	init_pids_tab(t_ast **tree)
+void	init_pids_tab(t_ast **lst)
 {
 	t_ast	*current;
 
-	current = *tree;
+	current = *lst;
 	while (current)
 	{
 		if (current->node_type == CMD)

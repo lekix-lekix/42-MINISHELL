@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/08 18:56:26 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/09 18:22:00 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,31 +116,22 @@ int	ft_get_la_status(int la_status)
 
 int	ft_check_cmds(t_token *token_node)
 {
-	int		la_status;
-	pid_t	pid;
+	int	la_status;
 
-	pid = fork();
-	if (pid == -1)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), perror("bash: fork: "),
-			exit(255), -1);
-	if (pid == 0)
+	la_status = ft_check_redirections(token_node->redirections);
+	if (la_status != ENO_SUCCESS)
+		gbg_coll(NULL, ALL, FLUSH_ALL), exit(la_status);
+	if (ft_is_builtin(token_node->contents[0]))
 	{
-		la_status = ft_check_redirections(token_node->redirections);
-		if (la_status != ENO_SUCCESS)
-			gbg_coll(NULL, ALL, FLUSH_ALL), exit(la_status);
-		if (ft_is_builtin(token_node->contents[0]))
-		{
-			la_status = ft_exec_builtins(token_node->contents, ft_shell());
-			exit(la_status);
-		}
-		else
-		{
-			la_status = ft_exec_non_builtins(token_node->contents,
-					token_node->redirections);
-			exit(la_status);
-		}
+		la_status = ft_exec_builtins(token_node->contents, ft_shell());
+		exit(la_status);
 	}
-	return (pid);
+	else
+	{
+		la_status = ft_exec_non_builtins(token_node->contents,
+				token_node->redirections);
+	}
+	return (0);
 }
 
 int	check_operator_exec(t_ast *root, t_ast **exec_lst, int *first_exec,
@@ -150,6 +141,7 @@ int	check_operator_exec(t_ast *root, t_ast **exec_lst, int *first_exec,
 	{
 		if (*first_exec)
 		{
+			printf("first exec = %d\n", *first_exec);
 			iterate_exec_ast_lst(exec_lst, la_status);
 			*exec_lst = NULL;
 			*first_exec = 0;
@@ -158,6 +150,7 @@ int	check_operator_exec(t_ast *root, t_ast **exec_lst, int *first_exec,
 		else if ((root->node_type == AND && *la_status == 0)
 			|| (root->node_type == OR && *la_status != 0))
 		{
+			printf("la status = %d\n", *la_status);
 			iterate_exec_ast_lst(exec_lst, la_status);
 			*exec_lst = NULL;
 			return (1);
@@ -201,33 +194,111 @@ int	init_only_child(t_token *node)
 	pid_t	pid;
 	int		status;
 
-	ft_shell()->exit_status = ft_check_redirections(node->redirections);
 	if (!node->contents[0])
+	{
+		ft_shell()->exit_status = ft_check_redirections(node->redirections);
 		return (ft_reset_ports(false), 0);
+	}
 	if (ft_is_builtin(node->contents[0]))
 		return (ft_exec_builtins(node->contents, ft_shell()));
-	pid = ft_exec_non_builtins(node->contents, node->redirections);
+	pid = fork();
+	if (pid == -1)
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), perror("bash: fork"), exit(255),
+			-1);
+	if (pid == 0)
+		ft_exec_non_builtins(node->contents, node->redirections);
 	waitpid(pid, &status, WUNTRACED);
 	if (WIFEXITED(status))
 		ft_shell()->exit_status = WEXITSTATUS(status);
 	return (0);
 }
 
-int	init_first_child(t_ast *node)
+int	init_first_child(t_ast *node, int **pipes)
 {
-	printf("FIRST CHILD = %s!\n", node->token_node->contents[0]);
+	pid_t	pid;
+
+	// printf("FIRST CHILD\n");
+	if (pipe(pipes[0]) == -1)
+		return (perror("bash: pipe"), gbg_coll(NULL, ALL, FLUSH_ALL), -1);
+	pid = fork();
+	if (pid == -1)
+		return (perror("bash: fork"), gbg_coll(NULL, ALL, FLUSH_ALL), exit(255),
+			-1);
+	if (pid == 0)
+	{
+		close(pipes[0][0]);
+		if (dup2(pipes[0][1], STDOUT_FILENO) == -1)
+			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
+				exit(255), -1);
+		close(pipes[0][1]);
+		ft_check_cmds(node->token_node);
+	}
+	ft_shell()->pids[0] = pid;
+	ft_shell()->pids_num += 1;
 	return (0);
 }
 
-int	init_middle_child(t_ast *node)
+int	init_middle_child(t_ast *node, int **pipes)
 {
-	printf("MIDDLE CHILD = %s!\n", node->token_node->contents[0]);
+	pid_t	pid;
+
+	// printf("MIDDLE CHILD, pids_num = %d\n", ft_shell()->pids_num);
+	if (pipe(pipes[ft_shell()->pids_num]) == -1)
+		return (perror("bash: pipe"), gbg_coll(NULL, ALL, FLUSH_ALL), -1);
+	// close(pipes[ft_shell()->pids_num][0]);
+	pid = fork();
+	if (pid == -1)
+		return (perror("bash: fork: "), gbg_coll(NULL, ALL, FLUSH_ALL),
+			exit(255), -1);
+	if (pid == 0)
+	{
+		if (dup2(pipes[ft_shell()->pids_num - 1][0], STDIN_FILENO))
+			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
+				exit(255), -1);
+		if (dup2(pipes[ft_shell()->pids_num][1], STDOUT_FILENO) == -1)
+			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
+				exit(255), -1);
+		close(pipes[ft_shell()->pids_num - 1][0]);
+		close(pipes[ft_shell()->pids_num - 1][1]);
+		close(pipes[ft_shell()->pids_num][1]);
+		ft_check_cmds(node->token_node);
+	}
+	close(pipes[ft_shell()->pids_num - 1][0]);
+	close(pipes[ft_shell()->pids_num - 1][1]);
+	ft_shell()->pids[ft_shell()->pids_num] = pid;
+	ft_shell()->pids_num += 1;
 	return (0);
 }
 
-int	init_last_child(t_ast *node)
+int	init_last_child(t_ast *node, int **pipes)
 {
-	printf("LAST CHILD = %s!\n", node->token_node->contents[0]);
+	pid_t	pid;
+
+	// printf("LAST CHILD, pids_num = %d\n", ft_shell()->pids_num);
+	// if (pipe(pipes[ft_shell()->pids_num]) == -1)
+	// 	return (perror("bash: pipe"), gbg_coll(NULL, ALL, FLUSH_ALL), -1);
+	pid = fork();
+	if (pid == -1)
+		return (perror("bash: fork"), gbg_coll(NULL, ALL, FLUSH_ALL), exit(255),
+			-1);
+	if (pid == 0)
+	{
+		// printf("pids_num = %d\n", ft_shell()->pids_num);
+		if (dup2(pipes[ft_shell()->pids_num - 1][0], STDIN_FILENO))
+			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
+				exit(255), -1);
+		close(pipes[ft_shell()->pids_num - 1][0]);
+		close(pipes[ft_shell()->pids_num - 1][1]);
+		// close(pipes[ft_shell()->pids_num][0]);
+		// close(pipes[ft_shell()->pids_num][1]);
+		ft_check_cmds(node->token_node);
+	}
+	// close(pipes[ft_shell()->pids_num][0]);
+	// close(pipes[ft_shell()->pids_num][1]);
+	close(pipes[ft_shell()->pids_num - 1][0]);
+	close(pipes[ft_shell()->pids_num - 1][1]);
+	ft_shell()->pids[ft_shell()->pids_num] = pid;
+	ft_shell()->pids_num += 1;
 	return (0);
 }
 
@@ -254,6 +325,47 @@ int	**alloc_pipes_tab(int size)
 	return (tab);
 }
 
+pid_t	*alloc_pids_tab(t_ast **lst)
+{
+	pid_t	*tab;
+
+	// printf("ast_list_size = %d\n", ast_list_size(lst));
+	tab = malloc(sizeof(pid_t) * (ast_list_size(lst) + 1));
+	if (!tab || gbg_coll(tab, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+	return (tab);
+}
+
+int	wait_all_pids(pid_t *pids)
+{
+	int	i;
+	int	pids_num;
+	int	status;
+
+	i = -1;
+	pids_num = ft_shell()->pids_num;
+	// printf("wait pids_num = %d\n", pids_num);
+	while (++i < pids_num)
+	{
+		// printf("wait i = %d, pid = %d\n", i, pids[i]);
+		waitpid(pids[i], &status, WUNTRACED);
+		// printf("exit status = %d\n", status);
+	}
+	return (0);
+}
+
+void	print_ast_lst(t_ast **lst)
+{
+	t_ast	*current;
+
+	current = *lst;
+	while (current)
+	{
+		printf("current = %s\n", current->token_node->contents[0]);
+		current = current->next;
+	}
+}
+
 int	iterate_exec_ast_lst(t_ast **lst, int *la_status)
 {
 	t_ast	*current;
@@ -262,10 +374,17 @@ int	iterate_exec_ast_lst(t_ast **lst, int *la_status)
 	int		cmd_nb;
 	int		i;
 
+	// print_ast_lst(lst);
 	current = *lst;
 	cmd_nb = ast_list_size(lst);
-    printf("cmd nb = %d\n", cmd_nb);
-	pipes = alloc_pipes_tab(ast_list_size(lst));
+	if (cmd_nb == 1)
+	{
+		printf("init only child\n");
+		*la_status = 1;
+		// *lst = NULL;
+		return (init_only_child(current->token_node));
+	}
+	pipes = alloc_pipes_tab(cmd_nb);
 	i = 0;
 	while (current)
 	{
@@ -278,14 +397,15 @@ int	iterate_exec_ast_lst(t_ast **lst, int *la_status)
 			continue ;
 		}
 		if (current == *lst)
-			init_first_child(current);
+			init_first_child(current, pipes);
 		else if (!current->next)
-			init_last_child(current);
+			init_last_child(current, pipes);
 		else
-			init_middle_child(current);
+			init_middle_child(current, pipes);
 		current = current->next;
 	}
 	*la_status = 1;
+	// *lst = NULL;
 	return (1);
 }
 
@@ -299,12 +419,16 @@ int	ft_start_exec(t_ast **tree)
 	root = *tree;
 	exec_lst = NULL;
 	if (root->node_type == CMD)
+	{
+		// printf("init only child\n");
 		return (init_only_child(root->token_node));
+	}
 	ft_shell()->pids_num = 0;
 	first_exec = 1;
-	init_pids_tab(&exec_lst);
 	ft_start_exec_tree(root, &exec_lst, &la_status, &first_exec);
-	if (exec_lst)
+	ft_shell()->pids = alloc_pids_tab(&exec_lst);
+	if (first_exec)
 		la_status = iterate_exec_ast_lst(&exec_lst, &la_status);
+	wait_all_pids(ft_shell()->pids);
 	return (la_status);
 }

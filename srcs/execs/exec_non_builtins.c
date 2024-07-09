@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/08 18:54:30 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/09 17:36:12 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,27 +51,22 @@
 
 int	ft_exec_non_builtins(char **args, t_redir *redirections)
 {
-	pid_t	pid;
+	int		la_status;
 	char	*la_path;
 	char	**env;
 
 	env = env_lst_to_arr(&(ft_shell())->env_lst);
 	la_path = ft_check_path(args[0], (ft_shell())->env_args);
 	if (!la_path)
-		return (ft_print_err(CMD_ERR), gbg_coll(NULL, ALL, FLUSH_ALL), -1);
-	pid = fork();
-	if (pid == -1)
-		return (perror("bash: fork: "), gbg_coll(NULL, ALL, FLUSH_ALL),
+		return (ft_print_err(CMD_ERR), -1);
+	la_status = ft_check_redirections(redirections);
+	if (la_status != ENO_SUCCESS)
+		return (la_status);
+	// dprintf(2, "LAUNCHING EXECVE CMD %s\n", args[0]);
+	if (execve(la_path, args, (ft_shell())->env_args) == -1)
+		return (perror("bash: execve: "), gbg_coll(NULL, ALL, FLUSH_ALL),
 			exit(255), -1);
-	if (pid == 0)
-	{
-	    ft_check_redirections(redirections);
-		dprintf(2, "LAUNCHING EXECVE CMD %s\n", args[0]);
-		if (execve(la_path, args, (ft_shell())->env_args) == -1)
-			return (perror("bash: execve: "), gbg_coll(NULL, ALL, FLUSH_ALL),
-				exit(255), -1);
-	}
-	return (pid);
+	return (-1);
 }
 
 int	ft_exec_non_builtins_single_cmd(char **args, t_redir *redirections)
