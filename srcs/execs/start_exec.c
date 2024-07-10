@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_exec.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/09 18:22:00 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/10 11:12:42 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,96 +23,12 @@ void	ft_reset_ports(bool piped)
 	dup2((ft_shell())->stdout, 1);
 }
 
-// void	ft_exec_pipe_child(t_ast *node, int pids[],
-// 		t_cmd_pipe_directions direction)
-// {
-// 	int	la_status;
-
-// 	if (direction == P_CMD_LEFT)
-// 	{
-// 		close(pids[0]);
-// 		dup2(pids[1], STDOUT_FILENO);
-// 		close(pids[1]);
-// 	}
-// 	else if (direction == P_CMD_RIGHT)
-// 	{
-// 		close(pids[1]);
-// 		dup2(pids[0], STDIN_FILENO);
-// 		close(pids[0]);
-// 	}
-// 	// la_status = ft_start_exec(&node);
-// 	exit(la_status);
-// }
-
 int	ft_get_la_status(int la_status)
 {
 	if (WIFSIGNALED(la_status))
 		return (128 + WTERMSIG(la_status));
 	return (WEXITSTATUS(la_status));
 }
-
-// int	ft_exec_pipe(t_ast *node)
-// {
-// 	int	pids[2];
-// 	int	la_status;
-// 	int	pipe_l;
-// 	int	pipe_r;
-
-// 	// printf("CALLED\n");
-// 	la_status = 0;
-// 	pipe(pids);
-// 	pipe_l = fork();
-// 	// dprintf(2, "FORKING\n");
-// 	if (pipe_l == 0)
-// 		ft_exec_pipe_child(node->left, pids, P_CMD_LEFT);
-// 	else
-// 	{
-// 		pipe_r = fork();
-// 		// dprintf(2, "FORKING\n");
-// 		if (pipe_r == 0)
-// 			ft_exec_pipe_child(node->right, pids, P_CMD_RIGHT);
-// 		else
-// 		{
-// 			(close(pids[0]), close(pids[1]));
-// 			waitpid(pipe_r, &la_status, 0);
-// 		}
-// 		(ft_shell())->heredoc_sigint = false;
-// 		(close(pids[0]), close(pids[1]));
-// 		(waitpid(pipe_l, &la_status, 0));
-// 	}
-// 	return (la_status);
-// }
-
-// int	ft_check_cmds(t_token *token_node)
-// {
-// 	int	la_status;
-
-// 	// int	x;
-// 	// x = -1;
-// 	// while (token_node->contents[++x])
-// 	// 	printf("The token is: %s\n", token_node->contents[x]);
-// 	if (!token_node->contents)
-// 	{
-// 		// printf("no content\n");
-// 		la_status = ft_check_redirections(token_node->redirections);
-// 		return (ft_reset_ports(false), (la_status && ENO_GENERAL));
-// 	}
-// 	if (ft_is_builtin(token_node->contents[0]))
-// 	{
-// 		// printf("It's a builtin\n");
-// 		la_status = ft_check_redirections(token_node->redirections);
-// 		if (la_status != ENO_SUCCESS)
-// 			return (ft_reset_ports(false), ENO_GENERAL);
-// 		la_status = ft_exec_builtins(token_node->contents, ft_shell());
-// 		return (ft_reset_ports(false), la_status);
-// 	}
-// 	else
-// 	{
-// 		// printf("It's a non builtin\n");
-// 		return (ft_exec_non_builtins(token_node->contents,
-// 				token_node->redirections));
-// 	}
-// }
 
 int	ft_check_cmds(t_token *token_node)
 {
@@ -127,10 +43,8 @@ int	ft_check_cmds(t_token *token_node)
 		exit(la_status);
 	}
 	else
-	{
 		la_status = ft_exec_non_builtins(token_node->contents,
 				token_node->redirections);
-	}
 	return (0);
 }
 
@@ -141,16 +55,14 @@ int	check_operator_exec(t_ast *root, t_ast **exec_lst, int *first_exec,
 	{
 		if (*first_exec)
 		{
-			printf("first exec = %d\n", *first_exec);
 			iterate_exec_ast_lst(exec_lst, la_status);
 			*exec_lst = NULL;
 			*first_exec = 0;
 			return (1);
 		}
-		else if ((root->node_type == AND && *la_status == 0)
-			|| (root->node_type == OR && *la_status != 0))
+		else if ((root->node_type == AND && (ft_shell())->exit_status == 0)
+			|| (root->node_type == OR && (ft_shell())->exit_status != 0))
 		{
-			printf("la status = %d\n", *la_status);
 			iterate_exec_ast_lst(exec_lst, la_status);
 			*exec_lst = NULL;
 			return (1);
@@ -379,9 +291,7 @@ int	iterate_exec_ast_lst(t_ast **lst, int *la_status)
 	cmd_nb = ast_list_size(lst);
 	if (cmd_nb == 1)
 	{
-		printf("init only child\n");
 		*la_status = 1;
-		// *lst = NULL;
 		return (init_only_child(current->token_node));
 	}
 	pipes = alloc_pipes_tab(cmd_nb);
@@ -397,15 +307,13 @@ int	iterate_exec_ast_lst(t_ast **lst, int *la_status)
 			continue ;
 		}
 		if (current == *lst)
-			init_first_child(current, pipes);
+			*la_status = init_first_child(current, pipes);
 		else if (!current->next)
-			init_last_child(current, pipes);
+			*la_status = init_last_child(current, pipes);
 		else
-			init_middle_child(current, pipes);
+			*la_status = init_middle_child(current, pipes);
 		current = current->next;
 	}
-	*la_status = 1;
-	// *lst = NULL;
 	return (1);
 }
 
