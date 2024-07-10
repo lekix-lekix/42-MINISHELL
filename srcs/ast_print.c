@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_print.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:57:52 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/28 16:58:09 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/10 13:18:16 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	traverse_print(t_ast *node, int level)
 	if (node->left)
 		traverse_print(node->left, level + 1);
 	printf("----NODE-------\n");
-	printf("node content = %s, level = %d\n", node->token_node->content, level);
+	printf("node content = %s, level = %d, type = %d\n", node->token_node->content, level, node->node_type);
 	if (node->token_node->contents)
 		print_contents(node);
 	if (node->token_node->redirections)

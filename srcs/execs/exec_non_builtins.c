@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_non_builtins.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/09 17:36:12 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/10 12:31:27 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ int	ft_exec_non_builtins(char **args, t_redir *redirections)
 {
 	int		la_status;
 	char	*la_path;
-	char	**env;
+	// char	**env;
 
-	env = env_lst_to_arr(&(ft_shell())->env_lst);
+	// env = env_lst_to_arr(&(ft_shell())->env_lst);
 	la_path = ft_check_path(args[0], (ft_shell())->env_args);
 	if (!la_path)
 		return (ft_print_err(CMD_ERR), -1);

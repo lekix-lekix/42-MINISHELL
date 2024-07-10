@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_ast_tools.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 14:20:35 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/09 14:25:44 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/10 18:10:02 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ t_ast	*find_top_node(t_ast **lst)
 {
 	t_ast	*current;
 	t_ast	*top_node;
-	t_ast	*prev;
 
 	current = *lst;
 	top_node = NULL;
@@ -61,10 +60,9 @@ t_ast	*find_top_node(t_ast **lst)
 			top_node->next = NULL;
 			return (top_node);
 		}
-		prev = current;
 		current = current->next;
 	}
-	return (NULL);
+	return (top_node);
 }
 
 void	set_next_null(t_ast *root)

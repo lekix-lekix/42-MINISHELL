@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_redir.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:13:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/01 15:19:12 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/10 12:33:05 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	handle_redirection(t_token **lst, t_token **redir_node)
 	return (0);
 }
 
-t_redir	*get_redir_lst_par(t_token **redir_node_lst, t_token *closing_par)
+t_redir	*get_redir_lst_par(t_token **redir_node_lst/* , t_token *closing_par */)
 {
 	t_token	*current;
 	t_redir	*new_redir_node;
@@ -51,7 +51,7 @@ t_redir	*get_redir_lst_par(t_token **redir_node_lst, t_token *closing_par)
 		{
 			new_redir_node = create_redir_node(current->type,
 					current->next->content);
-			closing_par = current->next->next;
+			// closing_par = current->next->next;
 			remove_token_node(redir_node_lst, current->next);
 			remove_token_node(redir_node_lst, current);
 			add_redirection_node(&redir_lst, new_redir_node);
@@ -99,7 +99,7 @@ int	handle_par_redirection(t_token **lst, t_token **redir_node,
 		if (par_right == closing_par)
 		{
 			next = get_outfile_next_node(&closing_par->next);
-			redir_lst = get_redir_lst_par(redir_node, closing_par);
+			redir_lst = get_redir_lst_par(redir_node/* , closing_par */);
 			apply_redir_lst(&current, closing_par, &redir_lst);
 			closing_par->next = next;
 			return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_handle_args.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 14:50:38 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/01 15:21:58 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/10 12:33:23 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,9 @@ int	get_args_flags(t_token **lst)
 void	join_cmd_args(t_token **lst)
 {
 	t_token	*current;
-	int		i;
+	// int		i;
 
-	i = 0;
+	// i = 0;
 	current = *lst;
 	while (current)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/09 17:36:28 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/10 12:58:49 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	init_data(t_minishell *data, char **envp)
 static void	ft_start_execution(t_ast **tree)
 {
 	t_ast	*nodes;
-	int		la_status;
+	// int		la_status;
 
 	nodes = *tree;
 	ft_init_tree(nodes);
@@ -64,7 +64,7 @@ static void	ft_start_execution(t_ast **tree)
 	// 	la_status = ft_exec_non_builtins_single_cmd(nodes->token_node->contents, nodes->redirections);
 	// }
 	// else
-	la_status = ft_start_exec(&nodes);
+	/* la_status =  */ft_start_exec(&nodes);
 }
 
 void	gbg_delete_node(t_token *node, int mlc_lst)
@@ -96,6 +96,9 @@ int	start_parsing(char *prompt)
 	clean_token_lst(&input);
 	join_cmd_args(&input);
 	tree = build_ast(&input, &insert_node);
+    printf("TREE BEFORE EXEC\n");
+    print_tree(&tree);
+    printf("====\n");
 	if (tree && check_tree_syntax(&tree) == -1)
         return (-1);
 	ft_start_execution(&tree);
