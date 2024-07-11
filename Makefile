@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
+#    By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/07/08 14:27:33 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/07/11 14:29:48 by sabakar-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,7 +55,9 @@ SRCS = ./srcs/minishell.c \
 	./srcs/parsing_clean_tokens.c \
 	./srcs/parsing_check_syntax.c \
 	./srcs/print_funcs.c \
-	./srcs/parsing_handle_args.c
+	./srcs/parsing_handle_args.c \
+	./srcs/expanders/ft_expands.c \
+	./srcs/expanders/expands_utils.c
 
 OBJ = $(SRCS:.c=.o)
 

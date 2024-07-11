@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/08 14:29:25 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/11 21:29:43 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ typedef struct s_ast
 	t_token			*token_node;
 	t_token_type	node_type;
 	t_redir			*redirections;
+	char			**expanded_args;
 	int				is_in_par;
 	int				visited;
 	struct s_ast	*left;
@@ -299,6 +300,8 @@ void				ft_reset_ports(bool piped);
 void				ft_heredoc_expander(char *str, int fd);
 int					ft_exec_non_builtins_single_cmd(char **args,
 						t_redir *redirections);
+bool				ft_is_valid_var_char(char c);
+char				**ft_expand(char *sr);
 
 // Exec AST tools
 void				set_is_in_par(t_ast *root, int flag);
