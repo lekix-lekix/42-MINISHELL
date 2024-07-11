@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_ast_tools.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 14:20:35 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/10 18:10:02 by lekix            ###   ########.fr       */
+/*   Updated: 2024/07/11 18:15:50 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,16 @@ t_ast	*find_top_node(t_ast **lst)
 	top_node = NULL;
 	while (current)
 	{
-		if ((current->node_type == AND || current->node_type == OR)
-			&& current->is_in_par)
+		if (current->token_node->contents)
+			printf("current in top node func = %s\n", current->token_node->contents[0]);
+		if (current->node_type == AND || current->node_type == OR || current->node_type == PIPE)
+		{
+			printf("found top node\n");
 			top_node = current;
+		}
 		if (!current->is_in_par)
 		{
+			printf("stop\n");
 			*lst = current;
 			top_node->next = NULL;
 			return (top_node);

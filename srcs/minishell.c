@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/10 12:58:49 by lekix            ###   ########.fr       */
+/*   Updated: 2024/07/11 18:27:54 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,52 @@ int	init_data(t_minishell *data, char **envp)
 	return (0);
 }
 
+void    traverse_count_pipes(t_ast *root, int *pipes)
+{
+    if (root->left)
+        traverse_count_pipes(root->left, pipes);
+    if (root->node_type == PIPE)
+        *pipes += 1;
+    if (root->right)
+        traverse_count_pipes(root->right, pipes);
+}
+
+int ft_count_pipes(t_ast **tree)
+{
+    int pipes;
+
+    pipes = 0;
+    if (!*tree)
+        return (0);
+    traverse_count_pipes(*tree, &pipes);
+    return (pipes);
+}
+
+int	**alloc_pipes_tab(t_ast **tree)
+{
+	int	**tab;
+    int size;
+	int	i;
+	int	j;
+
+	i = -1;
+    size = ft_count_pipes(tree);
+	tab = malloc(sizeof(int *) * (size + 1));
+	if (!tab || gbg_coll(tab, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+	while (++i < size)
+	{
+		tab[i] = malloc(sizeof(int) * 2);
+		if (!tab[i] || gbg_coll(tab[i], PARSING, ADD))
+			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		j = -1;
+		while (++j < 2)
+			tab[i][j] = 0;
+	}
+	tab[i] = NULL;
+	return (tab);
+}
+
 static void	ft_start_execution(t_ast **tree)
 {
 	t_ast	*nodes;
@@ -64,7 +110,9 @@ static void	ft_start_execution(t_ast **tree)
 	// 	la_status = ft_exec_non_builtins_single_cmd(nodes->token_node->contents, nodes->redirections);
 	// }
 	// else
-	/* la_status =  */ft_start_exec(&nodes);
+	/* la_status =  */
+	ft_shell()->pipes = alloc_pipes_tab(tree);
+    ft_start_exec(&nodes);
 }
 
 void	gbg_delete_node(t_token *node, int mlc_lst)
@@ -95,6 +143,9 @@ int	start_parsing(char *prompt)
 		return (-1);
 	clean_token_lst(&input);
 	join_cmd_args(&input);
+    printf("LST BEFORE AST ===\n");
+    print_lst(&input);
+    printf("==================\n");
 	tree = build_ast(&input, &insert_node);
     printf("TREE BEFORE EXEC\n");
     print_tree(&tree);

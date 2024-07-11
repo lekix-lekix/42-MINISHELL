@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/08 14:29:25 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/11 17:00:53 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ typedef struct s_ast
 	t_token_type	node_type;
 	t_redir			*redirections;
 	int				is_in_par;
-	int				visited;
 	struct s_ast	*left;
 	struct s_ast	*right;
 	struct s_ast	*next;
@@ -150,6 +149,8 @@ typedef struct s_minishell
 	char			*prompt;
 	char			*path;
 	pid_t			*pids;
+    int             **pipes;
+    int             exec_in_par;
 	int				pids_num;
 	int				stdin;
 	int				stdout;
