@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/11 18:23:38 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/12 16:04:22 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -360,7 +360,7 @@ int	iterate_exec_ast_lst(t_ast **lst)
 	if (cmd_nb == 1)
     {
         printf("only child\n");
-		return (init_only_child(current->token_node));
+		return (init_only_child_no_fork(current->token_node));
     }
 	if (ft_shell()->exec_in_par)
 		ft_shell()->exec_in_par = 0;
@@ -384,6 +384,7 @@ int	iterate_exec_ast_lst(t_ast **lst)
 			printf("start exec PAR start\n");
 			ft_start_exec(&par_sub_tree);
 			printf("=== END ===\n");
+            current = current->next;
 			continue ;
 		}
 		if (ft_shell()->pids_num == 0)
