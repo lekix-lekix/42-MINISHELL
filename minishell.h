@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/11 17:00:53 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/15 19:46:24 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ typedef struct s_token
 {
 	t_token_type	type;
 	t_redir			*redirections;
+	int				pipe_redir[2][2];
 	char			*filename;
 	char			*content;
 	char			**contents;
@@ -149,12 +150,13 @@ typedef struct s_minishell
 	char			*prompt;
 	char			*path;
 	pid_t			*pids;
-    int             **pipes;
-    int             exec_in_par;
+	int				**pipes;
+	int				exec_in_par;
 	int				pids_num;
 	int				stdin;
 	int				stdout;
 	int				heredoc;
+	t_ast			*exec_tree;
 	t_ast			*node;
 	bool			signint_child;
 	bool			heredoc_sigint;
@@ -194,18 +196,14 @@ int					is_an_operator(char c);
 char				*msh_strtrim(char const *s1, char const *set);
 char				**msh_split(char const *s, char c, int mlc_list);
 t_token				*create_cmd_node(char *input, char *sep);
-int					check_redirections(t_token **lst);
-char				*get_filename(t_token *node);
-t_token				*find_redir_node(t_token **lst, t_token *redir_node);
+
 void				remove_token_node(t_token **lst, t_token *node);
 int					only_spaces(char *str);
 void				gbg_delete_node(t_token *node, int mlc_lst);
 int					clean_token_lst(t_token **lst);
-int					is_a_redir_operator(t_token *node);
 void				split_lst_contents(t_token **lst);
 int					is_a_token_operator(t_token *node);
 char				*msh_strdup(const char *s, int mlc_lst);
-void				print_redir_lst(t_redir **lst);
 
 // The builtins
 int					ft_exec_echo(char **args);
@@ -256,6 +254,7 @@ int					print_token_syntax_error(t_token *node);
 void				join_cmd_args(t_token **lst);
 
 // Check syntax
+void				get_last_node_tree(t_ast *root, t_ast **node);
 int					check_tree_syntax(t_ast **tree);
 int					print_ast_syntax_error(t_ast *node);
 int					check_par_syntax(t_token **lst);
@@ -277,10 +276,14 @@ t_redir				*redir_lst_dup(t_redir **lst);
 t_redir				*find_last_redir_node(t_redir **lst);
 t_token				*get_outfile_next_node(t_token **lst);
 void				add_redirection_node(t_redir **lst, t_redir *node);
-int					add_redirection(t_token *cmd_node, t_token *redir_node,
-						char *filename);
 void				set_redir_lst(t_token **lst);
 void				set_args_lst(t_token **lst);
+char				*get_filename(t_token *node);
+int					check_redirections(t_token **lst);
+t_token				*find_redir_node(t_token **lst, t_token *redir_node);
+int					is_a_redir_operator(t_token *node);
+void				print_redir_lst(t_redir **lst);
+void				add_front_redir_node(t_redir **lst, t_redir *node);
 
 // print functions
 void				print_redir_lst(t_redir **lst);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_ast_tools.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 14:20:35 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/11 18:15:50 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/15 20:30:38 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ t_ast	*find_top_node(t_ast **lst)
 		if (!current->is_in_par)
 		{
 			printf("stop\n");
-			*lst = current;
+			// *lst = current;
 			top_node->next = NULL;
 			return (top_node);
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_exec.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/12 16:04:22 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/15 20:29:24 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,10 @@ int	ft_check_cmds(t_token *token_node)
 
 int	check_last_operator(t_ast **last_operator)
 {
-    if (!*last_operator)
-        return (1);
-	else if (((*last_operator)->node_type == AND && ft_shell()->exit_status == 0)
+	if (!*last_operator)
+		return (1);
+	else if (((*last_operator)->node_type == AND
+			&& ft_shell()->exit_status == 0)
 		|| ((*last_operator)->node_type == OR && ft_shell()->exit_status != 0))
 		return (1);
 	else
@@ -82,9 +83,9 @@ int	check_operator_exec(t_ast *root, t_ast **exec_lst, t_ast **last_operator)
 	if (!root->is_in_par)
 	{
 		// printf("checking operator node = %d, last exit status = %d\n",
-			// root->node_type, ft_shell()->exit_status);
+		// root->node_type, ft_shell()->exit_status);
 		// if (*last_operator)
-			// printf("last op node type = %d\n", (*last_operator)->node_type);
+		// printf("last op node type = %d\n", (*last_operator)->node_type);
 		if (*last_operator == NULL || check_last_operator(last_operator))
 		{
 			printf("can exec !\n");
@@ -209,7 +210,7 @@ int	init_only_child(t_token *node)
 			exit(ft_exec_builtins(node->contents, ft_shell()));
 		ft_exec_non_builtins(node->contents, node->redirections);
 	}
-    printf("hey hey\n");
+	printf("hey hey\n");
 	waitpid(pid, &status, WUNTRACED);
 	if (WIFEXITED(status))
 		ft_shell()->exit_status = WEXITSTATUS(status);
@@ -333,17 +334,126 @@ void	print_ast_lst(t_ast **lst)
 	current = *lst;
 	while (current)
 	{
-		printf("current = %s\n", current->token_node->contents[0]);
+		if (current->token_node->contents)
+			printf("current = %s\n", current->token_node->contents[0]);
+		else
+			printf("op_node type = %d\n", current->node_type);
+		if (current->token_node->redirections)
+			print_redir_lst(&current->token_node->redirections);
 		current = current->next;
 	}
 }
 
 int	init_exec_ast_data(t_ast **lst)
 {
-	int	cmd_nb;
-
-	cmd_nb = ast_list_size(lst);
+	(void)lst;
 	ft_shell()->pids_num = 0;
+	return (0);
+}
+
+void	check_next_op(t_ast *root, t_ast *to_find, t_ast **last_node_visited,
+		int *pipe_after)
+{
+	if (root->left)
+		check_next_op(root->left, to_find, last_node_visited, pipe_after);
+	if (root->node_type == CMD)
+		*last_node_visited = root;
+	if (root->node_type == PIPE && last_node_visited
+		&& *last_node_visited == to_find)
+		*pipe_after = 1;
+	if (root->right)
+		check_next_op(root->right, to_find, last_node_visited, pipe_after);
+}
+
+int	pipe_after_par(t_ast *node)
+{
+	t_ast	*root;
+	t_ast	*last_node_visited;
+	int		pipe_after;
+
+	pipe_after = 0;
+	last_node_visited = NULL;
+	root = ft_shell()->exec_tree;
+	check_next_op(root, node, &last_node_visited, &pipe_after);
+	printf("pipe after = %d\n", pipe_after);
+	return (pipe_after);
+}
+
+// void	check_last_op(t_ast *root, t_ast *to_find, t_ast **last_node_visited,
+// 		int *pipe_after)
+// {
+// 	if (root->left)
+// 		check_last_op(root->left, to_find, last_node_visited, pipe_after);
+// 	if (root->node_type == CMD)
+// 		*last_node_visited = root;
+// 	if (root->right)
+// 		check_last_op(root->right, to_find, last_node_visited, pipe_after);
+// 	if (root->node_type == PIPE && last_node_visited
+// 		&& *last_node_visited == to_find)
+// 		*pipe_after = 1;
+// }
+
+// int	pipe_before_par(t_ast *node)
+// {
+// 	t_ast	*root;
+// 	t_ast	*last_node_visited;
+// 	int		pipe_after;
+
+// 	pipe_after = 0;
+// 	last_node_visited = NULL;
+// 	root = ft_shell()->exec_tree;
+// 	check_last_op(root, node, &last_node_visited, &pipe_after);
+// 	printf("pipe before = %d\n", pipe_after);
+// 	return (pipe_after);
+// }
+
+int	init_pipe(int *pipe_fds)
+{
+	if (pipe(pipe_fds) == -1)
+		return (perror("bash: pipe"), gbg_coll(NULL, ALL, FLUSH_ALL), exit(-1),
+			-1);
+	return (0);
+}
+
+void	set_pipe_redir_out(t_ast *root, int *par_pipe, char *pipe_filename)
+{
+	t_redir	*pipe_redir;
+
+	if (root->left)
+		set_pipe_redir_out(root->left, par_pipe, pipe_filename);
+	if (root->node_type == CMD)
+	{
+		pipe_redir = create_redir_node(REDIR_OUTPUT, pipe_filename);
+		add_front_redir_node(&root->token_node->redirections, pipe_redir);
+		root->token_node->pipe_redir[1][0] = par_pipe[0];
+		root->token_node->pipe_redir[1][1] = par_pipe[1];
+	}
+	if (root->right)
+		set_pipe_redir_out(root->right, par_pipe, pipe_filename);
+}
+
+int	set_pipe_redir(t_ast *par_sub_tree, int *par_pipe, t_ast *first_par_node)
+{
+	t_redir	*input_redir;
+	int		pipes_i;
+
+	set_pipe_redir_out(par_sub_tree, par_pipe, "pipe");
+	pipes_i = ft_shell()->pids_num;
+    printf("pids num = %d\n", pipes_i);
+	if (pipes_i > 0)
+	{
+        printf("first par node content = %s\n", first_par_node->token_node->contents[0]);
+		input_redir = create_redir_node(REDIR_INPUT, "pipe");
+        printf("input redir name = %s\n", input_redir->filename);
+		add_front_redir_node(&first_par_node->token_node->redirections,
+			input_redir);
+		first_par_node->token_node->pipe_redir[0][0] = ft_shell()->pipes[pipes_i
+			- 1][0];
+		first_par_node->token_node->pipe_redir[0][1] = ft_shell()->pipes[pipes_i
+			- 1][1];
+	}
+    printf("BEFORE REDIR OUT\n");
+    print_redir_lst(&first_par_node->redirections);
 	return (0);
 }
 
@@ -352,16 +462,18 @@ int	iterate_exec_ast_lst(t_ast **lst)
 	t_ast	*current;
 	t_ast	*par_sub_tree;
 	int		cmd_nb;
+	int		par_pipe_out[2];
+	t_ast	*last_par_node;
 
 	current = *lst;
 	cmd_nb = ast_list_size(lst);
 	if (!cmd_nb)
 		return (0);
 	if (cmd_nb == 1)
-    {
-        printf("only child\n");
+	{
+		printf("only child\n");
 		return (init_only_child_no_fork(current->token_node));
-    }
+	}
 	if (ft_shell()->exec_in_par)
 		ft_shell()->exec_in_par = 0;
 	else
@@ -372,19 +484,28 @@ int	iterate_exec_ast_lst(t_ast **lst)
 		// printf("executing cmd = %s\n", current->token_node->contents[0]);
 		if (current->is_in_par)
 		{
+            printf("current = %s\n", current->token_node->contents[0]);
 			par_sub_tree = find_top_node(&current);
-			// if (par_sub_tree)
-			// 	printf("top node type = %d\n", par_sub_tree->node_type);
-            printf("PAR SUB TREE ====\n");
-            print_tree(&par_sub_tree);
-            printf("=========\n");
+			get_last_node_tree(par_sub_tree, &last_par_node);
+            printf("current = %s\n", current->token_node->contents[0]);
+			if (pipe_after_par(last_par_node))
+			{
+				init_pipe(par_pipe_out);
+				set_pipe_redir(par_sub_tree, par_pipe_out, current);
+			}
+			printf("==== AST LST PAR === \n");
+			print_ast_lst(lst);
+			printf("=======\n");
+			printf("PAR SUB TREE ====\n");
+			print_tree(&par_sub_tree);
+			printf("=========\n");
 			set_is_in_par(par_sub_tree, 0);
 			set_next_null(par_sub_tree);
 			ft_shell()->exec_in_par = 1;
 			printf("start exec PAR start\n");
-			ft_start_exec(&par_sub_tree);
+			// ft_start_exec(&par_sub_tree, par_pipe_out);
 			printf("=== END ===\n");
-            current = current->next;
+			current = current->next;
 			continue ;
 		}
 		if (ft_shell()->pids_num == 0)
@@ -414,7 +535,6 @@ int	ft_start_exec(t_ast **tree)
 	t_ast	*root;
 	t_ast	*exec_lst;
 	t_ast	*last_op;
-	int		first_exec;
 
 	printf("START EXEC\n");
 	root = *tree;
@@ -424,10 +544,9 @@ int	ft_start_exec(t_ast **tree)
 		// printf("init only child\n");
 		return (init_only_child_no_fork(root->token_node));
 	}
-	first_exec = 1;
 	last_op = NULL;
 	ft_start_exec_tree(root, &exec_lst, &last_op);
-	if (first_exec)
+	if (exec_lst)
 		iterate_exec_ast_lst(&exec_lst);
 	return (0);
 }

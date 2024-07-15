@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_redir_utils_bis.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 17:56:28 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/01 15:19:24 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/15 20:22:46 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,16 +67,17 @@ void	add_redirection_node(t_redir **lst, t_redir *node)
 	current->next = node;
 }
 
-int	add_redirection(t_token *cmd_node, t_token *redir_node, char *filename)
+void    add_front_redir_node(t_redir **lst, t_redir *node)
 {
-	t_redir	*new_redir;
+    t_redir *current;
 
-	new_redir = malloc(sizeof(t_redir));
-	if (!new_redir || gbg_coll(new_redir, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
-	new_redir->redir_type = redir_node->type;
-	new_redir->filename = filename;
-	new_redir->next = NULL;
-	add_redirection_node(&cmd_node->redirections, new_redir);
-	return (0);
+    current = *lst;
+    if (!current)
+    {
+        printf("no redir found\n");
+        *lst = node;
+        return ;
+    }
+    node->next = current;
+    *lst = node;
 }

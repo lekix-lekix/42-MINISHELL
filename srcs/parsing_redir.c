@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:13:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/10 12:33:05 by lekix            ###   ########.fr       */
+/*   Updated: 2024/07/15 15:42:14 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	handle_redirection(t_token **lst, t_token **redir_node)
 {
 	t_token	*cmd_node;
+	t_redir	*new_redir;
 	t_token	*filename_token;
 	char	*filename;
 
@@ -28,14 +29,15 @@ int	handle_redirection(t_token **lst, t_token **redir_node)
 	}
 	filename_token = (*redir_node)->next;
 	filename = msh_strdup(filename_token->content, PARSING);
-	add_redirection(cmd_node, *redir_node, filename);
+	new_redir = create_redir_node((*redir_node)->type, filename);
+	add_redirection_node(&cmd_node->redirections, new_redir);
 	remove_token_node(lst, *redir_node);
 	remove_token_node(lst, filename_token);
 	*redir_node = *lst;
 	return (0);
 }
 
-t_redir	*get_redir_lst_par(t_token **redir_node_lst/* , t_token *closing_par */)
+t_redir	*get_redir_lst_par(t_token **redir_node_lst)
 {
 	t_token	*current;
 	t_redir	*new_redir_node;
@@ -51,7 +53,6 @@ t_redir	*get_redir_lst_par(t_token **redir_node_lst/* , t_token *closing_par */)
 		{
 			new_redir_node = create_redir_node(current->type,
 					current->next->content);
-			// closing_par = current->next->next;
 			remove_token_node(redir_node_lst, current->next);
 			remove_token_node(redir_node_lst, current);
 			add_redirection_node(&redir_lst, new_redir_node);
@@ -99,7 +100,7 @@ int	handle_par_redirection(t_token **lst, t_token **redir_node,
 		if (par_right == closing_par)
 		{
 			next = get_outfile_next_node(&closing_par->next);
-			redir_lst = get_redir_lst_par(redir_node/* , closing_par */);
+			redir_lst = get_redir_lst_par(redir_node /* , closing_par */);
 			apply_redir_lst(&current, closing_par, &redir_lst);
 			closing_par->next = next;
 			return (0);

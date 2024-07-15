@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_redir_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 17:48:46 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/01 15:18:18 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/15 15:37:37 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,13 @@ t_redir	*redir_lst_dup(t_redir **lst)
 	lst_cpy = NULL;
 	while (current)
 	{
-		current_cpy = malloc(sizeof(t_redir));
-		if (!current_cpy || gbg_coll(current_cpy, PARSING, ADD))
-			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-		current_cpy->filename = msh_strdup(current->filename, PARSING);
-		current_cpy->redir_type = current->redir_type;
-		current_cpy->next = NULL;
+		// current_cpy = malloc(sizeof(t_redir));
+		// if (!current_cpy || gbg_coll(current_cpy, PARSING, ADD))
+		// 	return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		// current_cpy->filename = msh_strdup(current->filename, PARSING);
+		// current_cpy->redir_type = current->redir_type;
+		// current_cpy->next = NULL;
+        current_cpy = create_redir_node(current->redir_type, current->filename);
 		add_redirection_node(&lst_cpy, current_cpy);
 		current = current->next;
 	}
