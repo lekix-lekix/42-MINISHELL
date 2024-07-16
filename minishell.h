@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/15 19:46:24 by lekix            ###   ########.fr       */
+/*   Updated: 2024/07/16 15:00:56 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ typedef struct s_token
 {
 	t_token_type	type;
 	t_redir			*redirections;
-	int				pipe_redir[2][2];
+	int				pipe_redir[2];
 	char			*filename;
 	char			*content;
 	char			**contents;

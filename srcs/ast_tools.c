@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:27:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/15 19:48:56 by lekix            ###   ########.fr       */
+/*   Updated: 2024/07/16 15:23:34 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,8 @@ t_token	*lst_dup(t_token **lst, t_token *node)
 		current_cpy->content = current->content;
 		current_cpy->contents = current->contents;
 		current_cpy->redirections = current->redirections;
-        current_cpy->pipe_redir[0][0] = current->pipe_redir[0][0];
-        current_cpy->pipe_redir[0][1] = current->pipe_redir[0][1];
-        current_cpy->pipe_redir[1][0] = current->pipe_redir[1][0];
-        current_cpy->pipe_redir[1][1] = current->pipe_redir[1][1];
+        current_cpy->pipe_redir[0] = current->pipe_redir[0];
+        current_cpy->pipe_redir[1] = current->pipe_redir[1];
 		current_cpy->next = NULL;
 		insert_node_lst(&lst_cpy, current_cpy);
 		current = current->next;

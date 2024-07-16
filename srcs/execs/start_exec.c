@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_exec.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/15 20:29:24 by lekix            ###   ########.fr       */
+/*   Updated: 2024/07/16 18:06:17 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,17 +108,18 @@ void	ft_start_exec_tree(t_ast *root, t_ast **exec_lst, t_ast **last_op)
 {
 	if (root->left)
 		ft_start_exec_tree(root->left, exec_lst, last_op);
-	if (root->is_in_par && check_last_operator(last_op))
+	if (root->is_in_par && (root->node_type == AND || root->node_type == OR
+			|| root->node_type == PIPE) && check_last_operator(last_op))
 	{
-		printf("adding par node type = %d\n", root->node_type);
+		// printf("adding par node type = %d\n", root->node_type);
 		add_ast_lst(exec_lst, root);
 	}
-	else if (!root->is_in_par && root->node_type == CMD)
+	if (root->node_type == CMD)
 	{
 		printf("adding node = %s\n", root->token_node->contents[0]);
 		add_ast_lst(exec_lst, root);
 	}
-	if ((root->node_type == AND || root->node_type == OR))
+	if (root->node_type == AND || root->node_type == OR)
 		check_operator_exec(root, exec_lst, last_op);
 	if (root->right)
 		ft_start_exec_tree(root->right, exec_lst, last_op);
@@ -375,12 +376,12 @@ int	pipe_after_par(t_ast *node)
 	last_node_visited = NULL;
 	root = ft_shell()->exec_tree;
 	check_next_op(root, node, &last_node_visited, &pipe_after);
-	printf("pipe after = %d\n", pipe_after);
+	// printf("pipe after = %d\n", pipe_after);
 	return (pipe_after);
 }
 
 // void	check_last_op(t_ast *root, t_ast *to_find, t_ast **last_node_visited,
-// 		int *pipe_after)
+// 		int *pipe_after)x
 // {
 // 	if (root->left)
 // 		check_last_op(root->left, to_find, last_node_visited, pipe_after);
@@ -407,6 +408,24 @@ int	pipe_after_par(t_ast *node)
 // 	return (pipe_after);
 // }
 
+void	set_pipe_redir_out(t_ast *node, int pipe_fd)
+{
+	t_redir	*output_redir;
+
+	output_redir = create_redir_node(REDIR_OUTPUT, "pipe");
+	add_front_redir_node(&node->token_node->redirections, output_redir);
+	node->token_node->pipe_redir[1] = pipe_fd;
+}
+
+void	set_pipe_redir_in(t_ast *node, int pipe_fd)
+{
+	t_redir	*input_redir;
+
+	input_redir = create_redir_node(REDIR_INPUT, "pipe");
+	add_front_redir_node(&node->token_node->redirections, input_redir);
+	node->token_node->pipe_redir[0] = pipe_fd;
+}
+
 int	init_pipe(int *pipe_fds)
 {
 	if (pipe(pipe_fds) == -1)
@@ -415,46 +434,129 @@ int	init_pipe(int *pipe_fds)
 	return (0);
 }
 
-void	set_pipe_redir_out(t_ast *root, int *par_pipe, char *pipe_filename)
+void	set_pipe_redir_out_tree(t_ast *root, int out_pipe, char *pipe_filename)
 {
 	t_redir	*pipe_redir;
 
 	if (root->left)
-		set_pipe_redir_out(root->left, par_pipe, pipe_filename);
+		set_pipe_redir_out_tree(root->left, out_pipe, pipe_filename);
 	if (root->node_type == CMD)
 	{
 		pipe_redir = create_redir_node(REDIR_OUTPUT, pipe_filename);
 		add_front_redir_node(&root->token_node->redirections, pipe_redir);
-		root->token_node->pipe_redir[1][0] = par_pipe[0];
-		root->token_node->pipe_redir[1][1] = par_pipe[1];
+		root->token_node->pipe_redir[1] = out_pipe;
 	}
 	if (root->right)
-		set_pipe_redir_out(root->right, par_pipe, pipe_filename);
+		set_pipe_redir_out_tree(root->right, out_pipe, pipe_filename);
 }
 
-int	set_pipe_redir(t_ast *par_sub_tree, int *par_pipe, t_ast *first_par_node)
+int	set_pipe_redir_par(t_ast *par_sub_tree, int *par_pipe,
+		t_ast *first_par_node)
 {
-	t_redir	*input_redir;
-	int		pipes_i;
+	int	pipes_i;
 
-	set_pipe_redir_out(par_sub_tree, par_pipe, "pipe");
+	set_pipe_redir_out_tree(par_sub_tree, par_pipe[1], "pipe");
 	pipes_i = ft_shell()->pids_num;
-    printf("pids num = %d\n", pipes_i);
 	if (pipes_i > 0)
-	{
-        printf("first par node content = %s\n", first_par_node->token_node->contents[0]);
-		input_redir = create_redir_node(REDIR_INPUT, "pipe");
-        printf("input redir name = %s\n", input_redir->filename);
-		add_front_redir_node(&first_par_node->token_node->redirections,
-			input_redir);
-		first_par_node->token_node->pipe_redir[0][0] = ft_shell()->pipes[pipes_i
-			- 1][0];
-		first_par_node->token_node->pipe_redir[0][1] = ft_shell()->pipes[pipes_i
-			- 1][1];
-	}
-    printf("BEFORE REDIR OUT\n");
-    print_redir_lst(&first_par_node->redirections);
+		set_pipe_redir_in(first_par_node, par_pipe[0]);
+	print_redir_lst(&first_par_node->redirections);
 	return (0);
+}
+
+void	exec_child(t_ast *node)
+{
+	printf("executing child : %s\n", node->token_node->contents[0]);
+	if (node->token_node->redirections)
+		print_redir_lst(&node->token_node->redirections);
+    ft_shell()->pids_num += 1;
+}
+
+int	prep_exec_child(t_ast *to_exec, int lst_size)
+{
+	int	pipe_index;
+	int	pipe_fds[2];
+
+	pipe_index = ft_shell()->pids_num;
+	if (pipe_index == 0 && lst_size > 1)
+	{
+		init_pipe(pipe_fds);
+		set_pipe_redir_out(to_exec, pipe_fds[1]);
+		set_pipe_redir_in(to_exec->next, pipe_fds[0]);
+		exec_child(to_exec);
+		close(to_exec->token_node->pipe_redir[1]);
+		return (0);
+	}
+	else if (pipe_index == lst_size)
+	{
+		exec_child(to_exec);
+		close(to_exec->token_node->pipe_redir[0]);
+		close(to_exec->token_node->pipe_redir[1]);
+		return (0);
+	}
+	else
+	{
+		init_pipe(pipe_fds);
+		set_pipe_redir_out(to_exec, pipe_fds[1]);
+		set_pipe_redir_in(to_exec->next, pipe_fds[0]);
+		exec_child(to_exec);
+		close(to_exec->token_node->pipe_redir[0]);
+        ft_shell()->pids_num = 0;
+		return (0);
+	}
+}
+
+t_ast	*get_after_par_node(t_ast **lst)
+{
+	t_ast	*current;
+
+	current = *lst;
+	while (current && current->is_in_par)
+    {
+        if (current->token_node->contents)
+            printf("searching for next current = %s\n", current->token_node->contents[0]);
+		current = current->next;
+    }
+	return (current);
+}
+
+t_ast *ast_lst_dup(t_ast **lst)
+{
+	t_ast	*lst_cpy;
+	t_ast	*current_cpy;
+	t_ast	*current;
+
+	current = *lst;
+	lst_cpy = NULL;
+	while (current)
+	{
+		current_cpy = malloc(sizeof(t_token));
+		if (!current_cpy || gbg_coll(current_cpy, PARSING, ADD))
+			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		current_cpy->token_node = current->token_node;
+        current_cpy->node_type = current->node_type;
+        current_cpy->redirections = current->redirections;
+        current_cpy->is_in_par = current->is_in_par;
+        current_cpy->left = current->left;
+        current_cpy->right = current->right;
+        current_cpy->next = NULL;
+        add_ast_lst(&lst_cpy, current_cpy);
+		current = current->next;
+	}
+	return (lst_cpy);
+}
+
+t_ast *ast_find_one(t_ast **lst, t_ast *node)
+{
+    t_ast *current;
+
+    current = *lst;
+    while (current)
+    {
+        if (current->token_node == node->token_node)
+            return (current);
+        current = current->next;
+    }
+    return (NULL);
 }
 
 int	iterate_exec_ast_lst(t_ast **lst)
@@ -464,9 +566,13 @@ int	iterate_exec_ast_lst(t_ast **lst)
 	int		cmd_nb;
 	int		par_pipe_out[2];
 	t_ast	*last_par_node;
+    t_ast   *par_lst;
+    t_ast   *current_bis;
 
 	current = *lst;
+    par_lst = NULL;
 	cmd_nb = ast_list_size(lst);
+	// print_ast_lst(lst);
 	if (!cmd_nb)
 		return (0);
 	if (cmd_nb == 1)
@@ -484,45 +590,48 @@ int	iterate_exec_ast_lst(t_ast **lst)
 		// printf("executing cmd = %s\n", current->token_node->contents[0]);
 		if (current->is_in_par)
 		{
-            printf("current = %s\n", current->token_node->contents[0]);
-			par_sub_tree = find_top_node(&current);
+            par_lst = ast_lst_dup(lst);
+            printf("====== PAR LST ====\n");
+            print_ast_lst(&par_lst);
+            printf("========\n");
+            current_bis = ast_find_one(&par_lst, current);
+			par_sub_tree = find_top_node(&current_bis);
 			get_last_node_tree(par_sub_tree, &last_par_node);
-            printf("current = %s\n", current->token_node->contents[0]);
 			if (pipe_after_par(last_par_node))
 			{
 				init_pipe(par_pipe_out);
-				set_pipe_redir(par_sub_tree, par_pipe_out, current);
+				set_pipe_redir_par(par_sub_tree, par_pipe_out, current);
 			}
-			printf("==== AST LST PAR === \n");
-			print_ast_lst(lst);
-			printf("=======\n");
-			printf("PAR SUB TREE ====\n");
-			print_tree(&par_sub_tree);
-			printf("=========\n");
+			current = get_after_par_node(&current);
+
+			print_tree(par_sub_tree);
 			set_is_in_par(par_sub_tree, 0);
 			set_next_null(par_sub_tree);
 			ft_shell()->exec_in_par = 1;
 			printf("start exec PAR start\n");
-			// ft_start_exec(&par_sub_tree, par_pipe_out);
+			ft_start_exec(&par_sub_tree);
 			printf("=== END ===\n");
-			current = current->next;
+            printf("==== AST LST PAR === \n");
+			print_ast_lst(lst);
+			printf("=======\n");
 			continue ;
 		}
-		if (ft_shell()->pids_num == 0)
-		{
-			printf("first child\n");
-			init_first_child(current, ft_shell()->pipes);
-		}
-		else if (ft_shell()->pids_num == cmd_nb - 1)
-		{
-			printf("last_child\n");
-			init_last_child(current, ft_shell()->pipes);
-		}
-		else
-		{
-			printf("middle child\n");
-			init_middle_child(current, ft_shell()->pipes);
-		}
+		prep_exec_child(current, cmd_nb);
+		// if (ft_shell()->pids_num == 0)
+		// {
+		// 	printf("first child\n");
+		// 	init_first_child(current, ft_shell()->pipes);
+		// }
+		// else if (ft_shell()->pids_num == cmd_nb - 1)
+		// {
+		// 	printf("last_child\n");
+		// 	init_last_child(current, ft_shell()->pipes);
+		// }
+		// else
+		// {
+		// 	printf("middle child\n");
+		// 	init_middle_child(current, ft_shell()->pipes);
+		// }
 		current = current->next;
 	}
 	wait_all_pids(ft_shell()->pids);
