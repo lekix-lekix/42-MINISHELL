@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/15 17:07:04 by lekix            ###   ########.fr       */
+/*   Updated: 2024/07/17 16:48:19 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ static void	ft_start_execution(t_ast **tree)
 	// }
 	// else
 	/* la_status =  */
-	ft_shell()->pipes = alloc_pipes_tab(tree);
+    ft_shell()->pids = NULL;
     ft_start_exec(&nodes);
 }
 

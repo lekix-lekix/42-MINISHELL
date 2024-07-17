@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/08 18:56:09 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/17 15:40:19 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,18 +85,41 @@ int	ft_out(t_redir *redirections, int *status)
 	return (*status);
 }
 
-int	ft_check_redirections(t_redir *redirections)
+int	handle_pipe_redirections(t_redir *redirection, t_token *node)
 {
-	int	le_status;
+	if (redirection->redir_type == REDIR_INPUT)
+	{
+		if (dup2(node->pipe_redir[0], STDIN_FILENO) == -1)
+			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
+				exit(255), -1);
+        // close(node->pipe_redir[0]);
+	}
+	else if (redirection->redir_type == REDIR_OUTPUT)
+	{
+		if (dup2(node->pipe_redir[1], STDOUT_FILENO) == -1)
+			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
+				exit(255), -1);
+        // close(node->pipe_redir[1]);
+	}
+	return (0);
+}
 
+int	ft_check_redirections(t_token *node)
+{
+	t_redir	*redirections;
+	int		le_status;
+
+	redirections = node->redirections;
 	while (redirections)
 	{
-		if (redirections->redir_type == REDIR_INPUT && ft_in(redirections,
+		if (ft_strcmp(redirections->filename, "pipe") == 0)
+			handle_pipe_redirections(redirections, node);
+		else if (redirections->redir_type == REDIR_INPUT && ft_in(redirections,
 				&le_status) != ENO_SUCCESS)
 			return (le_status);
 		else if (redirections->redir_type == REDIR_OUTPUT
 			&& ft_out(redirections, &le_status) != ENO_SUCCESS)
-	    		return (le_status);
+			return (le_status);
 		else if (redirections->redir_type == REDIR_OUTPUT_APPEND
 			&& ft_append(redirections, &le_status) != ENO_SUCCESS)
 			return (le_status);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/16 15:00:56 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/17 16:39:33 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ typedef struct s_minishell
 	int				exit_status;
 	char			*prompt;
 	char			*path;
-	pid_t			*pids;
+	t_lst			*pids;
 	int				**pipes;
 	int				exec_in_par;
 	int				pids_num;
@@ -224,7 +224,7 @@ int					ft_check_key(char *str);
 char				*ft_get_envlst_content(char *content, t_minishell *data);
 
 // The non-builtins
-int					ft_exec_non_builtins(char **args, t_redir *redirections);
+int					ft_exec_non_builtins(t_token *node);
 
 // utils
 void				ft_print_err(char *str);
@@ -294,7 +294,7 @@ void				lst_env_add_back(t_env **lst, t_env *new);
 void				consume_node(t_token **lst, t_token *node);
 int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
 						int level);
-int					ft_check_redirections(t_redir *redirections);
+int					ft_check_redirections(t_token *node);
 bool				ft_is_delimiter(char *delimiter, char *str);
 void				ft_init_tree(t_ast *data);
 void				ft_reset_ports(bool piped);
