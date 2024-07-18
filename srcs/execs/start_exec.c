@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_exec.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/17 20:23:12 by lekix            ###   ########.fr       */
+/*   Updated: 2024/07/18 19:13:59 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,87 +218,6 @@ int	init_only_child(t_token *node)
 	return (0);
 }
 
-// int	init_first_child(t_ast *node, int **pipes)
-// {
-// 	pid_t	pid;
-// 	int		pids_num;
-
-// 	pids_num = ft_shell()->pids_num;
-// 	// printf("FIRST CHILD\n");
-// 	if (pipe(pipes[pids_num]) == -1)
-// 		return (perror("bash: pipe"), gbg_coll(NULL, ALL, FLUSH_ALL), -1);
-// 	pid = fork();
-// 	if (pid == -1)
-// 		return (perror("bash: fork"), gbg_coll(NULL, ALL, FLUSH_ALL), exit(255),
-// 			-1);
-// 	if (pid == 0)
-// 	{
-// 		close(pipes[pids_num][0]);
-// 		if (dup2(pipes[pids_num][1], STDOUT_FILENO) == -1)
-// 			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
-// 				exit(255), -1);
-// 		close(pipes[pids_num][1]);
-// 		ft_check_cmds(node->token_node);
-// 	}
-// 	ft_shell()->pids[0] = pid;
-// 	ft_shell()->pids_num += 1;
-// 	return (0);
-// }
-
-// int	init_middle_child(t_ast *node, int **pipes)
-// {
-// 	pid_t	pid;
-
-// 	if (pipe(pipes[ft_shell()->pids_num]) == -1)
-// 		return (perror("bash: pipe"), gbg_coll(NULL, ALL, FLUSH_ALL), -1);
-// 	pid = fork();
-// 	if (pid == -1)
-// 		return (perror("bash: fork: "), gbg_coll(NULL, ALL, FLUSH_ALL),
-// 			exit(255), -1);
-// 	if (pid == 0)
-// 	{
-// 		if (dup2(pipes[ft_shell()->pids_num - 1][0], STDIN_FILENO))
-// 			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
-// 				exit(255), -1);
-// 		if (dup2(pipes[ft_shell()->pids_num][1], STDOUT_FILENO) == -1)
-// 			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
-// 				exit(255), -1);
-// 		close(pipes[ft_shell()->pids_num - 1][0]);
-// 		close(pipes[ft_shell()->pids_num - 1][1]);
-// 		close(pipes[ft_shell()->pids_num][1]);
-// 		ft_check_cmds(node->token_node);
-// 	}
-// 	close(pipes[ft_shell()->pids_num - 1][0]);
-// 	close(pipes[ft_shell()->pids_num - 1][1]);
-// 	ft_shell()->pids[ft_shell()->pids_num] = pid;
-// 	ft_shell()->pids_num += 1;
-// 	return (0);
-// }
-
-// int	init_last_child(t_ast *node, int **pipes)
-// {
-// 	pid_t	pid;
-
-// 	pid = fork();
-// 	if (pid == -1)
-// 		return (perror("bash: fork"), gbg_coll(NULL, ALL, FLUSH_ALL), exit(255),
-// 			-1);
-// 	if (pid == 0)
-// 	{
-// 		if (dup2(pipes[ft_shell()->pids_num - 1][0], STDIN_FILENO))
-// 			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
-// 				exit(255), -1);
-// 		close(pipes[ft_shell()->pids_num - 1][0]);
-// 		close(pipes[ft_shell()->pids_num - 1][1]);
-// 		ft_check_cmds(node->token_node);
-// 	}
-// 	close(pipes[ft_shell()->pids_num - 1][0]);
-// 	close(pipes[ft_shell()->pids_num - 1][1]);
-// 	ft_shell()->pids[ft_shell()->pids_num] = pid;
-// 	ft_shell()->pids_num += 1;
-// 	return (0);
-// }
-
 pid_t	*alloc_pids_tab(t_ast **lst)
 {
 	pid_t	*tab;
@@ -367,7 +286,6 @@ int	pipe_after_par(t_ast *node)
 	last_node_visited = NULL;
 	root = ft_shell()->exec_tree;
 	check_next_op(root, node, &last_node_visited, &pipe_after);
-	// printf("pipe after = %d\n", pipe_after);
 	return (pipe_after);
 }
 
@@ -417,12 +335,17 @@ void	set_pipe_redir_in(t_ast *node, int pipe_fd)
 	node->token_node->pipe_redir[0] = pipe_fd;
 }
 
-int	init_pipe(int *pipe_fds)
+int	*init_pipe(void)
 {
+	int	*pipe_fds;
+
+	pipe_fds = malloc(sizeof(int) * 2);
+	if (!pipe_fds || gbg_coll(pipe_fds, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	if (pipe(pipe_fds) == -1)
 		return (perror("bash: pipe"), gbg_coll(NULL, ALL, FLUSH_ALL), exit(-1),
-			-1);
-	return (0);
+			NULL);
+	return (pipe_fds);
 }
 
 void	set_pipe_redir_out_tree(t_ast *root, int out_pipe, char *pipe_filename)
@@ -441,21 +364,21 @@ void	set_pipe_redir_out_tree(t_ast *root, int out_pipe, char *pipe_filename)
 		set_pipe_redir_out_tree(root->right, out_pipe, pipe_filename);
 }
 
-int	set_pipe_redir_par(t_ast *par_sub_tree, int *par_pipe,
-		t_ast *first_par_node)
-{
-	int	pipes_i;
+// int	set_pipe_redir_par(t_ast *par_sub_tree, int *par_pipe,
+// 		t_ast *first_par_node)
+// {
+// 	int	pipes_i;
 
-	set_pipe_redir_out_tree(par_sub_tree, par_pipe[1], "pipe");
-	pipes_i = ft_shell()->pids_num;
-	if (pipes_i > 0)
-	{
-		set_pipe_redir_in(first_par_node, par_pipe[0]);
-	}
-	// if (&first_par_node->redirections)
-	// 	print_redir_lst(&first_par_node->redirections);
-	return (0);
-}
+// 	set_pipe_redir_out_tree(par_sub_tree, par_pipe[1], "pipe");
+// 	pipes_i = ft_shell()->pids_num;
+// 	if (pipes_i > 0)
+// 	{
+// 		set_pipe_redir_in(first_par_node, par_pipe[0]);
+// 	}
+// 	// if (&first_par_node->redirections)
+// 	// 	print_redir_lst(&first_par_node->redirections);
+// 	return (0);
+// }
 
 t_lst	*create_pid_node(void *pid)
 {
@@ -474,12 +397,12 @@ int	exec_child(t_ast *node)
 	pid_t	*pid;
 	t_lst	*pid_node;
 
+	if (node->token_node->redirections)
+		print_redir_lst(&node->token_node->redirections);
 	pid = malloc(sizeof(pid_t));
 	if (!pid || gbg_coll(pid, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
 	printf("executing child : %s\n", node->token_node->contents[0]);
-	if (node->token_node->redirections)
-		print_redir_lst(&node->token_node->redirections);
 	*pid = fork();
 	if (*pid == -1)
 		return (perror("bash: fork: "), gbg_coll(NULL, ALL, FLUSH_ALL),
@@ -492,7 +415,7 @@ int	exec_child(t_ast *node)
 	return (0);
 }
 
-int	close_pipes(t_ast *node)
+int	close_pipe_redir_in(t_ast *node)
 {
 	t_redir	*redirection;
 
@@ -503,33 +426,90 @@ int	close_pipes(t_ast *node)
 	{
 		if (redirection->redir_type == REDIR_INPUT
 			&& ft_strcmp(redirection->filename, "pipe") == 0)
+		{
+			printf("closing pipe in\n");
 			close(node->token_node->pipe_redir[0]);
-		if (redirection->redir_type == REDIR_OUTPUT
-			&& ft_strcmp(redirection->filename, "pipe") == 0)
-			close(node->token_node->pipe_redir[1]);
+		}
 		redirection = redirection->next;
 	}
 	return (0);
 }
 
+void	close_pipe_redir_out(t_ast *node)
+{
+	t_redir	*redirection;
+
+	redirection = node->token_node->redirections;
+	if (!redirection)
+		return ;
+	while (redirection)
+	{
+		if (redirection->redir_type == REDIR_OUTPUT
+			&& ft_strcmp(redirection->filename, "pipe") == 0)
+		{
+			printf("closing pipe out\n");
+			close(node->token_node->pipe_redir[1]);
+		}
+		redirection = redirection->next;
+	}
+}
+
+void	close_pipes(t_ast *node)
+{
+	// close_pipe_redir_in(node);
+	// close_pipe_redir_out(node);
+	close(node->token_node->pipe_redir[0]);
+	close(node->token_node->pipe_redir[1]);
+}
+
+void	set_pipe_redir_in_par(t_ast **in_par_lst, int pipe_fd)
+{
+	t_ast	*current;
+
+	current = *in_par_lst;
+	while (current && current->is_in_par)
+	{
+		set_pipe_redir_in(current, pipe_fd);
+		current = current->next;
+	}
+}
+
 int	prep_exec_child(t_ast *to_exec, int lst_size)
 {
-	int	pipe_index;
-	int	pipe_fds[2];
+	int		*pipe_fds;
+	t_ast	*last_node;
 
+	last_node = NULL;
+	pipe_fds = NULL;
 	printf("prepping cmd : %s\n", to_exec->token_node->contents[0]);
-	pipe_index = ft_shell()->pids_num;
-	if (lst_size > 1 && pipe_index < lst_size - 1)
+	if (to_exec->next)
 	{
-        printf("pids idx = %d\n", pipe_index);
-        printf("lst size = %d\n", lst_size);
-		init_pipe(pipe_fds);
+		printf("lst size = %d\n", lst_size);
+		pipe_fds = init_pipe();
+		dprintf(2, "pipe %d\n", pipe_fds[0]);
 		set_pipe_redir_out(to_exec, pipe_fds[1]);
-		if (to_exec->next)
+		if (to_exec->next->is_in_par)
+			set_pipe_redir_in_par(&to_exec->next, pipe_fds[0]);
+		else
 			set_pipe_redir_in(to_exec->next, pipe_fds[0]);
 	}
 	exec_child(to_exec);
-	close_pipes(to_exec);
+	if (!ft_shell()->exec_in_par)
+	{
+		printf("closing pipes all pipes : %s\n",
+			to_exec->token_node->contents[0]);
+		close_pipes(to_exec);
+	}
+	if (ft_shell()->exec_in_par)
+	{
+		get_last_node_tree(ft_shell()->exec_tree, &last_node);
+		if (to_exec->token_node == last_node->token_node)
+		{
+			printf("closing pipes in node : %s\n",
+				to_exec->token_node->contents[0]);
+			close_pipe_redir_in(to_exec);
+		}
+	}
 	return (0);
 }
 
@@ -590,25 +570,43 @@ t_ast	*ast_find_one(t_ast **lst, t_ast *node)
 	return (NULL);
 }
 
+// void    sub_tree_close_pipes(t_ast *root)
+// {
+//     if (root->left)
+//         sub_tree_close_pipes(root->left);
+//     close()
+// }
+
+void	close_pipes_lst(t_ast **lst)
+{
+	t_ast	*current;
+
+	current = *lst;
+	close_pipes(current->next->next->next->next);
+	current = current->next;
+}
+
 int	iterate_exec_ast_lst(t_ast **lst)
 {
 	t_ast	*current;
 	t_ast	*par_sub_tree;
 	int		cmd_nb;
-	int		par_pipe_out[2];
+	int		*after_par_pipe;
 	t_ast	*last_par_node;
 	t_ast	*par_lst;
 	t_ast	*current_bis;
+	t_ast	*prev;
 
 	current = *lst;
 	par_lst = NULL;
+	prev = NULL;
 	cmd_nb = ast_list_size(lst);
 	if (!cmd_nb)
 		return (0);
 	while (current)
 	{
 		printf("in loop cmd = %s\n", current->token_node->contents[0]);
-		if (current->is_in_par)
+		if (current->is_in_par && !ft_shell()->exec_in_par)
 		{
 			par_lst = ast_lst_dup(lst);
 			printf("====== PAR LST ====\n");
@@ -619,21 +617,36 @@ int	iterate_exec_ast_lst(t_ast **lst)
 			get_last_node_tree(par_sub_tree, &last_par_node);
 			if (pipe_after_par(last_par_node))
 			{
-				init_pipe(par_pipe_out);
-				set_pipe_redir_par(par_sub_tree, par_pipe_out, current);
+				after_par_pipe = init_pipe();
+				set_pipe_redir_out_tree(par_sub_tree, after_par_pipe[1],
+					"pipe");
 			}
 			current = get_after_par_node(&current);
+			set_pipe_redir_in(current, after_par_pipe[0]);
+			if (par_sub_tree->right->next)
+				printf("par sub tree right->next  = %s\n",
+					par_sub_tree->right->next->token_node->contents[0]);
+			printf("PAR SUB TREE ====\n");
 			print_tree(&par_sub_tree);
+			printf("=======\n");
 			set_is_in_par(par_sub_tree, 0);
 			set_next_null(par_sub_tree);
 			ft_shell()->exec_in_par = 1;
 			printf("start exec PAR start\n");
+			ft_shell()->exec_in_par = 1;
 			ft_start_exec(&par_sub_tree);
+			ft_shell()->exec_in_par = 0;
+			// close(after_par_pipe[0]);
+			close(after_par_pipe[1]);
 			printf("=== END ===\n");
 			continue ;
 		}
 		prep_exec_child(current, cmd_nb);
 		current = current->next;
+	}
+	if (!ft_shell()->exec_in_par)
+	{
+		close(after_par_pipe[0]);
 	}
 	wait_all_pids(&ft_shell()->pids);
 	// ft_shell()->pids_num = 0;
@@ -650,6 +663,7 @@ int	ft_start_exec(t_ast **tree)
 
 	printf("START EXEC\n");
 	root = *tree;
+	ft_shell()->exec_tree = *tree;
 	exec_lst = NULL;
 	if (root->node_type == CMD)
 	{

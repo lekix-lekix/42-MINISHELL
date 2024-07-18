@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/17 16:48:19 by lekix            ###   ########.fr       */
+/*   Updated: 2024/07/18 18:35:21 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ char	*get_path(char **envp)
 int	init_data(t_minishell *data, char **envp)
 {
 	data->path = get_path(envp);
-	data->stdin = dup(0);
-	data->stdout = dup(1);
+	// data->stdin = dup(0);
+	// data->stdout = dup(1);
 	if (!data->path)
 		return (-1);
 	data->env_lst = get_env_lst(envp);
@@ -112,6 +112,7 @@ static void	ft_start_execution(t_ast **tree)
 	// else
 	/* la_status =  */
     ft_shell()->pids = NULL;
+    ft_shell()->exec_in_par = 0;
     ft_start_exec(&nodes);
 }
 
