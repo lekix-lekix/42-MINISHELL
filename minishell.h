@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/18 17:46:10 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/19 15:16:40 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,12 +150,14 @@ typedef struct s_minishell
 	char			*prompt;
 	char			*path;
 	t_lst			*pids;
-	int				**pipes;
+	t_lst           *pipes;
+    int             end_exec;
 	int				exec_in_par;
 	int				pids_num;
 	int				stdin;
 	int				stdout;
 	int				heredoc;
+    t_ast           *full_exec_tree;
 	t_ast			*exec_tree;
 	t_ast			*node;
 	bool			signint_child;

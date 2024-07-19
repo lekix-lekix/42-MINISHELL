@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 17:56:28 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/15 20:22:46 by lekix            ###   ########.fr       */
+/*   Updated: 2024/07/19 12:41:34 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ void    add_front_redir_node(t_redir **lst, t_redir *node)
     current = *lst;
     if (!current)
     {
-        printf("no redir found\n");
         *lst = node;
         return ;
     }

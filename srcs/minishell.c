@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/18 18:35:21 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/19 15:17:09 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,10 @@ static void	ft_start_execution(t_ast **tree)
 	// else
 	/* la_status =  */
     ft_shell()->pids = NULL;
+    ft_shell()->pipes = NULL;
+    ft_shell()->end_exec = 0;
     ft_shell()->exec_in_par = 0;
+    ft_shell()->full_exec_tree = *tree;
     ft_start_exec(&nodes);
 }
 
@@ -134,7 +137,7 @@ int	start_parsing(char *prompt)
 	if (check_quotes(prompt))
 		return (-1);
 	input = tokenize_input(prompt);
-    print_lst(&input);
+    // print_lst(&input);
 	clean_token_lst(&input);
 	if (check_redir_syntax(&input) == -1)
 		return (-1);
@@ -145,13 +148,13 @@ int	start_parsing(char *prompt)
 		return (-1);
 	clean_token_lst(&input);
 	join_cmd_args(&input);
-    printf("LST BEFORE AST ===\n");
-    print_lst(&input);
-    printf("==================\n");
+    // printf("LST BEFORE AST ===\n");
+    // print_lst(&input);
+    // printf("==================\n");
 	tree = build_ast(&input, &insert_node);
-    printf("TREE BEFORE EXEC\n");
-    print_tree(&tree);
-    printf("====\n");
+    // printf("TREE BEFORE EXEC\n");
+    // print_tree(&tree);
+    // printf("====\n");
 	if (tree && check_tree_syntax(&tree) == -1)
         return (-1);
     ft_shell()->exec_tree = tree;

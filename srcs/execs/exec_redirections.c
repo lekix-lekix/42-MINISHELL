@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/18 19:09:47 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/07/19 13:38:56 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,14 +92,12 @@ int	handle_pipe_redirections(t_redir *redirection, t_token *node)
 		if (dup2(node->pipe_redir[0], STDIN_FILENO) == -1)
 			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
 				exit(255), -1);
-        // close(node->pipe_redir[0]);
 	}
 	else if (redirection->redir_type == REDIR_OUTPUT)
 	{
 		if (dup2(node->pipe_redir[1], STDOUT_FILENO) == -1)
 			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
 				exit(255), -1);
-        // close(node->pipe_redir[1]);
 	}
 	return (0);
 }
