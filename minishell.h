@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/19 15:16:40 by lekix            ###   ########.fr       */
+/*   Updated: 2024/07/21 01:48:11 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,14 +150,14 @@ typedef struct s_minishell
 	char			*prompt;
 	char			*path;
 	t_lst			*pids;
-	t_lst           *pipes;
-    int             end_exec;
+	t_lst			*pipes;
+	int				end_exec;
 	int				exec_in_par;
 	int				pids_num;
 	int				stdin;
 	int				stdout;
 	int				heredoc;
-    t_ast           *full_exec_tree;
+	t_ast			*full_exec_tree;
 	t_ast			*exec_tree;
 	t_ast			*node;
 	bool			signint_child;
@@ -312,5 +312,5 @@ void				add_ast_lst(t_ast **ast_lst, t_ast *node);
 t_ast				*find_top_node(t_ast **lst);
 void				set_next_null(t_ast *root);
 void				init_pids_tab(t_ast **tree);
-
+int					close_pipes_lst(t_lst **pipe_lst, t_token *node);
 #endif
