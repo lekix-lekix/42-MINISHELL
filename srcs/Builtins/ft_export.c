@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:02:12 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/05 13:35:32 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/22 14:46:34 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,3 @@ int	ft_exec_export(char **args, t_minishell *data)
 	}
 	return (exit_s);
 }
-// printf("The field: %s\n", key);
-// printf("The content: %s\n", ft_extract_key(args[i]));

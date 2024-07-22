@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/11 21:29:43 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/22 14:39:21 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,7 +301,8 @@ void				ft_heredoc_expander(char *str, int fd);
 int					ft_exec_non_builtins_single_cmd(char **args,
 						t_redir *redirections);
 bool				ft_is_valid_var_char(char c);
-char				**ft_expand(char *sr);
+char				*ft_expand(char *sr);
+char				*ft_strip_quotes(char *str);
 
 // Exec AST tools
 void				set_is_in_par(t_ast *root, int flag);

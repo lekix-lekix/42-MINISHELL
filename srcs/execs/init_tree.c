@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/11 21:32:27 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/22 12:21:28 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,19 @@ static void	ft_init_leaf(t_ast *node)
 	t_token	*io;
 	int		p[2];
 	int		pid;
+	int	idx;
 
+	idx = -1;
 	io = node->token_node;
-	if (io->content)
+	// if (io->contents[1])
+	// {	
+	// 	printf("THE FIRST CONTENT: %s\n", io->contents[1]);
+	// 	node->expanded_args = ft_expand(io->contents[1]);
+	// }
+	while (io->contents[++idx])
 	{	
-		printf("THE FIRST CONTENT: %s\n", io->contents[1]);
-		node->expanded_args = ft_expand(io->contents[1]);
+		// printf("The args before expand: %s\n", io->contents[idx]);
+		io->contents[idx] = ft_expand(io->contents[idx]);
 	}
 	while (io)
 	{
