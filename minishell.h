@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/21 01:48:11 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/01 18:16:46 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,14 +303,43 @@ void				ft_reset_ports(bool piped);
 
 // Expanders
 void				ft_heredoc_expander(char *str, int fd);
-int					ft_exec_non_builtins_single_cmd(char **args,
-						t_redir *redirections);
 
 // Exec AST tools
 void				set_is_in_par(t_ast *root, int flag);
 void				add_ast_lst(t_ast **ast_lst, t_ast *node);
 t_ast				*find_top_node(t_ast **lst);
 void				set_next_null(t_ast *root);
-void				init_pids_tab(t_ast **tree);
-int					close_pipes_lst(t_lst **pipe_lst, t_token *node);
+t_ast				*ast_lst_dup(t_ast **lst, t_ast *node);
+t_ast				*get_after_par_node(t_ast **lst);
+t_ast				*ast_find_one(t_ast **lst, t_ast *node);
+int					ast_list_size(t_ast **lst);
+void				print_ast_lst(t_ast **lst);
+
+// Exec pipe redirections
+int					handle_pipe_redirections(t_redir *redirection,
+						t_token *node);
+int					close_pipes_lst(t_lst **pipe_lst);
+void				set_pipe_redir_out(t_ast *node, int pipe_fd);
+void				set_pipe_redir_in(t_ast *node, int pipe_fd);
+int					close_pipe_redir_in(t_ast *node);
+void				close_pipe_redir_out(t_ast *node);
+int					*init_pipe(void);
+t_lst				*create_lst_node(void *mem_addr);
+void				ft_lst_del_pipe(t_lst **lst, int pipe);
+
+// Exec
+int					init_only_child_no_fork(t_token *node);
+int					ft_check_cmds(t_token *token_node);
+int					*prep_exec_child(t_ast *to_exec);
+int					close_wait(int par_pid);
+void				ft_start_exec_tree(t_ast *root, t_ast **exec_lst,
+						t_ast **last_op);
+int					iterate_exec_ast_lst(t_ast **lst);
+// int					exec_child(t_ast *node);
+
+// Exec parenthesis
+int					prep_exec_par(t_ast *sub_tree, int *before_par_pipe,
+						int *after_par_pipe);
+int					handle_par_exec(t_ast **current, int *before_par_pipe);
+
 #endif

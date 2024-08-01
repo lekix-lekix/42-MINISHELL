@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/20 20:04:29 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/01 17:59:08 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,31 +72,6 @@ int ft_count_pipes(t_ast **tree)
     return (pipes);
 }
 
-int	**alloc_pipes_tab(t_ast **tree)
-{
-	int	**tab;
-    int size;
-	int	i;
-	int	j;
-
-	i = -1;
-    size = ft_count_pipes(tree);
-	tab = malloc(sizeof(int *) * (size + 1));
-	if (!tab || gbg_coll(tab, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-	while (++i < size)
-	{
-		tab[i] = malloc(sizeof(int) * 2);
-		if (!tab[i] || gbg_coll(tab[i], PARSING, ADD))
-			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-		j = -1;
-		while (++j < 2)
-			tab[i][j] = 0;
-	}
-	tab[i] = NULL;
-	return (tab);
-}
-
 static void	ft_start_execution(t_ast **tree)
 {
 	t_ast	*nodes;
@@ -104,13 +79,6 @@ static void	ft_start_execution(t_ast **tree)
 
 	nodes = *tree;
 	ft_init_tree(nodes);
-	// if (nodes->token_node && nodes->token_node->type == CMD)
-	// {
-	// 	printf("It was a single cmd\n");
-	// 	la_status = ft_exec_non_builtins_single_cmd(nodes->token_node->contents, nodes->redirections);
-	// }
-	// else
-	/* la_status =  */
     ft_shell()->pids = NULL;
     ft_shell()->pipes = NULL;
     ft_shell()->end_exec = 0;
@@ -148,13 +116,13 @@ int	start_parsing(char *prompt)
 		return (-1);
 	clean_token_lst(&input);
 	join_cmd_args(&input);
-    // printf("LST BEFORE AST ===\n");
-    // print_lst(&input);
-    // printf("==================\n");
+    printf("LST BEFORE AST ===\n");
+    print_lst(&input);
+    printf("==================\n");
 	tree = build_ast(&input, &insert_node);
-    // printf("TREE BEFORE EXEC\n");
-    // print_tree(&tree);
-    // printf("====\n");
+    printf("TREE BEFORE EXEC\n");
+    print_tree(&tree);
+    printf("====\n");
 	if (tree && check_tree_syntax(&tree) == -1)
         return (-1);
     ft_shell()->exec_tree = tree;

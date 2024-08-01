@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
+#    By: lekix <lekix@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/07/08 14:27:33 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/08/01 17:43:30 by lekix            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,17 @@ SRCS = ./srcs/minishell.c \
 	./srcs/execs/exec_non_builtins.c \
 	./srcs/execs/start_exec.c \
 	./srcs/execs/exec_ast_tools.c \
+	./srcs/execs/exec_ast_tools_bis.c \
+	./srcs/execs/exec_handle_par.c \
+	./srcs/execs/exec_init_child.c \
+	./srcs/execs/init_tree.c \
+	./srcs/execs/exec_redirections.c \
+	./srcs/execs/exec_utils.c \
+	./srcs/execs/exec_pipe_redirections.c \
+	./srcs/execs/exec_traverse_tree.c \
+	./srcs/execs/prep_exec_child.c \
+	./srcs/execs/set_close_pipes.c \
+	./srcs/execs/set_close_pipes_bis.c \
 	./srcs/general_utils.c \
 	./srcs/non_builtins/paths_utils.c \
 	./srcs/tokenizer.c \
@@ -39,9 +50,6 @@ SRCS = ./srcs/minishell.c \
 	./srcs/ast_tools_bis.c \
 	./srcs/msh_strtrim.c \
 	./srcs/msh_split.c \
-	./srcs/execs/exec_redirections.c \
-	./srcs/execs/init_tree.c \
-	./srcs/execs/exec_utils.c \
 	./srcs/expanders/heredoc_expander.c \
 	./srcs/parsing_redir.c \
 	./srcs/parsing_redir_bis.c \

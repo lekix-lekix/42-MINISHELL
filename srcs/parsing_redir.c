@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:13:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/15 15:42:14 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/01 18:29:01 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ t_redir	*get_redir_lst_par(t_token **redir_node_lst)
 		if (is_a_redir_operator(current) && current->next
 			&& current->next->type == OUTFILE)
 		{
-			new_redir_node = create_redir_node(current->type,
+			new_redir_node = create_redir_node(REDIR_OUTPUT_APPEND,
 					current->next->content);
 			remove_token_node(redir_node_lst, current->next);
 			remove_token_node(redir_node_lst, current);
@@ -100,7 +100,7 @@ int	handle_par_redirection(t_token **lst, t_token **redir_node,
 		if (par_right == closing_par)
 		{
 			next = get_outfile_next_node(&closing_par->next);
-			redir_lst = get_redir_lst_par(redir_node /* , closing_par */);
+			redir_lst = get_redir_lst_par(redir_node);
 			apply_redir_lst(&current, closing_par, &redir_lst);
 			closing_par->next = next;
 			return (0);

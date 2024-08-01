@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/21 01:46:51 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/01 18:16:27 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	ft_append(t_redir *redirections, int *le_status)
 		*le_status = ft_errmsg();
 		return (*le_status);
 	}
-	dup2(fd, STDOUT_FILENO);
+	dup2(fd, STDOUT_FILENO); // NEEDS PROTECTION
 	close(fd);
 	*le_status = 0;
 	return (0);
@@ -58,7 +58,7 @@ int	ft_in(t_redir *redirections, int *le_status)
 		*le_status = ft_errmsg();
 		return (*le_status);
 	}
-	dup2(fd, STDIN_FILENO);
+	dup2(fd, STDIN_FILENO); // NEEDS PROTECTION
 	close(fd);
 	*le_status = 0;
 	return (*le_status);
@@ -79,59 +79,10 @@ int	ft_out(t_redir *redirections, int *status)
 		*status = ft_errmsg();
 		return (*status);
 	}
-	dup2(fd, STDOUT_FILENO);
+	dup2(fd, STDOUT_FILENO); // NEEDS PROTECTION
 	close(fd);
 	*status = 0;
 	return (*status);
-}
-
-void    ft_lst_del_pipe(t_lst **lst, int pipe)
-{
-    t_lst *current;
-    t_lst *prev;
-
-    current = *lst;
-    if (!current)
-        return ;
-    if (*(int *)current->content == pipe)
-    {
-        *lst = current->next;
-        return ;
-    }
-    while (current)
-    {
-        if (*(int *)current->content == pipe)
-        {
-            prev->next = current->next;
-            return ;
-        }
-        prev = current;
-        current = current->next;
-    }
-}
-
-int	handle_pipe_redirections(t_redir *redirection, t_token *node)
-{
-	if (redirection->redir_type == REDIR_INPUT)
-	{
-        printf("node dup2 input = %s pipe fd = %d\n", node->contents[0], node->pipe_redir[0]);
-		if (dup2(node->pipe_redir[0], STDIN_FILENO) == -1)
-			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
-				exit(255), -1);
-        ft_lst_del_pipe(&ft_shell()->pipes, node->pipe_redir[0]);
-        close(node->pipe_redir[0]);
-	}
-	else if (redirection->redir_type == REDIR_OUTPUT)
-	{
-        printf("node dup2 output = %s\n", node->contents[0]);
-		if (dup2(node->pipe_redir[1], STDOUT_FILENO) == -1)
-			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
-				exit(255), -1);
-        ft_lst_del_pipe(&ft_shell()->pipes, node->pipe_redir[1]);
-        close(node->pipe_redir[1]);
-	}
-    
-	return (0);
 }
 
 int	ft_check_redirections(t_token *node)

@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 14:20:35 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/19 12:57:39 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/01 17:52:09 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,11 @@ t_ast	*find_top_node(t_ast **lst)
 	top_node = NULL;
 	while (current)
 	{
-		if (current->node_type == AND || current->node_type == OR || current->node_type == PIPE)
+		if (current->node_type == AND || current->node_type == OR
+			|| current->node_type == PIPE)
 			top_node = current;
-		if (!current->is_in_par)
+		if (current->node_type == CMD && current->next
+			&& current->next->node_type == CMD)
 			return (top_node);
 		current = current->next;
 	}
@@ -69,19 +71,19 @@ void	set_next_null(t_ast *root)
 		set_next_null(root->right);
 }
 
-void	init_pids_tab(t_ast **lst)
+void	print_ast_lst(t_ast **lst)
 {
 	t_ast	*current;
 
 	current = *lst;
 	while (current)
 	{
-		if (current->node_type == CMD)
-			ft_shell()->pids_num += 1;
+		if (current->token_node->contents)
+			printf("current = %s\n", current->token_node->contents[0]);
+		else
+			printf("op_node type = %d\n", current->node_type);
+		if (current->token_node->redirections)
+			print_redir_lst(&current->token_node->redirections);
 		current = current->next;
 	}
-	printf("pids tab size = %d\n", ft_shell()->pids_num);
-	ft_shell()->pids = malloc(sizeof(pid_t) * ft_shell()->pids_num - 1);
-	// if (!ft_shell()->pids || gbg_coll(ft_shell()->pids, ADD, PARSING))
-	// 	(gbg_coll(NULL, ALL, FLUSH_ALL), exit(255));
 }
