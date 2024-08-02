@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/03 16:28:54 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/07/22 12:21:28 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,20 @@ static void	ft_init_leaf(t_ast *node)
 	t_token	*io;
 	int		p[2];
 	int		pid;
+	int	idx;
 
+	idx = -1;
 	io = node->token_node;
+	// if (io->contents[1])
+	// {	
+	// 	printf("THE FIRST CONTENT: %s\n", io->contents[1]);
+	// 	node->expanded_args = ft_expand(io->contents[1]);
+	// }
+	while (io->contents[++idx])
+	{	
+		// printf("The args before expand: %s\n", io->contents[idx]);
+		io->contents[idx] = ft_expand(io->contents[idx]);
+	}
 	while (io)
 	{
 		if (io->redirections && io->redirections->redir_type == REDIR_HEREDOC)
@@ -84,7 +96,7 @@ static void	ft_init_leaf(t_ast *node)
 			(ft_shell())->heredoc = p[0];
 		}
 		// else
-			// printf("Here u go!\n");
+			// printf("HERE YOU ARE\n");
 		io = io->next;
 	}
 }
