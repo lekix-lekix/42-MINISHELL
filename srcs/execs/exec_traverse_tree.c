@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_traverse_tree.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:20:09 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/01 17:26:32 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/02 14:39:07 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	check_operator_exec(t_ast *root, t_ast **exec_lst, t_ast **last_operator)
 	{
 		if (*last_operator == NULL || check_last_operator(last_operator))
 		{
-			printf("can exec !\n");
+			// printf("can exec !\n");
 			iterate_exec_ast_lst(exec_lst);
 			*last_operator = root;
 			*exec_lst = NULL;
@@ -52,7 +52,7 @@ int	check_operator_exec(t_ast *root, t_ast **exec_lst, t_ast **last_operator)
 		}
 		else
 		{
-			printf("cant exec !\n");
+			// printf("cant exec !\n");
 			*exec_lst = NULL;
 			return (1);
 		}

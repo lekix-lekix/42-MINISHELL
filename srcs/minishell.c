@@ -3,10 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
+<<<<<<< Updated upstream
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
 /*   Updated: 2024/08/02 17:17:07 by sabakar-         ###   ########.fr       */
+=======
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
+/*   Updated: 2024/08/02 14:37:02 by kipouliq         ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,13 +123,13 @@ int	start_parsing(char *prompt)
 		return (-1);
 	clean_token_lst(&input);
 	join_cmd_args(&input);
-    printf("LST BEFORE AST ===\n");
-    print_lst(&input);
-    printf("==================\n");
+    // printf("LST BEFORE AST ===\n");
+    // print_lst(&input);
+    // printf("==================\n");
 	tree = build_ast(&input, &insert_node);
-    printf("TREE BEFORE EXEC\n");
-    print_tree(&tree);
-    printf("====\n");
+    // printf("TREE BEFORE EXEC\n");
+    // print_tree(&tree);
+    // printf("====\n");
 	if (tree && check_tree_syntax(&tree) == -1)
         return (-1);
     ft_shell()->exec_tree = tree;

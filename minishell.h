@@ -3,10 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
+<<<<<<< Updated upstream
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
 /*   Updated: 2024/08/02 17:20:22 by sabakar-         ###   ########.fr       */
+=======
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
+/*   Updated: 2024/08/02 14:46:28 by kipouliq         ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +75,6 @@ typedef enum e_token_type
 	REDIR_HEREDOC,
 	OUTFILE
 }					t_token_type;
-
-// typedef enum e_ast_node_type
-// {
-// 	COMMAND,
-// 	OPERATOR
-// }					t_ast_node_type;
 
 typedef enum e_redir_type
 {
