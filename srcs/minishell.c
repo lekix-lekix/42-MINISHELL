@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/05 06:17:43 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/05 15:43:48 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,12 @@ int	start_parsing(char *prompt)
     // print_lst(&input);
     // printf("==================\n");
 	tree = build_ast(&input, &insert_node);
-    // printf("TREE BEFORE EXEC\n");
-    // print_tree(&tree);
-    // printf("====\n");
+    printf("TREE BEFORE EXEC\n");
+    print_tree(&tree);
+    printf("====\n");
 	if (tree && check_tree_syntax(&tree) == -1)
         return (-1);
+    ft_shell()->les_token = input;
     ft_shell()->exec_tree = tree;
 	ft_start_execution(&tree);
 	return (0);
