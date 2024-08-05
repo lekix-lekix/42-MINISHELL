@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_exec.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/01 17:53:41 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/02 17:47:11 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ int	iterate_exec_ast_lst(t_ast **lst)
 	if (!cmd_nb)
 		return (0);
 	before_par_pipe = NULL;
+	printf("exec list ====\n");
+	print_ast_lst(lst);
+	printf("========\n");
 	while (current)
 	{
 		if (current->is_in_par)
