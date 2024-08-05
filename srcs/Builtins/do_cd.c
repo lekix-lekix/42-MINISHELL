@@ -6,36 +6,36 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:44:43 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/05 13:13:30 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/05 06:15:25 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
 static int	ft_cdhome(t_minishell *data);
-static int	ft_change_cwd(t_minishell *data);
+static int	ft_change_cwd(void);
 static int	ft_cderr_msg(char *err_msg);
 
-static int	ft_change_cwd(t_minishell *data)
+static int	ft_change_cwd(void)
 {
 	char	*cwd;
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		return (1);
-	return (ft_update_envlst("PWD", cwd, false, data), 0);
+	return (ft_update_envlst("PWD", cwd, false), 0);
 }
 
 static int	ft_cdhome(t_minishell *data)
 {
 	char	*home;
 
-	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD", data), false, data);
+	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD", data), false);
 	home = ft_get_envlst_content("HOME", data);
 	if (!home)
 		return (ft_putstr_fd("minishell: cd: HOME not set\n", 2), 1);
 	if (chdir(home) == ENO_SUCCESS)
-		return (ft_update_envlst("PWD", home, false, data), 0);
+		return (ft_update_envlst("PWD", home, false), 0);
 	return (1);
 }
 
@@ -53,8 +53,8 @@ int	ft_do_cd(char **path, t_minishell *data)
 		return (ft_cdhome(data));
 	if (chdir(path[1]) != ENO_SUCCESS)
 		return (ft_cderr_msg(path[1]));
-	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD", data), false, data);
-	return (ft_change_cwd(data));
+	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD", data), false);
+	return (ft_change_cwd());
 }
 
 int	ft_strcmp(const char *s1, const char *s2)

@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:02:12 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/22 14:46:34 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/05 07:09:25 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,26 @@ static int	ft_export_err_msg(char *identifier)
 	return (1);
 }
 
-static void	ft_export_list(t_minishell *data)
-{
-	t_env	*list;
-	size_t	i;
-
-	list = data->env_lst;
-	while (list)
+static void ft_export_list(void) {
+	t_env *list;
+	size_t i;
+	
+    list = ft_shell()->expanded_env;
+	
+    // printf("===============================================================\n");
+    // print_env(&list);
+    // printf("===============================================================\n");
+	
+    while (list)
 	{
-		if (list->content != NULL && (ft_strcmp(list->field, "_") != 0))
+        // printf("Current list element: %p, Field: %s\n", (void*)list, list->field ? list->field : "NULL");
+		// printf("Current list element: %p, Content: %s\n", (void*)list, list->content ? list->content : "NULL");
+		
+		if (list->field != NULL)
 		{
-			printf("export %s\"", list->field);
+			printf("export %s\"", list->field ? list->field : " ");
 			i = 0;
-			while ((list->content)[i])
+			while ((list->content) && (list->content)[i])
 			{
 				if ((list->content)[i] == '$' || (list->content)[i] == '"')
 					printf("\\%c", (list->content)[i++]);
@@ -41,10 +48,14 @@ static void	ft_export_list(t_minishell *data)
 			}
 			printf("\"\n");
 		}
-		else if (list->content == NULL && (ft_strcmp(list->field, "_") != 0))
-			printf("export F %s\n", list->field);
-		list = list->next;
+		else if (list->field == NULL)
+			printf("export %s\n", list->content);
+		// printf("%s\n", list->content ? list->content : " ");
+		
+		// printf("the returned value: %d\n", ft_strcmp(list->field, "_"));
+        list = list->next;
 	}
+    // printf("AFTER PRINTING\n");
 }
 
 int	ft_check_key(char *str)
@@ -63,7 +74,7 @@ int	ft_check_key(char *str)
 	return (1);
 }
 
-int	ft_exec_export(char **args, t_minishell *data)
+int	ft_exec_export(char **args)
 {
 	int		i;
 	int		exit_s;
@@ -71,10 +82,12 @@ int	ft_exec_export(char **args, t_minishell *data)
 
 	exit_s = 0;
 	i = 1;
-	dprintf(2, "The cmd is: %s\n", args[0]);	
-	dprintf(2, "The cmd is: %s\n", args[1]);
+	ft_shell()->expanded_env = (ft_shell())->env_lst;
 	if (!args[1])
-		return (ft_export_list(data), 0);
+		return ( ft_export_list(), 0);
+	int p = -1;
+	while (args[++p])
+		printf("THE AGRS THAT'S ARE COMING: %s\n", args[p]);
 	while (args[i])
 	{
 		if (ft_check_key(args[i]) == 0)
@@ -82,17 +95,17 @@ int	ft_exec_export(char **args, t_minishell *data)
 		else
 		{
 			key = ft_extract_val(args[i]);
-			printf("The key: %s\n", key);
-			printf("The key of: %s\n", (ft_shell())->env_lst->field);
-			if (ft_env_entry_exists(key, ft_shell()))
-			{	
-				printf("The crash\n");
-				ft_update_envlst(ft_extract_key(args[i]), key, false, data);
-			}
+			// printf("THE ARGS IS: %s\n", args[i]);
+			if (ft_env_entry_exists(key))
+			{	ft_update_envlst(key, ft_extract_key(args[i]), false);}
 			else
-				ft_update_envlst(ft_extract_key(args[i]), key, true, data);
+			{	
+				ft_update_envlst(key, ft_extract_key(args[i]), true);
+				// printf("WE WRE CRASHING HERE\n");
+			}
 		}
 		i++;
+		// printf("THE I COUNT IS: %d\n", i);
 	}
 	return (exit_s);
 }

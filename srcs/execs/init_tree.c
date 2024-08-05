@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/22 12:21:28 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/05 07:07:05 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,9 @@ static void	ft_init_leaf(t_ast *node)
 	int		p[2];
 	int		pid;
 	int	idx;
+	int expanded_len;
+	char *first_args;
+	int	contents_len;
 
 	idx = -1;
 	io = node->token_node;
@@ -76,11 +79,43 @@ static void	ft_init_leaf(t_ast *node)
 	// 	printf("THE FIRST CONTENT: %s\n", io->contents[1]);
 	// 	node->expanded_args = ft_expand(io->contents[1]);
 	// }
+	// contents_len = get_arr_len(io->contents);
+	contents_len = 0;
+	// printf("TLSD CONTENTS LEN: %d\n", contents_len);
 	while (io->contents[++idx])
 	{	
-		// printf("The args before expand: %s\n", io->contents[idx]);
-		io->contents[idx] = ft_expand(io->contents[idx]);
+		(ft_shell())->expanded_args = ft_expand(io->contents[idx]);
+		// printf("THE CONTENTS CONTENT: [%s]", io->contents[idx]);
+		// int x = -1;
+		// while ((ft_shell())->expanded_args[++x])
+		// {	
+		// 	printf("THe EX [%s]", (ft_shell())->expanded_args[x]);
+		// 	io->contents[idx] = (ft_shell())->expanded_args[x];
+		// }
+		// ft_expand(io->contents[idx]);
+		// printf("\n");
+		contents_len++;
 	}
+	expanded_len = get_arr_len((ft_shell())->expanded_args);
+	first_args = io->contents[0];
+	io->contents = (char **)malloc(sizeof(char *) * (expanded_len + 2));
+	// printf("THE FIRST OF CONTETNS: %s\n", first_args);
+	// printf("THE LEN OF EXPANDED: %d\n", expanded_len);
+	io->contents[0] = first_args;
+	int g = -1;
+	int c = 1;
+	while (ft_shell()->expanded_args[++g] && contents_len > 1)
+	{	
+		// printf("hi!\n");
+		// printf("THE EXPANDED ARGS: [%s]\n", (ft_shell())->expanded_args[g]);
+		io->contents[c] = ft_shell()->expanded_args[g];
+		c++;
+	}
+	io->contents[c] = 0;
+	// int l = -1;
+	// while (io->contents[++l])
+		// printf("THE CONTENTS: %s\n", io->contents[1]);
+	// printf("\n");
 	while (io)
 	{
 		if (io->redirections && io->redirections->redir_type == REDIR_HEREDOC)
@@ -101,17 +136,27 @@ static void	ft_init_leaf(t_ast *node)
 	}
 }
 
-void	ft_init_tree(t_ast *node)
+// void	ft_init_tree(t_ast *node)
+// {
+// 	if (!node)
+// 		return ;
+// 	if (node->node_type == PIPE || node->node_type == AND
+// 		|| node->node_type == OR)
+// 	{
+// 		ft_init_tree(node->left);
+// 		if (!(ft_shell())->heredoc_sigint)
+// 			ft_init_tree(node->right);
+// 	}
+// 	else
+// 		ft_init_leaf(node);
+// }
+
+void ft_init_tree(t_ast *node)
 {
-	if (!node)
-		return ;
-	if (node->node_type == PIPE || node->node_type == AND
-		|| node->node_type == OR)
-	{
+	if (node->left)
 		ft_init_tree(node->left);
-		if (!(ft_shell())->heredoc_sigint)
-			ft_init_tree(node->right);
-	}
-	else
+	if (node->node_type == CMD)
 		ft_init_leaf(node);
+	if (node->right)
+		ft_init_tree(node->right);
 }

@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:14:54 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/22 14:46:44 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/05 06:11:43 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,14 +74,13 @@ char	*ft_join(char *s1, char *s2)
 	return (new_arr);
 }
 
-bool	ft_env_entry_exists(char *content, t_minishell *data)
+bool	ft_env_entry_exists(char *content)
 {
 	t_env	*envlst;
-	(void)data;
-	
-	envlst = (ft_shell())->env_lst;
-	printf("The coming key: %s\n", content);
-	while (envlst->field != NULL && envlst)
+
+	envlst = (ft_shell())->expanded_env;
+	// printf("The coming key: %s\n", content);
+	while (envlst)
 	{
 		if (!ft_strcmp(content, envlst->content))
 			return (true);

@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/18 14:13:28 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/05 07:10:50 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static t_env	*ft_envlst_new(char *content, char *field)
 {
 	t_env	*new;
 
+	printf("THE FIELD: %s\n", field);
+	printf("THE CONTENT: %s\n", content);
 	new = (t_env *)ft_calloc(1, sizeof(t_env));
 	if (!new)
 		return (NULL);
@@ -40,24 +42,31 @@ char	*ft_get_envlst_content(char *key, t_minishell *data)
 	return (NULL);
 }
 
-void	ft_update_envlst(char *field, char *content, bool create,
-		t_minishell *data)
+void	ft_update_envlst(char *key, char *value, bool create)
 {
 	t_env	*envlst;
+	int key_len;
 
-	envlst = data->env_lst;
-	while (envlst)
+	envlst = ft_shell()->expanded_env;
+	print_env(&envlst);
+	key_len = ft_strlen(key);
+	while (envlst && envlst->next)
 	{
-		if (!ft_strncmp(field, envlst->field, ft_strlen(field)))
+		if (envlst->field && !ft_strncmp_loco(envlst->field, key, key_len))
 		{
-			if (content)
-				envlst->content = ft_strdup(content);
+			printf("INSIDE THE IF OF THE LOOP13\n");
+			if (value)
+				envlst->content = ft_strdup(value);
 			return ;
 		}
 		envlst = envlst->next;
 	}
 	if (create)
-		lst_env_add_back(&data->env_lst, ft_envlst_new(field, content));
+	{	
+		// printf("TO CREATE\n");
+		// printf("THE KEY: %s THE VALUE: %s\n", key, value);
+		lst_env_add_back(&envlst, ft_envlst_new(key, value));
+	}
 }
 
 char	*ft_extract_val(char *str)

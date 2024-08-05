@@ -6,22 +6,26 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:31:03 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/05 11:53:31 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/05 06:14:32 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static int	ft_strncmp_loco(const char *s1, const char *s2, size_t n)
+int	ft_strncmp_loco(const char *s1, const char *s2, size_t n)
 {
 	unsigned int	i;
 
 	i = 0;
 	if (n == 0)
 		return (0);
+	// printf("THE LENG IS: %zu\n", n);
+	// printf("THE S1: %s\n", s1);
+	// printf("THE S2: %s\n", s2);
 	while ((i < n - 1) && ((unsigned char)s1[i] != '\0'
 			|| (unsigned char)s2[i] != '\0'))
 	{
+		// printf("IT DOESN'T GETS HERE29\n");
 		if ((unsigned char)s1[i] != (unsigned char)s2[i])
 			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 		i++;
@@ -30,10 +34,7 @@ static int	ft_strncmp_loco(const char *s1, const char *s2, size_t n)
 }
 
 int	ft_exec_builtins(char **args, t_minishell *data)
-{
-	// int x = -1;
-	// while (args[++x])
-		// dprintf(2, "The bultin cmd is: %s\n", args[0]);	
+{	
 	if (ft_strncmp_loco(args[0], "echo", ft_strlen(args[0])) == 0)
 		return (ft_exec_echo(args));
 	if (ft_strncmp_loco(args[0], "pwd", ft_strlen(args[0])) == 0)
@@ -41,7 +42,7 @@ int	ft_exec_builtins(char **args, t_minishell *data)
 	if (ft_strncmp_loco(args[0], "env", ft_strlen(args[0])) == 0)
 		return (print_env(&data->env_lst));
 	if (ft_strncmp_loco(args[0], "export", ft_strlen(args[0])) == 0)
-		return (ft_exec_export(args, data));
+		return (ft_exec_export(args));
 	if (ft_strncmp_loco(args[0], "unset", ft_strlen("unset")) == 0)
 		return (ft_exec_unset(args, data));
 	if (ft_strncmp_loco(args[0], "cd", ft_strlen("cd")) == 0)

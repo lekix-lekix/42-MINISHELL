@@ -3,17 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-<<<<<<< Updated upstream
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/02 17:20:22 by sabakar-         ###   ########.fr       */
-=======
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/02 14:46:28 by kipouliq         ###   ########.fr       */
->>>>>>> Stashed changes
+/*   Updated: 2024/08/05 06:09:52 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +158,8 @@ typedef struct s_minishell
 	bool			signint_child;
 	bool			heredoc_sigint;
 	char			**env_args;
+	t_env			*expanded_env;
+	char			**expanded_args;
 	struct termios	original_term;
 }					t_minishell;
 
@@ -213,22 +208,22 @@ char				*msh_strdup(const char *s, int mlc_lst);
 int					ft_exec_echo(char **args);
 int					ft_exec_pwd(void);
 int					ft_do_cd(char **path, t_minishell *data);
-void				ft_update_envlst(char *field, char *content, bool create,
-						t_minishell *data);
+void				ft_update_envlst(char *field, char *content, bool create);
 int					print_env(t_env **lst);
-int					ft_exec_export(char **args, t_minishell *data);
+int					ft_exec_export(char **args);
 int					ft_exec_builtins(char **args, t_minishell *data);
 char				*ft_extract_val(char *str);
 char				*ft_extract_key(char *str);
 int					ft_strcmp(const char *s1, const char *s2);
 bool				ft_is_builtin(char *arg);
-bool				ft_env_entry_exists(char *content, t_minishell *data);
+bool				ft_env_entry_exists(char *content);
 int					ft_exec_unset(char **args, t_minishell *data);
 int					ft_check_key(char *str);
 char				*ft_get_envlst_content(char *content, t_minishell *data);
 
 // The non-builtins
 int					ft_exec_non_builtins(t_token *node);
+int					ft_strncmp_loco(const char *s1, const char *s2, size_t n);
 
 // utils
 void				ft_print_err(char *str);
@@ -308,8 +303,14 @@ void				ft_heredoc_expander(char *str, int fd);
 int					ft_exec_non_builtins_single_cmd(char **args,
 						t_redir *redirections);
 bool				ft_is_valid_var_char(char c);
-char				*ft_expand(char *sr);
+char				**ft_expand(char *sr);
 char				*ft_strip_quotes(char *str);
+char				*ft_clean_empty_chars(char *sr);
+bool				ft_is_contains_asterisk(char *sr);
+size_t				ft_count_match(char *pattern);
+bool				ft_match_star(char *pattern, char *str);
+char				**ft_globaler(char *str);
+size_t	get_arr_len(char **expanded);
 
 // Exec AST tools
 void				set_is_in_par(t_ast *root, int flag);

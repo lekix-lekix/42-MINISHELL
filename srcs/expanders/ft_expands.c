@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/07/22 15:21:37 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/05 06:50:50 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,23 +111,52 @@ char	*ft_pre_expand(char *sr)
 	return (res);
 }
 
-char	*ft_expand(char *sr)
+size_t	get_arr_len(char **expanded)
 {
-	// char **expanded;
-	char *pre_expand;
+	size_t	x;
 
+	x = 0;
+	if (!expanded || !expanded[0])
+		return (0);
+	while (expanded[x])
+		x++;
+	// printf("THE LENS IS: %zu\n", x);
+	return (x);
+}
+
+char	**ft_expand(char *sr)
+{
+	// char *expanded;
+	char	**expanded;
+	size_t arg_len;
+	char **globaled;
+	size_t x;
+
+	x = 0;
 	sr = ft_pre_expand(sr);
 	if (!sr)
 		return (NULL);
-	pre_expand = ft_strip_quotes(sr);
-	printf("THE RETURNED STR: %s\n", pre_expand);
-	// expanded = ft_expander_split(sr);
-	// if (!expanded || expanded[0] == NULL)
-	// 	return (NULL);
-	// free(sr);
-	// int x = -1;
-	// while (expanded[++x])
-	// 	printf("THE EXPANDED SH!T: %s\n", expanded[x]);
-	// printf("Thee str pre expanding is: %s\n", pre_expand);
-	return (pre_expand);
+	sr = ft_clean_empty_chars(sr);
+	if (!sr)
+		return (NULL);
+	arg_len = ft_strlen(sr);
+	// globaled = (char **)malloc(sizeof(char *) * (arg_len + 1)); // NEEDS PROTECTION AND GARBAGE
+	globaled = ft_globaler(sr);
+	expanded = malloc(sizeof(char *) * (get_arr_len(globaled) + 1)); // NEEDS PROTECTION AND GARBAGE
+	// printf("get arr = %lu\n", get_arr_len(globaled) + 1);
+	if (!expanded)
+		return (NULL);
+	while (globaled[x])
+	{
+		// printf("THE GLOBALED: %s\n", ft_strip_quotes(globaled[x]));
+		expanded[x] = ft_strip_quotes(globaled[x]);
+		x++;
+	}
+	// dprintf(2, "EXPANDED X END = %zu\n", x);
+	expanded[x] = 0;
+	// printf("THE GLOBALED LEN: %zu\n", get_arr_len(globaled));
+
+	// sr = ft_strip_quotes(sr);
+	// printf("THE RETURNED STR: %s\n", *expanded);
+	return (expanded);
 }
