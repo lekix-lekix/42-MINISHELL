@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expands.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/05 06:50:50 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/05 12:46:10 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ char	**ft_expand(char *sr)
 {
 	// char *expanded;
 	char	**expanded;
-	size_t arg_len;
+	// size_t arg_len;
 	char **globaled;
 	size_t x;
 
@@ -139,7 +139,7 @@ char	**ft_expand(char *sr)
 	sr = ft_clean_empty_chars(sr);
 	if (!sr)
 		return (NULL);
-	arg_len = ft_strlen(sr);
+	// arg_len = ft_strlen(sr);
 	// globaled = (char **)malloc(sizeof(char *) * (arg_len + 1)); // NEEDS PROTECTION AND GARBAGE
 	globaled = ft_globaler(sr);
 	expanded = malloc(sizeof(char *) * (get_arr_len(globaled) + 1)); // NEEDS PROTECTION AND GARBAGE
