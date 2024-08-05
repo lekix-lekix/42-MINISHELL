@@ -3,17 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-<<<<<<< Updated upstream
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/02 17:20:22 by sabakar-         ###   ########.fr       */
-=======
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/02 14:46:28 by kipouliq         ###   ########.fr       */
->>>>>>> Stashed changes
+/*   Updated: 2024/08/05 05:46:01 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
