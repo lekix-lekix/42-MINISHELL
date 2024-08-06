@@ -6,15 +6,15 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/05 06:17:43 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/06 02:04:40 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_minishell *ft_shell(void)
+t_minishell	*ft_shell(void)
 {
-	static t_minishell data;
+	static t_minishell	data;
 
 	return (&data);
 }
@@ -48,43 +48,53 @@ int	init_data(t_minishell *data, char **envp)
 	data->env_args = envp;
 	if (!data->env_lst)
 		return (-1);
+	tcgetattr(STDIN_FILENO, &ft_shell()->original_term);
 	return (0);
 }
 
-void    traverse_count_pipes(t_ast *root, int *pipes)
+void	traverse_count_pipes(t_ast *root, int *pipes)
 {
-    if (root->left)
-        traverse_count_pipes(root->left, pipes);
-    if (root->node_type == PIPE)
-        *pipes += 1;
-    if (root->right)
-        traverse_count_pipes(root->right, pipes);
+	if (root->left)
+		traverse_count_pipes(root->left, pipes);
+	if (root->node_type == PIPE)
+		*pipes += 1;
+	if (root->right)
+		traverse_count_pipes(root->right, pipes);
 }
 
-int ft_count_pipes(t_ast **tree)
+int	ft_count_pipes(t_ast **tree)
 {
-    int pipes;
+	int	pipes;
 
-    pipes = 0;
-    if (!*tree)
-        return (0);
-    traverse_count_pipes(*tree, &pipes);
-    return (pipes);
+	pipes = 0;
+	if (!*tree)
+		return (0);
+	traverse_count_pipes(*tree, &pipes);
+	return (pipes);
 }
 
 static void	ft_start_execution(t_ast **tree)
 {
 	t_ast	*nodes;
-	// int		la_status;
 
+	// int		la_status;
 	nodes = *tree;
 	ft_init_tree(nodes);
-    ft_shell()->pids = NULL;
-    ft_shell()->pipes = NULL;
-    ft_shell()->end_exec = 0;
-    ft_shell()->exec_in_par = 0;
-    ft_shell()->full_exec_tree = *tree;
-    ft_start_exec(&nodes);
+	ft_shell()->pids = NULL;
+	ft_shell()->pipes = NULL;
+	ft_shell()->end_exec = 0;
+	ft_shell()->exec_in_par = 0;
+	ft_shell()->full_exec_tree = *tree;
+	signal(SIGQUIT, ft_sigquit_handler);
+	if ((ft_shell())->heredoc_sigint)
+	{
+		// If the program is quited during heredoc,
+		// we have clean the mess afterword I guess
+		printf("WE ARE HERE 98\n");
+		(ft_shell())->heredoc_sigint = false;
+	}
+	tcsetattr(STDIN_FILENO, TCSANOW, &(ft_shell())->original_term);
+	ft_start_exec(&nodes);
 }
 
 void	gbg_delete_node(t_token *node, int mlc_lst)
@@ -105,7 +115,7 @@ int	start_parsing(char *prompt)
 	if (check_quotes(prompt))
 		return (-1);
 	input = tokenize_input(prompt);
-    // print_lst(&input);
+	// print_lst(&input);
 	clean_token_lst(&input);
 	if (check_redir_syntax(&input) == -1)
 		return (-1);
@@ -116,16 +126,16 @@ int	start_parsing(char *prompt)
 		return (-1);
 	clean_token_lst(&input);
 	join_cmd_args(&input);
-    // printf("LST BEFORE AST ===\n");
-    // print_lst(&input);
-    // printf("==================\n");
+	// printf("LST BEFORE AST ===\n");
+	// print_lst(&input);
+	// printf("==================\n");
 	tree = build_ast(&input, &insert_node);
-    // printf("TREE BEFORE EXEC\n");
-    // print_tree(&tree);
-    // printf("====\n");
+	// printf("TREE BEFORE EXEC\n");
+	// print_tree(&tree);
+	// printf("====\n");
 	if (tree && check_tree_syntax(&tree) == -1)
-        return (-1);
-    ft_shell()->exec_tree = tree;
+		return (-1);
+	ft_shell()->exec_tree = tree;
 	ft_start_execution(&tree);
 	return (0);
 }
@@ -145,13 +155,22 @@ int	main(int argc, char **argv, char **env)
 	init_data(data, env);
 	while (1)
 	{
+		ft_init_signals();
 		data->prompt = readline("./minishell$ ");
+		if (!data->prompt)
+		{
+			// Also we need to clean here if I'm not mistaking!
+			ft_putstr_fd("exit\n", 1);
+			exit(ft_shell()->exit_status);
+		}
 		if (data->prompt || *data->prompt)
-        {
-		    start_parsing(data->prompt);
-            gbg_coll(NULL, PARSING, FLUSH_ONE);
-		    free(data->prompt);
-        }
+		{
+			if (data->prompt[0])
+				add_history(data->prompt);
+			start_parsing(data->prompt);
+			gbg_coll(NULL, PARSING, FLUSH_ONE);
+			free(data->prompt);
+		}
 	}
 	free(data->prompt);
 	gbg_coll(NULL, ENV, FLUSH_ALL);

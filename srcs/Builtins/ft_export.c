@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:02:12 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/05 07:09:25 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/05 08:38:14 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,6 @@ int	ft_exec_export(char **args)
 	ft_shell()->expanded_env = (ft_shell())->env_lst;
 	if (!args[1])
 		return ( ft_export_list(), 0);
-	int p = -1;
-	while (args[++p])
-		printf("THE AGRS THAT'S ARE COMING: %s\n", args[p]);
 	while (args[i])
 	{
 		if (ft_check_key(args[i]) == 0)

@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/05 07:07:05 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/06 08:49:35 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,6 @@ void	ft_heredoc(t_token *io, int p[2])
 		}
 	}
 	exit(0);
-}
-
-void	ft_sigquit_handler(int num)
-{
-	(void)num;
-	ft_putstr_fd("Quit: 3\n", 1);
 }
 
 static bool	ft_leave_leaf(int p[2], int *pid)

@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/05 06:09:52 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/05 21:41:35 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -349,5 +349,9 @@ int					iterate_exec_ast_lst(t_ast **lst);
 int					prep_exec_par(t_ast *sub_tree, int *before_par_pipe,
 						int *after_par_pipe);
 int					handle_par_exec(t_ast **current, int *before_par_pipe);
+
+// Signals
+void	ft_init_signals(void);
+void	ft_sigquit_handler(int num);
 
 #endif
