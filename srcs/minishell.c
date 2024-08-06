@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/05 15:43:48 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/06 18:32:10 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,8 @@ int	start_parsing(char *prompt)
     // printf("LST BEFORE AST ===\n");
     // print_lst(&input);
     // printf("==================\n");
+    set_par_lst(&input);
+    print_lst(&input);
 	tree = build_ast(&input, &insert_node);
     printf("TREE BEFORE EXEC\n");
     print_tree(&tree);
