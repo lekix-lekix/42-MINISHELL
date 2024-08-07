@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_par_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 17:11:53 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/28 17:12:45 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/07 18:49:19 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,44 @@ t_token	*find_last_par(t_token **lst)
 	return (par);
 }
 
+// t_token	*find_closing_par(t_token **lst)
+// {
+// 	t_token	*current;
+
+// 	current = (*lst)->next;
+// 	if (!current)
+// 		return (NULL);
+// 	while (current)
+// 	{
+// 		if (current->type == PAR_LEFT)
+// 			return (find_last_par(lst));
+// 		if (current->type == PAR_RIGHT)
+// 		{
+// 			if (current->next)
+// 				return (current);
+// 		}
+// 		current = current->next;
+// 	}
+// 	return (NULL);
+// }
+
 t_token	*find_closing_par(t_token **lst)
 {
 	t_token	*current;
+	int		par;
 
-	current = (*lst)->next;
-	if (!current)
-		return (NULL);
+    current = *lst;
+    if (!current)
+        return (NULL);
+    par = 0;
 	while (current)
 	{
 		if (current->type == PAR_LEFT)
-			return (find_last_par(lst));
+			par++;
 		if (current->type == PAR_RIGHT)
-		{
-			if (current->next)
-				return (current);
-		}
+            par--;
+        if (par == 0)
+            return (current);
 		current = current->next;
 	}
 	return (NULL);

@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/05 15:43:48 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/07 19:16:12 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,24 @@ void	gbg_delete_node(t_token *node, int mlc_lst)
 	gbg_coll(node, mlc_lst, FREE);
 }
 
+void check_delete_global_par(t_token **lst)
+{
+    t_token *current;
+    t_token *prev;
+    
+    if (*lst && (*lst)->type == PAR_LEFT && find_closing_par(lst)->next == NULL)
+    {
+        *lst = (*lst)->next;
+        current = *lst;
+        while (current->next)
+        {
+            prev = current;
+            current = current->next;
+        }
+        prev->next = current;
+    }
+}
+
 int	start_parsing(char *prompt)
 {
 	t_token	*input;
@@ -116,9 +134,11 @@ int	start_parsing(char *prompt)
 		return (-1);
 	clean_token_lst(&input);
 	join_cmd_args(&input);
-    // printf("LST BEFORE AST ===\n");
-    // print_lst(&input);
-    // printf("==================\n");
+    check_delete_global_par(&input);
+    set_par_lst(&input);
+    printf("LST BEFORE AST ===\n");
+    print_lst(&input);
+    printf("==================\n");
 	tree = build_ast(&input, &insert_node);
     printf("TREE BEFORE EXEC\n");
     print_tree(&tree);

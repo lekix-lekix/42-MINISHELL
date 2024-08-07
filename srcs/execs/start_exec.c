@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/05 14:32:49 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/07 18:37:31 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,10 @@ int	iterate_exec_ast_lst(t_ast **lst)
 	{
 		if (current->is_in_par)
 		{
-            // printf("current= %s\n", current->token_node->contents[0]);
-			par_pid = handle_par_exec(&current, before_par_pipe);
+            printf("NODE = %s %s IS IN PAR\n", current->token_node->contents[0], current->token_node->contents[1]);
+			par_pid = handle_par_exec(&current, lst, before_par_pipe);
 			ft_lstadd_back(&ft_shell()->pids, create_lst_node(&par_pid));
+            current = NULL;
 			continue ;
 		}
 		before_par_pipe = prep_exec_child(current);

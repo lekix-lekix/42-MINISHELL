@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/05 23:48:34 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/07 18:45:27 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ typedef struct s_token
 	char			*filename;
 	char			*content;
 	char			**contents;
-    int             is_in_par;
-    struct s_token  *original_token;
+	int				is_in_par;
+	struct s_token	*original_token;
 	struct s_token	*next;
 }					t_token;
 
@@ -312,7 +312,7 @@ bool				ft_is_contains_asterisk(char *sr);
 size_t				ft_count_match(char *pattern);
 bool				ft_match_star(char *pattern, char *str);
 char				**ft_globaler(char *str);
-size_t	get_arr_len(char **expanded);
+size_t				get_arr_len(char **expanded);
 
 // Exec AST tools
 void				set_is_in_par(t_ast *root, int flag);
@@ -350,6 +350,8 @@ int					iterate_exec_ast_lst(t_ast **lst);
 // Exec parenthesis
 int					prep_exec_par(t_ast *sub_tree, int *before_par_pipe,
 						int *after_par_pipe);
-int					handle_par_exec(t_ast **current, int *before_par_pipe);
+int					handle_par_exec(t_ast **current, t_ast **exec_lst,
+						int *before_par_pipe);
+void				set_par_lst(t_token **lst);
 
 #endif
