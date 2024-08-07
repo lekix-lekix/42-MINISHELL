@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/01 18:07:16 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/07 15:00:18 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ t_ast	*build_ast(t_token **lst, int *insert_node)
 	t_ast	*tree;
 
 	tree = build_operator_tree(lst);
+    printf("coucou\n");
 	if (build_cmd_tree(&tree, lst) == -1)
 		*insert_node = 0;
 	return (tree);
