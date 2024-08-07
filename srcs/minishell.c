@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/06 18:32:10 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/07 15:37:06 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,15 @@ void	gbg_delete_node(t_token *node, int mlc_lst)
 	gbg_coll(node, mlc_lst, FREE);
 }
 
+void    set_par_tree_token(t_ast *tree)
+{
+    if (tree->left)
+        set_par_tree_token(tree->left);
+    tree->is_in_par = tree->token_node->is_in_par;
+    if (tree->right)
+        set_par_tree_token(tree->right);
+}
+
 int	start_parsing(char *prompt)
 {
 	t_token	*input;
@@ -119,9 +128,10 @@ int	start_parsing(char *prompt)
     // printf("LST BEFORE AST ===\n");
     // print_lst(&input);
     // printf("==================\n");
-    set_par_lst(&input);
     print_lst(&input);
+    set_par_lst(&input);
 	tree = build_ast(&input, &insert_node);
+    // set_par_tree_token(tree);
     printf("TREE BEFORE EXEC\n");
     print_tree(&tree);
     printf("====\n");
