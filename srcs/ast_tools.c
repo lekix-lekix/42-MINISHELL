@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:27:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/07 15:25:02 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/05 23:39:31 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ t_token	*lst_dup(t_token **lst, t_token *node)
 			current_cpy->original_token = current->original_token;
 		else
 			current_cpy->original_token = current;
-        current_cpy->is_in_par = current->is_in_par;
 		insert_node_lst(&lst_cpy, current_cpy);
 		current = current->next;
 	}
@@ -93,6 +92,6 @@ t_ast	*create_ast_node(t_token *node)
 	new_node->node_type = node->type;
 	if (node->redirections)
 		new_node->redirections = node->redirections;
-	new_node->is_in_par = node->is_in_par;
+	new_node->is_in_par = 0;
 	return (new_node);
 }

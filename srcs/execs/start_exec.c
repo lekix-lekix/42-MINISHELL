@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_exec.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/06 18:03:44 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/05 14:32:49 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,13 @@ int	iterate_exec_ast_lst(t_ast **lst)
 		if (current->is_in_par)
 		{
             // printf("current= %s\n", current->token_node->contents[0]);
-			par_pid = handle_par_exec(&current, before_par_pipe, lst);
+			par_pid = handle_par_exec(&current, before_par_pipe);
 			ft_lstadd_back(&ft_shell()->pids, create_lst_node(&par_pid));
 			continue ;
 		}
 		before_par_pipe = prep_exec_child(current);
 		current = current->next;
 	}
-    printf("END EXECUTION\n");
 	close_wait(par_pid);
 	return (0);
 }

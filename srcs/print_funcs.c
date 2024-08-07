@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_funcs.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:55:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/06 18:32:43 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/05 06:12:50 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void	print_lst(t_token **lst)
 		printf("--------\n");
 		printf("content = '%s'\n", root->content);
 		printf("type = %u\n", root->type);
-        printf("in par = %d\n", root->is_in_par);
 		if (root->redirections)
 			print_redir_lst(&root->redirections);
 		root = root->next;
