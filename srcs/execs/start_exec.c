@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_exec.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/07 18:37:31 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/08 20:42:49 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	iterate_exec_ast_lst(t_ast **lst)
 		if (current->is_in_par)
 		{
             printf("NODE = %s %s IS IN PAR\n", current->token_node->contents[0], current->token_node->contents[1]);
-			par_pid = handle_par_exec(&current, lst, before_par_pipe);
+			par_pid = handle_par_exec(&current);
 			ft_lstadd_back(&ft_shell()->pids, create_lst_node(&par_pid));
             current = NULL;
 			continue ;

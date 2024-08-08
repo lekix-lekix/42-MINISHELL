@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/07 18:45:27 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/08 19:13:50 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -348,10 +348,8 @@ int					iterate_exec_ast_lst(t_ast **lst);
 // int					exec_child(t_ast *node);
 
 // Exec parenthesis
-int					prep_exec_par(t_ast *sub_tree, int *before_par_pipe,
-						int *after_par_pipe);
-int					handle_par_exec(t_ast **current, t_ast **exec_lst,
-						int *before_par_pipe);
+int					prep_exec_par(t_ast *sub_tree, int *after_par_pipe);
+int					handle_par_exec(t_ast **current);
 void				set_par_lst(t_token **lst);
 
 #endif
