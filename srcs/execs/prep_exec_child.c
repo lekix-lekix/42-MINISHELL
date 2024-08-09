@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:34:26 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/01 17:55:28 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/09 16:59:02 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,8 @@ int	*prep_exec_child(t_ast *to_exec)
 		ft_lstadd_back(&ft_shell()->pipes, pipe_node);
 		pipe_node = create_lst_node(&pipe_fds[1]);
 		ft_lstadd_back(&ft_shell()->pipes, pipe_node);
+        return (exec_child_next_not_par(to_exec, pipe_fds));
 	}
-	if (to_exec->next && !to_exec->next->is_in_par)
-		return (exec_child_next_not_par(to_exec, pipe_fds));
-	else if (to_exec->next && to_exec->next->is_in_par)
-		return (exec_child_next_in_par(to_exec, pipe_fds));
 	else
 		return (exec_child_no_next(to_exec));
 }

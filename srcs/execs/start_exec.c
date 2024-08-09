@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_exec.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/08 20:42:49 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/09 17:32:45 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	iterate_exec_ast_lst(t_ast **lst)
 {
 	t_ast	*current;
 	int		cmd_nb;
-	int		*before_par_pipe;
+	// int		*before_par_pipe;
 	int		par_pid;
 
 	par_pid = -1;
@@ -24,7 +24,7 @@ int	iterate_exec_ast_lst(t_ast **lst)
 	cmd_nb = ast_list_size(lst);
 	if (!cmd_nb)
 		return (0);
-	before_par_pipe = NULL;
+	// before_par_pipe = NULL;
 	while (current)
 	{
 		if (current->is_in_par)
@@ -35,7 +35,8 @@ int	iterate_exec_ast_lst(t_ast **lst)
             current = NULL;
 			continue ;
 		}
-		before_par_pipe = prep_exec_child(current);
+        printf("prepping cmd = %s %s\n", current->token_node->contents[0], current->token_node->contents[1]);
+		/* before_par_pipe =  */prep_exec_child(current);
 		current = current->next;
 	}
 	close_wait(par_pid);

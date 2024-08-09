@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/07 19:16:12 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/09 16:50:44 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ int	start_parsing(char *prompt)
 	join_cmd_args(&input);
     check_delete_global_par(&input);
     set_par_lst(&input);
+    ft_shell()->les_token = lst_dup(&input, NULL);
     printf("LST BEFORE AST ===\n");
     print_lst(&input);
     printf("==================\n");
@@ -145,7 +146,6 @@ int	start_parsing(char *prompt)
     printf("====\n");
 	if (tree && check_tree_syntax(&tree) == -1)
         return (-1);
-    ft_shell()->les_token = input;
     ft_shell()->exec_tree = tree;
 	ft_start_execution(&tree);
 	return (0);

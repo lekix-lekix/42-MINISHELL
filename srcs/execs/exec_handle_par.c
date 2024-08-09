@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle_par.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:15:37 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/08 21:14:36 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/09 17:34:49 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	set_pipes_stdout(int *after_par_pipe)
+int	set_pipe_stdout(int *after_par_pipe)
 {
 	if (dup2(after_par_pipe[1], STDOUT_FILENO) == -1)
 		return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL), exit(255),
@@ -32,13 +32,16 @@ int	prep_exec_par(t_ast *sub_tree, int *after_par_pipe)
 			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
 		if (pid == 0)
 		{
+			set_pipe_stdout(after_par_pipe);
 			printf("EXECUTING PAR TREE ====\n");
 			print_tree(&sub_tree);
 			printf("=====\n");
 			ft_start_exec(&sub_tree);
 			close_pipes_lst(&ft_shell()->pipes);
+			printf("==== FORK PAR EXEC END ====\n");
 			exit(0);
 		}
+        close_pipes_lst(&ft_shell()->pipes);
 		return (pid);
 	}
 	ft_start_exec(&sub_tree);
@@ -59,19 +62,28 @@ t_token	*find_original_token_lst(t_token **lst, t_token *to_find)
 	return (NULL);
 }
 
-t_token	*delete_last_node(t_token **lst)
+void	delete_begin_end_par_nodes(t_token **lst)
 {
 	t_token	*current;
-	t_token	*prev;
+	t_token	*end_par_node;
 
 	current = *lst;
-	while (current->next)
+	if (current->type == PAR_LEFT)
 	{
-		prev = current;
+		end_par_node = find_closing_par(lst);
+		*lst = current->next;
+		current->next = NULL;
+	}
+	current = *lst;
+	while (current && current->next)
+	{
+		if (current->next == end_par_node)
+		{
+			current->next = NULL;
+			return ;
+		}
 		current = current->next;
 	}
-	prev->next = NULL;
-	return (prev);
 }
 
 void	set_par_node(t_token **lst, t_token *node)
@@ -152,74 +164,119 @@ t_ast	*find_original_token_ast_lst(t_ast **lst, t_token *to_find)
 	return (NULL);
 }
 
-t_token	*find_last_nested_node_init_pipe(t_token **lst, int **pipe)
+t_token	*pipe_after_par(t_token **lst)
 {
 	t_token	*current;
-	t_token	*prev;
+
+	current = find_right_par(lst)->next;
+	while (current)
+	{
+		if (current->type == PIPE)
+			return (current);
+		if (current->type == AND || current->type == OR)
+			return (NULL);
+		current = current->next;
+	}
+	return (NULL);
+}
+
+void    create_ast_exec_lst(t_token **lst, t_ast **exec_lst)
+{
+	t_token	*current;
+	t_ast	*node;
 
 	current = *lst;
-	prev = NULL;
+	while (current && current->type != AND && current->type != OR)
+	{
+		if (current->type == CMD)
+		{
+			node = create_ast_node(current);
+			add_ast_lst(exec_lst, node);
+		}
+		current = current->next;
+	}
+}
+
+t_token	*find_left_par_original_token(t_token **lst, t_token *node)
+{
+	t_token	*current;
+	t_token	*par;
+
+	current = *lst;
+	par = NULL;
 	while (current)
 	{
 		if (current->type == PAR_LEFT)
-			return (prev);
-		if (current->type == PIPE)
-		{
-			*pipe = init_pipe();
-			ft_lstadd_back(&ft_shell()->pipes,
-				create_lst_node((void *)&pipe[0][0]));
-			ft_lstadd_back(&ft_shell()->pipes,
-				create_lst_node((void *)&pipe[0][1]));
-		}
-		prev = current;
+			par = current;
+		if (current == node)
+			return (par);
 		current = current->next;
 	}
-	return (prev);
+	return (par);
 }
 
 int	handle_par_exec(t_ast **current)
 {
 	t_token	*par_lst;
-	t_token	*next_node;
+	t_token	*after_par_lst;
+	t_ast	*after_par_ast_lst;
+	t_token	*original_current;
+	t_token	*left_par;
 	t_ast	*par_sub_tree;
+	t_token	*after_par_pipe_node;
 	int		*after_par_pipe;
 	int		insert_node;
 	int		par_exec_pid;
 
+	// t_token	*next_node;
 	after_par_pipe = NULL;
+	after_par_lst = NULL;
+	after_par_ast_lst = NULL;
 	par_exec_pid = -1;
 	printf("======== HANDLE PAR START ========\n");
 	insert_node = 1;
-	par_lst = find_original_token_lst(&ft_shell()->les_token,
+    printf("ORIGINAL TOKEN LST ====\n");
+    print_lst(&ft_shell()->les_token);
+    printf("=======\n");
+	original_current = find_original_token_lst(&ft_shell()->les_token,
 			(*current)->token_node);
-	if (!par_lst)
-		printf("NO PAR LST\n");
-	par_lst = lst_dup(&par_lst, NULL);
-	set_par_lst(&par_lst);
-	// delete_last_node(&par_lst); // only if last node is a parenthesis
-	printf("lst ======\n");
+	left_par = find_left_par_original_token(&ft_shell()->les_token,
+			original_current);
+	if (!left_par)
+		printf("NO LEFT PAR\n");
+	par_lst = lst_dup(&left_par, NULL);
+	printf("PAR LST BEFORE PAR DELETE ======\n");
 	print_lst(&par_lst);
 	printf("======\n");
-	next_node = cut_par_lst(&par_lst);
-    printf("after find closing par lst ======\n");
-	print_lst(&par_lst);
-	printf("======\n");
-	// next_node = find_last_nested_node_init_pipe(&next_node, &after_par_pipe); // de la merde
-	if (next_node)
+	after_par_pipe_node = pipe_after_par(&par_lst);
+	if (after_par_pipe_node)
 	{
-		next_node->next = NULL;
-		printf("next node = %d\n", next_node->type);
+		after_par_lst = lst_dup(&after_par_pipe_node->next, NULL);
+		printf("AFTER PAR LST ===\n");
+		after_par_pipe = init_pipe();
+        ft_lstadd_back(&ft_shell()->pipes, create_lst_node(&after_par_pipe[0]));
+        ft_lstadd_back(&ft_shell()->pipes, create_lst_node(&after_par_pipe[1]));
 	}
+	delete_begin_end_par_nodes(&par_lst);
+	printf("after deleting par nodes ======\n");
+	print_lst(&par_lst);
+	printf("======\n");
+	set_par_lst(&par_lst);
 	par_sub_tree = build_ast(&par_lst, &insert_node);
-	if (after_par_pipe)
-    {
-        printf("looking for new current\n");
-		*current = get_after_par_node(current);
-    }
 	printf("PAR SUB TREE ======\n");
 	print_tree(&par_sub_tree);
 	printf("===========\n");
 	set_next_null(par_sub_tree);
 	par_exec_pid = prep_exec_par(par_sub_tree, after_par_pipe);
+	if (after_par_lst)
+	{
+		create_ast_exec_lst(&after_par_lst, &after_par_ast_lst);
+		set_pipe_redir_in(after_par_ast_lst, after_par_pipe[0]);
+        printf("AFTER PAR AST LST ====\n");
+        print_ast_lst(&after_par_ast_lst);
+        printf("=======\n");
+		iterate_exec_ast_lst(&after_par_ast_lst);
+	}
+	printf("===== HANDLE PAR FUNC END ====\n");
 	return (par_exec_pid);
 }
