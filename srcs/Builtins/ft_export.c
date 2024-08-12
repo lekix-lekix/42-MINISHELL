@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:02:12 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/05 08:38:14 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/12 06:31:20 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,14 @@ int	ft_exec_export(char **args)
 	int		i;
 	int		exit_s;
 	char	*key;
+	// t_env *temp;
 
 	exit_s = 0;
 	i = 1;
-	ft_shell()->expanded_env = (ft_shell())->env_lst;
+	// ft_shell()->expanded_env = envlst_dup(&ft_shell()->env_lst);
+	// temp = envlst_dup(&ft_shell()->env_lst);
+	// print_env(&temp);
+	// ft_shell()->expanded_env = ft_shell()->env_lst;
 	if (!args[1])
 		return ( ft_export_list(), 0);
 	while (args[i])
@@ -102,7 +106,6 @@ int	ft_exec_export(char **args)
 			}
 		}
 		i++;
-		// printf("THE I COUNT IS: %d\n", i);
 	}
 	return (exit_s);
 }

@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:55:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/05 06:12:50 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/12 06:33:55 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int	print_env(t_env **lst)
 	node = *lst;
 	while (node)
 	{
-		printf("field: %s", node->field);
-		printf("content: %s\n", node->content);
+		printf("%s", node->field);
+		printf("%s\n", node->content);
 		node = node->next;
 	}
 	return (0);

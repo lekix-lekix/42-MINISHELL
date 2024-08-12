@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/01 18:16:27 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/12 06:04:31 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int	ft_append(t_redir *redirections, int *le_status)
 
 	if (!redirections->filename)
 	{
-		printf("The wasn't a filename\n");
 		*le_status = ft_errmsg();
 		return (*le_status);
 	}
@@ -47,14 +46,14 @@ int	ft_in(t_redir *redirections, int *le_status)
 
 	if (!redirections->filename)
 	{
-		printf("There wasn't a filename\n");
+		// printf("There wasn't a filename\n");
 		*le_status = ft_errmsg();
 		return (*le_status);
 	}
 	fd = open(redirections->filename, O_RDONLY);
 	if (fd == -1)
 	{
-		printf("There was a problem opening the file\n");
+		// printf("There was a problem opening the file\n");
 		*le_status = ft_errmsg();
 		return (*le_status);
 	}

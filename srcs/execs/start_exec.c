@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/05 08:40:02 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/12 05:48:23 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,6 @@ int	iterate_exec_ast_lst(t_ast **lst)
 	if (!cmd_nb)
 		return (0);
 	before_par_pipe = NULL;
-	// printf("exec list ====\n");
-	// print_ast_lst(lst);
-	// printf("========\n");
 	while (current)
 	{
 		if (current->is_in_par)

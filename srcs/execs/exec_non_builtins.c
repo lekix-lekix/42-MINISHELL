@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_non_builtins.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/02 14:38:09 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/08 16:03:59 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 int	ft_exec_non_builtins(t_token *node)
 {
 	char	*la_path;
-
+	
+	ft_shell()->exit_status = ft_check_redirections(node);
 	la_path = ft_check_path(node->contents[0], ft_shell()->env_args);
 	if (!la_path)
 		return (ft_print_err(CMD_ERR), -1);

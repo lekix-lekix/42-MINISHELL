@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/06 01:22:06 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/12 05:49:07 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,6 @@ int	ft_check_cmds(t_token *token_node)
 	close_pipes_lst(&ft_shell()->pipes);
 	if (la_status != ENO_SUCCESS)
 		gbg_coll(NULL, ALL, FLUSH_ALL), exit(la_status);
-	// int p = -1;
-	// while (token_node->contents[++p])
-	// 	dprintf(2, "THE CONTENT THAT'S ARE COMING: %s\n", token_node->contents[p]);
 	if (ft_is_builtin(token_node->contents[0]))
 	{
 		la_status = ft_exec_builtins(token_node->contents, ft_shell());
@@ -30,7 +27,7 @@ int	ft_check_cmds(t_token *token_node)
 	}
 	else
 		la_status = ft_exec_non_builtins(token_node);
-	return (0);
+	return (la_status);
 }
 
 int	init_only_child_no_fork(t_token *node)

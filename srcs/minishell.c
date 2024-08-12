@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/06 02:04:40 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/12 06:32:20 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	init_data(t_minishell *data, char **envp)
 	if (!data->path)
 		return (-1);
 	data->env_lst = get_env_lst(envp);
+	data->expanded_env = get_env_lst(envp);
 	data->env_args = envp;
 	if (!data->env_lst)
 		return (-1);
@@ -80,6 +81,8 @@ static void	ft_start_execution(t_ast **tree)
 	// int		la_status;
 	nodes = *tree;
 	ft_init_tree(nodes);
+	// printf("IN EXEC TREE ====\n");
+	// print_tree(tree);
 	ft_shell()->pids = NULL;
 	ft_shell()->pipes = NULL;
 	ft_shell()->end_exec = 0;
@@ -94,6 +97,7 @@ static void	ft_start_execution(t_ast **tree)
 		(ft_shell())->heredoc_sigint = false;
 	}
 	tcsetattr(STDIN_FILENO, TCSANOW, &(ft_shell())->original_term);
+	// printf("WE ARE about to start EXEC 12\n");
 	ft_start_exec(&nodes);
 }
 
@@ -130,11 +134,11 @@ int	start_parsing(char *prompt)
 	// print_lst(&input);
 	// printf("==================\n");
 	tree = build_ast(&input, &insert_node);
+	if (tree && check_tree_syntax(&tree) == -1)
+		return (-1);
 	// printf("TREE BEFORE EXEC\n");
 	// print_tree(&tree);
 	// printf("====\n");
-	if (tree && check_tree_syntax(&tree) == -1)
-		return (-1);
 	ft_shell()->exec_tree = tree;
 	ft_start_execution(&tree);
 	return (0);

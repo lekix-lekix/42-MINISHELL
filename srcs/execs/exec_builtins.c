@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:31:03 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/05 08:49:34 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/12 04:45:33 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,6 @@ int	ft_strncmp_loco(const char *s1, const char *s2, size_t n)
 
 int	ft_exec_builtins(char **args, t_minishell *data)
 {	
-	// int p = -1;
-	// while (args[++p])
-	// 	printf("THE AGRS THAT'S ARE COMING: %s\n", args[p]);
 	if (ft_strncmp_loco(args[0], "echo", ft_strlen(args[0])) == 0)
 		return (ft_exec_echo(args));
 	if (ft_strncmp_loco(args[0], "pwd", ft_strlen(args[0])) == 0)

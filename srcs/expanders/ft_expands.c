@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expands.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/05 12:46:10 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/12 06:41:27 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ size_t	get_arr_len(char **expanded)
 	x = 0;
 	if (!expanded || !expanded[0])
 		return (0);
-	while (expanded[x])
+	while (expanded && expanded[x])
 		x++;
 	// printf("THE LENS IS: %zu\n", x);
 	return (x);

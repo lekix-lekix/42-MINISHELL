@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/06 08:49:35 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/12 04:40:38 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,68 +56,59 @@ static bool	ft_leave_leaf(int p[2], int *pid)
 	return (false);
 }
 
+char	**ft_concat_str_arr(char **arr, char **arr2)
+{
+	int len1;
+	int len2;
+	char	**res;
+	int	x;
+	int y;
+	int	total_len;
+
+	len1 = get_arr_len(arr);
+	len2 = get_arr_len(arr2);
+	total_len = len1 + len2;
+	res = (char **)malloc(sizeof(char *) * (total_len + 1));
+	x = -1;
+	while (++x < len1)
+		res[x] = ft_strdup(arr[x]);
+	y = -1;
+	while (++y < len2)
+	{	
+		res[x] = ft_strdup(arr2[y]);
+		x++;
+	}
+	res[total_len] = NULL;
+	return (res);
+}
+
 static void	ft_init_leaf(t_ast *node)
 {
 	t_token	*io;
+	t_redir	*redirections;
 	int		p[2];
 	int		pid;
-	int	idx;
-	int expanded_len;
-	char *first_args;
-	int	contents_len;
+	int		idx;
+	char	**temp_contents;
+	char	**la_args;
 
 	idx = -1;
 	io = node->token_node;
-	// if (io->contents[1])
-	// {	
-	// 	printf("THE FIRST CONTENT: %s\n", io->contents[1]);
-	// 	node->expanded_args = ft_expand(io->contents[1]);
-	// }
-	// contents_len = get_arr_len(io->contents);
-	contents_len = 0;
-	// printf("TLSD CONTENTS LEN: %d\n", contents_len);
+	temp_contents = NULL;
+	redirections = node->token_node->redirections;
 	while (io->contents[++idx])
-	{	
-		(ft_shell())->expanded_args = ft_expand(io->contents[idx]);
-		// printf("THE CONTENTS CONTENT: [%s]", io->contents[idx]);
-		// int x = -1;
-		// while ((ft_shell())->expanded_args[++x])
-		// {	
-		// 	printf("THe EX [%s]", (ft_shell())->expanded_args[x]);
-		// 	io->contents[idx] = (ft_shell())->expanded_args[x];
-		// }
-		// ft_expand(io->contents[idx]);
-		// printf("\n");
-		contents_len++;
-	}
-	expanded_len = get_arr_len((ft_shell())->expanded_args);
-	first_args = io->contents[0];
-	io->contents = (char **)malloc(sizeof(char *) * (expanded_len + 2));
-	// printf("THE FIRST OF CONTETNS: %s\n", first_args);
-	// printf("THE LEN OF EXPANDED: %d\n", expanded_len);
-	io->contents[0] = first_args;
-	int g = -1;
-	int c = 1;
-	while (ft_shell()->expanded_args[++g] && contents_len > 1)
-	{	
-		// printf("hi!\n");
-		// printf("THE EXPANDED ARGS: [%s]\n", (ft_shell())->expanded_args[g]);
-		io->contents[c] = ft_shell()->expanded_args[g];
-		c++;
-	}
-	io->contents[c] = 0;
-	// int l = -1;
-	// while (io->contents[++l])
-		// printf("THE CONTENTS: %s\n", io->contents[1]);
-	// printf("\n");
-	while (io)
 	{
-		if (io->redirections && io->redirections->redir_type == REDIR_HEREDOC)
+		la_args = ft_expand(io->contents[idx]);
+		temp_contents = ft_concat_str_arr(temp_contents, la_args);
+	}
+	io->contents = temp_contents;
+	while (redirections)
+	{
+		if (redirections->redir_type == REDIR_HEREDOC)
 		{
 			pipe(p);
 			(ft_shell())->signint_child = true;
-			signal(SIGQUIT, SIG_IGN),
-			pid = (fork());
+			signal(SIGQUIT, SIG_IGN), pid = (fork());
 			if (!pid)
 				ft_heredoc(io, p);
 			if (ft_leave_leaf(p, &pid))
@@ -125,8 +116,8 @@ static void	ft_init_leaf(t_ast *node)
 			(ft_shell())->heredoc = p[0];
 		}
 		// else
-			// printf("HERE YOU ARE\n");
-		io = io->next;
+		// printf("HERE YOU ARE\n");
+		redirections = redirections->next;
 	}
 }
 
@@ -145,7 +136,7 @@ static void	ft_init_leaf(t_ast *node)
 // 		ft_init_leaf(node);
 // }
 
-void ft_init_tree(t_ast *node)
+void	ft_init_tree(t_ast *node)
 {
 	if (node->left)
 		ft_init_tree(node->left);
