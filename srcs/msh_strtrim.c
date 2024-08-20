@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 17:33:34 by lekix             #+#    #+#             */
-/*   Updated: 2024/06/14 12:18:26 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/20 16:16:29 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,17 @@ static int	ft_total_to_trim(char const *str, char const *set, int *begin)
 	return (count);
 }
 
+char	*empty_str(void)
+{
+	char	*empty_str;
+
+	empty_str = malloc(1);
+	if (!empty_str || gbg_coll(empty_str, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+	empty_str[0] = '\0';
+	return (empty_str);
+}
+
 char	*msh_strtrim(char const *s1, char const *set)
 {
 	int		i;
@@ -54,13 +65,7 @@ char	*msh_strtrim(char const *s1, char const *set)
 		return (NULL);
 	str_size = ft_strlen(s1) - ft_total_to_trim(s1, set, &i) + 1;
 	if (str_size < 0)
-	{
-		final_str = malloc(1);
-		if (!final_str || gbg_coll(final_str, PARSING, ADD))
-			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-		final_str[0] = '\0';
-		return (final_str);
-	}
+		return (empty_str());
 	final_str = malloc(sizeof(char) * str_size);
 	if (!final_str || gbg_coll(final_str, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);

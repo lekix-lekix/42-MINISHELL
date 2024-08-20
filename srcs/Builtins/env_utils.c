@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/05 07:10:50 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/20 17:19:22 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ static t_env	*ft_envlst_new(char *content, char *field)
 {
 	t_env	*new;
 
-	printf("THE FIELD: %s\n", field);
-	printf("THE CONTENT: %s\n", content);
 	new = (t_env *)ft_calloc(1, sizeof(t_env));
 	if (!new)
 		return (NULL);
@@ -45,7 +43,7 @@ char	*ft_get_envlst_content(char *key, t_minishell *data)
 void	ft_update_envlst(char *key, char *value, bool create)
 {
 	t_env	*envlst;
-	int key_len;
+	int		key_len;
 
 	envlst = ft_shell()->expanded_env;
 	print_env(&envlst);
@@ -54,7 +52,6 @@ void	ft_update_envlst(char *key, char *value, bool create)
 	{
 		if (envlst->field && !ft_strncmp_loco(envlst->field, key, key_len))
 		{
-			printf("INSIDE THE IF OF THE LOOP13\n");
 			if (value)
 				envlst->content = ft_strdup(value);
 			return ;
@@ -62,9 +59,7 @@ void	ft_update_envlst(char *key, char *value, bool create)
 		envlst = envlst->next;
 	}
 	if (create)
-	{	
-		// printf("TO CREATE\n");
-		// printf("THE KEY: %s THE VALUE: %s\n", key, value);
+	{
 		lst_env_add_back(&envlst, ft_envlst_new(key, value));
 	}
 }

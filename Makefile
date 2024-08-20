@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+         #
+#    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/08/05 06:10:46 by sabakar-         ###   ########.fr        #
+#    Updated: 2024/08/20 16:43:08 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,8 @@ SRCS = ./srcs/minishell.c \
 	./srcs/execs/prep_exec_child.c \
 	./srcs/execs/set_close_pipes.c \
 	./srcs/execs/set_close_pipes_bis.c \
+	./srcs/execs/exec_handle_par_utils.c \
+	./srcs/execs/exec_handle_par_utils_bis.c \
 	./srcs/general_utils.c \
 	./srcs/non_builtins/paths_utils.c \
 	./srcs/tokenizer.c \

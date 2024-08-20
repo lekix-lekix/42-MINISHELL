@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/09 16:50:44 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/20 16:58:15 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_minishell *ft_shell(void)
+t_minishell	*ft_shell(void)
 {
-	static t_minishell data;
+	static t_minishell	data;
 
 	return (&data);
 }
@@ -40,8 +40,6 @@ char	*get_path(char **envp)
 int	init_data(t_minishell *data, char **envp)
 {
 	data->path = get_path(envp);
-	// data->stdin = dup(0);
-	// data->stdout = dup(1);
 	if (!data->path)
 		return (-1);
 	data->env_lst = get_env_lst(envp);
@@ -51,40 +49,39 @@ int	init_data(t_minishell *data, char **envp)
 	return (0);
 }
 
-void    traverse_count_pipes(t_ast *root, int *pipes)
+void	traverse_count_pipes(t_ast *root, int *pipes)
 {
-    if (root->left)
-        traverse_count_pipes(root->left, pipes);
-    if (root->node_type == PIPE)
-        *pipes += 1;
-    if (root->right)
-        traverse_count_pipes(root->right, pipes);
+	if (root->left)
+		traverse_count_pipes(root->left, pipes);
+	if (root->node_type == PIPE)
+		*pipes += 1;
+	if (root->right)
+		traverse_count_pipes(root->right, pipes);
 }
 
-int ft_count_pipes(t_ast **tree)
+int	ft_count_pipes(t_ast **tree)
 {
-    int pipes;
+	int	pipes;
 
-    pipes = 0;
-    if (!*tree)
-        return (0);
-    traverse_count_pipes(*tree, &pipes);
-    return (pipes);
+	pipes = 0;
+	if (!*tree)
+		return (0);
+	traverse_count_pipes(*tree, &pipes);
+	return (pipes);
 }
 
 static void	ft_start_execution(t_ast **tree)
 {
 	t_ast	*nodes;
-	// int		la_status;
 
 	nodes = *tree;
 	ft_init_tree(nodes);
-    ft_shell()->pids = NULL;
-    ft_shell()->pipes = NULL;
-    ft_shell()->end_exec = 0;
-    ft_shell()->exec_in_par = 0;
-    ft_shell()->full_exec_tree = *tree;
-    ft_start_exec(&nodes);
+	ft_shell()->pids = NULL;
+	ft_shell()->pipes = NULL;
+	ft_shell()->end_exec = 0;
+	ft_shell()->exec_in_par = 0;
+	ft_shell()->full_exec_tree = *tree;
+	ft_start_exec(&nodes);
 }
 
 void	gbg_delete_node(t_token *node, int mlc_lst)
@@ -93,22 +90,22 @@ void	gbg_delete_node(t_token *node, int mlc_lst)
 	gbg_coll(node, mlc_lst, FREE);
 }
 
-void check_delete_global_par(t_token **lst)
+void	check_delete_global_par(t_token **lst)
 {
-    t_token *current;
-    t_token *prev;
-    
-    if (*lst && (*lst)->type == PAR_LEFT && find_closing_par(lst)->next == NULL)
-    {
-        *lst = (*lst)->next;
-        current = *lst;
-        while (current->next)
-        {
-            prev = current;
-            current = current->next;
-        }
-        prev->next = current;
-    }
+	t_token	*current;
+	t_token	*prev;
+
+	if (*lst && (*lst)->type == PAR_LEFT && find_closing_par(lst)->next == NULL)
+	{
+		*lst = (*lst)->next;
+		current = *lst;
+		while (current->next)
+		{
+			prev = current;
+			current = current->next;
+		}
+		prev->next = current;
+	}
 }
 
 int	start_parsing(char *prompt)
@@ -123,30 +120,21 @@ int	start_parsing(char *prompt)
 	if (check_quotes(prompt))
 		return (-1);
 	input = tokenize_input(prompt);
-    // print_lst(&input);
 	clean_token_lst(&input);
-	if (check_redir_syntax(&input) == -1)
-		return (-1);
-	if (check_par_syntax(&input) == -1)
+	if (check_redir_syntax(&input) == -1 || check_par_syntax(&input) == -1)
 		return (-1);
 	split_lst_contents(&input);
 	if (check_redirections(&input) == -1)
 		return (-1);
 	clean_token_lst(&input);
 	join_cmd_args(&input);
-    check_delete_global_par(&input);
-    set_par_lst(&input);
-    ft_shell()->les_token = lst_dup(&input, NULL);
-    printf("LST BEFORE AST ===\n");
-    print_lst(&input);
-    printf("==================\n");
-	tree = build_ast(&input, &insert_node);
-    printf("TREE BEFORE EXEC\n");
-    print_tree(&tree);
-    printf("====\n");
+	check_delete_global_par(&input);
+	set_par_lst(&input);
+	ft_shell()->les_token = lst_dup(&input, NULL);
+	tree = build_ast(&input, NULL);
 	if (tree && check_tree_syntax(&tree) == -1)
-        return (-1);
-    ft_shell()->exec_tree = tree;
+		return (-1);
+	ft_shell()->exec_tree = tree;
 	ft_start_execution(&tree);
 	return (0);
 }
@@ -168,11 +156,11 @@ int	main(int argc, char **argv, char **env)
 	{
 		data->prompt = readline("./minishell$ ");
 		if (data->prompt || *data->prompt)
-        {
-		    start_parsing(data->prompt);
-            gbg_coll(NULL, PARSING, FLUSH_ONE);
-		    free(data->prompt);
-        }
+		{
+			start_parsing(data->prompt);
+			gbg_coll(NULL, PARSING, FLUSH_ONE);
+			free(data->prompt);
+		}
 	}
 	free(data->prompt);
 	gbg_coll(NULL, ENV, FLUSH_ALL);

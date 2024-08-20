@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_parenthesis.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:19:53 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/01 18:17:16 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/20 16:18:33 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ t_ast	*handle_par(t_token **lst, t_ast **tree, int *insert_node)
 	t_token	*par_lst;
 	t_ast	*par_tree;
 
-    (void) insert_node;
+	(void)insert_node;
 	par_lst = create_par_lst(lst);
 	if (!par_lst || !check_par_lst(&par_lst))
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:07:00 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/09 17:30:09 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/20 17:19:47 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int	ft_exec_echo(char **args)
 
 	x = 1;
 	opt = 0;
-    dprintf(2, "launching echo\n");
 	while (args[x] && ft_check_option(args[x]))
 	{
 		opt = 1;
