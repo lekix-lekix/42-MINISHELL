@@ -1,2 +1,3 @@
 ls|cat-e
 ctrl-d leaks
+valgrind env | grep qqch
