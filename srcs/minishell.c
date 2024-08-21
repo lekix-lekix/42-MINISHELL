@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/21 15:28:17 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/21 16:20:10 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,18 @@ void	check_delete_global_par(t_token **lst)
 	}
 }
 
+void print_lstt(t_token **lst)
+{
+    t_token *current;
+
+    current = *lst;
+    while (current)
+    {
+        printf("current = %s\n", current->content);
+        current = current->next;
+    }
+}
+
 int	start_parsing(char *prompt)
 {
 	t_token	*input;
@@ -146,6 +158,7 @@ int	start_parsing(char *prompt)
 	join_cmd_args(&input);
 	check_delete_global_par(&input);
 	set_par_lst(&input);
+    print_lst(&input);
 	ft_shell()->les_token = lst_dup(&input, NULL);
 	tree = build_ast(&input, NULL);
 	if (tree && check_tree_syntax(&tree) == -1)
@@ -154,12 +167,6 @@ int	start_parsing(char *prompt)
 	ft_start_execution(&tree);
 	return (0);
 }
-
-// void	ft_exit(void)
-// {
-// 	gbg_coll(NULL, ALL, FLUSH_ALL);
-// 	exit(0);
-// }
 
 int	main(int argc, char **argv, char **env)
 {

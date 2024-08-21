@@ -1,9 +1,13 @@
 42-MEGALIBFT
+Docker
+Dockers
+log
 Makefile
 minishell
 minishell.h
 no_rl_leaks
 outfile
+pipe
 srcs
 test.c
 tree errors

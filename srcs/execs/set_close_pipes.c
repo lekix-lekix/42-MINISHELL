@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set_close_pipes.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:11:49 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/12 05:54:26 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/21 17:17:53 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	set_pipe_redir_in(t_ast *node, int pipe_fd)
 	t_redir	*input_redir;
 	
 	input_redir = create_redir_node(REDIR_INPUT, "pipe");
+    printf("redir node = %s\n", input_redir->filename);
 	add_front_redir_node(&node->token_node->redirections, input_redir);
 	node->token_node->pipe_redir[0] = pipe_fd;
 }
