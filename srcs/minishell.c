@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/12 06:32:20 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/20 12:30:53 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 t_minishell	*ft_shell(void)
 {
 	static t_minishell	data;
-
 	return (&data);
 }
 
@@ -40,8 +39,6 @@ char	*get_path(char **envp)
 int	init_data(t_minishell *data, char **envp)
 {
 	data->path = get_path(envp);
-	// data->stdin = dup(0);
-	// data->stdout = dup(1);
 	if (!data->path)
 		return (-1);
 	data->env_lst = get_env_lst(envp);
@@ -78,27 +75,28 @@ static void	ft_start_execution(t_ast **tree)
 {
 	t_ast	*nodes;
 
-	// int		la_status;
+	signal(SIGQUIT, ft_sigquit_handler);
 	nodes = *tree;
 	ft_init_tree(nodes);
-	// printf("IN EXEC TREE ====\n");
-	// print_tree(tree);
 	ft_shell()->pids = NULL;
 	ft_shell()->pipes = NULL;
 	ft_shell()->end_exec = 0;
 	ft_shell()->exec_in_par = 0;
 	ft_shell()->full_exec_tree = *tree;
-	signal(SIGQUIT, ft_sigquit_handler);
 	if ((ft_shell())->heredoc_sigint)
 	{
 		// If the program is quited during heredoc,
 		// we have clean the mess afterword I guess
 		printf("WE ARE HERE 98\n");
+		// gbg_coll(NULL, PARSING, FLUSH_ONE);
+		gbg_coll(NULL, ENV, FREE);
+		// gbg_coll(NULL, ENV, FLUSH_ALL);
+		// clean_token_lst(&nodes->token_node);
 		(ft_shell())->heredoc_sigint = false;
+		return;
 	}
 	tcsetattr(STDIN_FILENO, TCSANOW, &(ft_shell())->original_term);
-	// printf("WE ARE about to start EXEC 12\n");
-	ft_start_exec(&nodes);
+	(ft_shell())->exit_status = ft_start_exec(&nodes);
 }
 
 void	gbg_delete_node(t_token *node, int mlc_lst)
@@ -119,7 +117,6 @@ int	start_parsing(char *prompt)
 	if (check_quotes(prompt))
 		return (-1);
 	input = tokenize_input(prompt);
-	// print_lst(&input);
 	clean_token_lst(&input);
 	if (check_redir_syntax(&input) == -1)
 		return (-1);
@@ -128,27 +125,21 @@ int	start_parsing(char *prompt)
 	split_lst_contents(&input);
 	if (check_redirections(&input) == -1)
 		return (-1);
-	clean_token_lst(&input);
-	join_cmd_args(&input);
-	// printf("LST BEFORE AST ===\n");
-	// print_lst(&input);
-	// printf("==================\n");
+	(clean_token_lst(&input), join_cmd_args(&input));
 	tree = build_ast(&input, &insert_node);
+	print_tree(&tree);
 	if (tree && check_tree_syntax(&tree) == -1)
 		return (-1);
-	// printf("TREE BEFORE EXEC\n");
-	// print_tree(&tree);
-	// printf("====\n");
 	ft_shell()->exec_tree = tree;
 	ft_start_execution(&tree);
 	return (0);
 }
 
-void	ft_exit(void)
-{
-	gbg_coll(NULL, ALL, FLUSH_ALL);
-	exit(0);
-}
+// void	ft_exit(void)
+// {
+// 	gbg_coll(NULL, ALL, FLUSH_ALL);
+// 	exit(0);
+// }
 
 int	main(int argc, char **argv, char **env)
 {
@@ -164,7 +155,10 @@ int	main(int argc, char **argv, char **env)
 		if (!data->prompt)
 		{
 			// Also we need to clean here if I'm not mistaking!
-			ft_putstr_fd("exit\n", 1);
+			gbg_coll(NULL, ENV, FLUSH_ALL);
+			gbg_coll(NULL, PARSING, FLUSH_ALL);
+			gbg_coll(NULL, ENV, FREE);
+			(ft_putstr_fd("exit\n", 1));
 			exit(ft_shell()->exit_status);
 		}
 		if (data->prompt || *data->prompt)

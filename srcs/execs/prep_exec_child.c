@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:34:26 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/12 05:51:40 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/16 17:15:09 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	exec_child(t_ast *node)
 	pid_t	*pid;
 	t_lst	*pid_node;
 	
+	(ft_shell())->signint_child = true;
 	pid = malloc(sizeof(pid_t));
 	if (!pid || gbg_coll(pid, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);

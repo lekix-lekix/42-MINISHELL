@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 00:17:24 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/12 04:41:14 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/19 05:37:54 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,27 @@ int	close_wait(int par_pid)
 	wait_all_pids(&ft_shell()->pids);
 	ft_shell()->pids = NULL;
 	return (0);
+}
+
+
+static void	ft_del(void *ptr)
+{
+	free(ptr);
+	ptr = NULL;
+}
+
+void	*ft_unset_cleaner(void *ptr, bool clean)
+{
+	static t_lst	*clean_list;
+
+	if (clean)
+	{
+		ft_lstclear(&clean_list, ft_del);
+		return (NULL);
+	}
+	else
+	{
+		ft_lstadd_back(&clean_list, ft_lstnew(ptr));
+		return (ptr);
+	}
 }

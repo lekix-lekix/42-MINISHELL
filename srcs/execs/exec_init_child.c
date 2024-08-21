@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/12 05:49:07 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/16 17:11:56 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,12 @@ int	init_only_child_no_fork(t_token *node)
 	if (ft_is_builtin(node->contents[0]))
 		return (ft_exec_builtins(node->contents, ft_shell()));
 	pid = fork();
+	(ft_shell())->signint_child = true;
 	if (pid == -1)
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), perror("bash: fork"), exit(255),
 			-1);
 	if (pid == 0)
-		ft_exec_non_builtins(node);
+		status = ft_exec_non_builtins(node);
 	waitpid(pid, &status, WUNTRACED);
 	if (WIFEXITED(status))
 		ft_shell()->exit_status = WEXITSTATUS(status);

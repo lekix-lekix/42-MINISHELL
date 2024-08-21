@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/12 06:35:45 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/21 09:55:20 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ static t_env	*ft_envlst_new(char *content, char *field)
 		return (NULL);
 	new->content = ft_strdup(content);
 	if (field)
-		new->field = ft_strdup(field);
+	{
+		new->content = ft_strdup(field);
+		new->field = ft_strdup(content);
+	}
 	new->next = NULL;
 	return (new);
 }
@@ -33,32 +36,62 @@ char	*ft_get_envlst_content(char *key, t_minishell *data)
 	envlst = data->env_lst;
 	while (envlst)
 	{
-		if (!ft_strncmp(key, envlst->field, ft_strlen(key)))
+		// I'm using a function that I shuldn't use here, 
+		// don't delete this comment unless you change this function
+		if (!ft_strncmp_loco(key, envlst->field, ft_strlen(key))) 
 			return (envlst->content);
 		envlst = envlst->next;
 	}
 	return (NULL);
 }
 
-void	ft_update_envlst(char *key, char *value, bool create)
+static int	ft_loop_and_update(t_env **to_update_lst, char *value, char *key)
 {
 	t_env	*envlst;
-	int key_len;
+	int		key_len;
 
-	envlst = ft_shell()->expanded_env;
+	envlst = *to_update_lst;
 	key_len = ft_strlen(key);
-	while (envlst && envlst->next)
+	while (envlst)
 	{
-		if (envlst->field && !ft_strncmp_loco(envlst->field, key, key_len))
+		// printf("THE FIELD: %s\n", envlst->field);
+		// printf("THE INCOMING KEY: %s\n", key);
+		if (envlst->field && !ft_strncmp(envlst->field, key, key_len))
 		{
 			if (value)
+			{
+				// printf("THIS ONE ALREADY EXIST: %s\n", envlst->content);
+				// printf("THE NEW ONE: %s\n", value);
+				free(envlst->content);
 				envlst->content = ft_strdup(value);
-			return ;
+			}
+			return (1);
 		}
 		envlst = envlst->next;
 	}
+	return (0);
+}
+
+void	ft_update_envlst(char *key, char *value, bool create)
+{
+	t_env	*le_env;
+	t_env	*envlst;
+
+	envlst = ft_shell()->expanded_env;
+	le_env = ft_shell()->env_lst;
+	if (ft_loop_and_update(&le_env, value, key) && ft_loop_and_update(&envlst,
+			value, key))
+		return ;
 	if (create)
+	{
 		lst_env_add_back(&envlst, ft_envlst_new(key, value));
+		if (value)
+		{
+			lst_env_add_back(&le_env, ft_envlst_new(key, value));
+		}
+	}
+	// print_env(&le_env);
+	// print_env(&envlst);
 }
 
 char	*ft_extract_val(char *str)

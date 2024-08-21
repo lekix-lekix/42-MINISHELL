@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/12 04:40:38 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/20 11:58:12 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static void	ft_heredoc_sigint_handler(int signum)
 {
 	(void)signum;
+	gbg_coll(NULL, ENV, FREE);
 	exit(SIGINT);
 }
 
@@ -41,6 +42,7 @@ void	ft_heredoc(t_token *io, int p[2])
 			ft_putstr_fd(line, p[1]);
 			ft_putstr_fd("\n", p[1]);
 		}
+		free(line);
 	}
 	exit(0);
 }
@@ -58,12 +60,12 @@ static bool	ft_leave_leaf(int p[2], int *pid)
 
 char	**ft_concat_str_arr(char **arr, char **arr2)
 {
-	int len1;
-	int len2;
+	int		len1;
+	int		len2;
 	char	**res;
-	int	x;
-	int y;
-	int	total_len;
+	int		x;
+	int		y;
+	int		total_len;
 
 	len1 = get_arr_len(arr);
 	len2 = get_arr_len(arr2);
@@ -71,13 +73,18 @@ char	**ft_concat_str_arr(char **arr, char **arr2)
 	res = (char **)malloc(sizeof(char *) * (total_len + 1));
 	x = -1;
 	while (++x < len1)
+	{
 		res[x] = ft_strdup(arr[x]);
+		free(arr[x]);
+	}
+	free(arr);
 	y = -1;
 	while (++y < len2)
-	{	
-		res[x] = ft_strdup(arr2[y]);
-		x++;
+	{
+		res[x++] = ft_strdup(arr2[y]);
+		// free(arr2[y]);
 	}
+	// free(arr2);
 	res[total_len] = NULL;
 	return (res);
 }
@@ -102,39 +109,23 @@ static void	ft_init_leaf(t_ast *node)
 		temp_contents = ft_concat_str_arr(temp_contents, la_args);
 	}
 	io->contents = temp_contents;
+	ft_free(la_args);
 	while (redirections)
 	{
 		if (redirections->redir_type == REDIR_HEREDOC)
 		{
 			pipe(p);
 			(ft_shell())->signint_child = true;
-			signal(SIGQUIT, SIG_IGN), pid = (fork());
-			if (!pid)
+			(signal(SIGQUIT, SIG_IGN), pid = fork());
+			if (pid == 0)
 				ft_heredoc(io, p);
 			if (ft_leave_leaf(p, &pid))
 				return ;
-			(ft_shell())->heredoc = p[0];
+			redirections->heredoc = p[0];
 		}
-		// else
-		// printf("HERE YOU ARE\n");
 		redirections = redirections->next;
 	}
 }
-
-// void	ft_init_tree(t_ast *node)
-// {
-// 	if (!node)
-// 		return ;
-// 	if (node->node_type == PIPE || node->node_type == AND
-// 		|| node->node_type == OR)
-// 	{
-// 		ft_init_tree(node->left);
-// 		if (!(ft_shell())->heredoc_sigint)
-// 			ft_init_tree(node->right);
-// 	}
-// 	else
-// 		ft_init_leaf(node);
-// }
 
 void	ft_init_tree(t_ast *node)
 {

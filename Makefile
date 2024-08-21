@@ -6,7 +6,7 @@
 #    By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/08/05 21:55:03 by sabakar-         ###   ########.fr        #
+#    Updated: 2024/08/19 04:29:37 by sabakar-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -69,7 +69,8 @@ SRCS = ./srcs/minishell.c \
 	./srcs/expanders/ft_remove_quotes.c \
 	./srcs/expanders/ft_asterisker.c \
 	./srcs/expanders/ft_globaler.c \
-	./srcs/signals.c
+	./srcs/signals.c \
+	./srcs/Builtins/ft_exit.c
 
 OBJ = $(SRCS:.c=.o)
 

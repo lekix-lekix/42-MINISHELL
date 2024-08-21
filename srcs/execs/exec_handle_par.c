@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle_par.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:15:37 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/01 17:23:35 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/20 12:15:17 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	prep_exec_par(t_ast *sub_tree, int *before_par_pipe, int *after_par_pipe)
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
 	if (pid == 0)
 	{
+		(ft_shell())->signint_child = true;
 		if (before_par_pipe && dup2(before_par_pipe[0], STDIN_FILENO) == -1)
 			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
 				exit(255), -1);

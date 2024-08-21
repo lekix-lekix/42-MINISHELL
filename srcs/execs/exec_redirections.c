@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/12 06:04:31 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/20 12:12:17 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	ft_check_redirections(t_token *node)
 	{
 		if (ft_strcmp(redirections->filename, "pipe") == 0)
 			handle_pipe_redirections(redirections, node);
-		else if (redirections->redir_type == REDIR_INPUT && ft_in(redirections,
+		if (redirections->redir_type == REDIR_INPUT && ft_in(redirections,
 				&le_status) != ENO_SUCCESS)
 			return (le_status);
 		else if (redirections->redir_type == REDIR_OUTPUT
@@ -104,7 +104,7 @@ int	ft_check_redirections(t_token *node)
 			&& ft_append(redirections, &le_status) != ENO_SUCCESS)
 			return (le_status);
 		else if (redirections->redir_type == REDIR_HEREDOC)
-			(dup2((ft_shell())->heredoc, 0), close((ft_shell())->heredoc));
+			(dup2(redirections->heredoc, 0), close(redirections->heredoc));
 		redirections = redirections->next;
 	}
 	return (ENO_SUCCESS);

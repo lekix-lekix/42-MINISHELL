@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/12 06:33:16 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/20 13:46:50 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef struct s_redir
 {
 	t_token_type	redir_type;
 	char			*filename;
+	int				heredoc;
 	struct s_redir	*next;
 }					t_redir;
 
@@ -151,7 +152,6 @@ typedef struct s_minishell
 	int				pids_num;
 	int				stdin;
 	int				stdout;
-	int				heredoc;
 	t_ast			*full_exec_tree;
 	t_ast			*exec_tree;
 	t_ast			*node;
@@ -206,7 +206,7 @@ char				*msh_strdup(const char *s, int mlc_lst);
 
 // The builtins
 int					ft_exec_echo(char **args);
-int					ft_exec_pwd(void);
+int					ft_exec_pwd(char **args);
 int					ft_do_cd(char **path, t_minishell *data);
 void				ft_update_envlst(char *field, char *content, bool create);
 int					print_env(t_env **lst);
@@ -217,7 +217,8 @@ char				*ft_extract_key(char *str);
 int					ft_strcmp(const char *s1, const char *s2);
 bool				ft_is_builtin(char *arg);
 bool				ft_env_entry_exists(char *content);
-int					ft_exec_unset(char **args, t_minishell *data);
+int					ft_exec_unset(char **args);
+void				*ft_unset_cleaner(void *ptr, bool clean);
 int					ft_check_key(char *str);
 char				*ft_get_envlst_content(char *content, t_minishell *data);
 
@@ -310,7 +311,7 @@ bool				ft_is_contains_asterisk(char *sr);
 size_t				ft_count_match(char *pattern);
 bool				ft_match_star(char *pattern, char *str);
 char				**ft_globaler(char *str);
-size_t	get_arr_len(char **expanded);
+size_t				get_arr_len(char **expanded);
 
 // Exec AST tools
 void				set_is_in_par(t_ast *root, int flag);
@@ -351,7 +352,8 @@ int					prep_exec_par(t_ast *sub_tree, int *before_par_pipe,
 int					handle_par_exec(t_ast **current, int *before_par_pipe);
 
 // Signals
-void	ft_init_signals(void);
-void	ft_sigquit_handler(int num);
+void				ft_init_signals(void);
+void				ft_sigquit_handler(int num);
+void				ft_exit(char **args);
 
 #endif
