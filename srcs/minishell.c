@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/20 12:30:53 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/21 12:01:22 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 t_minishell	*ft_shell(void)
 {
 	static t_minishell	data;
+  
 	return (&data);
 }
 
@@ -105,6 +106,24 @@ void	gbg_delete_node(t_token *node, int mlc_lst)
 	gbg_coll(node, mlc_lst, FREE);
 }
 
+void	check_delete_global_par(t_token **lst)
+{
+	t_token	*current;
+	t_token	*prev;
+
+	if (*lst && (*lst)->type == PAR_LEFT && find_closing_par(lst)->next == NULL)
+	{
+		*lst = (*lst)->next;
+		current = *lst;
+		while (current->next)
+		{
+			prev = current;
+			current = current->next;
+		}
+		prev->next = current;
+	}
+}
+
 int	start_parsing(char *prompt)
 {
 	t_token	*input;
@@ -118,16 +137,17 @@ int	start_parsing(char *prompt)
 		return (-1);
 	input = tokenize_input(prompt);
 	clean_token_lst(&input);
-	if (check_redir_syntax(&input) == -1)
-		return (-1);
-	if (check_par_syntax(&input) == -1)
+	if (check_redir_syntax(&input) == -1 || check_par_syntax(&input) == -1)
 		return (-1);
 	split_lst_contents(&input);
 	if (check_redirections(&input) == -1)
 		return (-1);
-	(clean_token_lst(&input), join_cmd_args(&input));
-	tree = build_ast(&input, &insert_node);
-	print_tree(&tree);
+	clean_token_lst(&input);
+	join_cmd_args(&input);
+	check_delete_global_par(&input);
+	set_par_lst(&input);
+	ft_shell()->les_token = lst_dup(&input, NULL);
+	tree = build_ast(&input, NULL);
 	if (tree && check_tree_syntax(&tree) == -1)
 		return (-1);
 	ft_shell()->exec_tree = tree;

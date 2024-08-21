@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:10:07 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/01 17:14:53 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/05 23:49:17 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,11 @@ t_ast	*ast_lst_dup(t_ast **lst, t_ast *node)
 
 	current = *lst;
 	lst_cpy = NULL;
+	if (!node)
+		printf("lst dup node = NULL\n");
 	while (current && current != node)
 	{
-		current_cpy = malloc(sizeof(t_token));
+		current_cpy = malloc(sizeof(t_ast));
 		if (!current_cpy || gbg_coll(current_cpy, PARSING, ADD))
 			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 		current_cpy->token_node = current->token_node;

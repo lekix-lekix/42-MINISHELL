@@ -3,14 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ast_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:27:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/01 18:17:06 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/20 16:32:30 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	copy_token_attributes(t_token *current, t_token *current_cpy)
+{
+	current_cpy->type = current->type;
+	current_cpy->content = current->content;
+	if (current->type != CMD)
+		current_cpy->contents = NULL;
+	else
+		current_cpy->contents = current->contents;
+	current_cpy->redirections = current->redirections;
+	current_cpy->pipe_redir[0] = current->pipe_redir[0];
+	current_cpy->pipe_redir[1] = current->pipe_redir[1];
+	current_cpy->next = NULL;
+	if (current->original_token)
+		current_cpy->original_token = current->original_token;
+	else
+		current_cpy->original_token = current;
+	current_cpy->is_in_par = current->is_in_par;
+}
 
 t_token	*lst_dup(t_token **lst, t_token *node)
 {
@@ -20,18 +39,12 @@ t_token	*lst_dup(t_token **lst, t_token *node)
 
 	current = *lst;
 	lst_cpy = NULL;
-	while (current != node)
+	while (current && current != node)
 	{
 		current_cpy = malloc(sizeof(t_token));
 		if (!current_cpy || gbg_coll(current_cpy, PARSING, ADD))
 			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-		current_cpy->type = current->type;
-		current_cpy->content = current->content;
-		current_cpy->contents = current->contents;
-		current_cpy->redirections = current->redirections;
-        current_cpy->pipe_redir[0] = current->pipe_redir[0];
-        current_cpy->pipe_redir[1] = current->pipe_redir[1];
-		current_cpy->next = NULL;
+		copy_token_attributes(current, current_cpy);
 		insert_node_lst(&lst_cpy, current_cpy);
 		current = current->next;
 	}

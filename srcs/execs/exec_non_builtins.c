@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/21 10:39:55 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/20 15:50:24 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ int	ft_exec_non_builtins(t_token *node)
 		// ft_putchar_fd(node->contents[1], 2);
 		ft_putstr_fd(" :", 2);
 		return (ft_print_err(CMD_ERR), -1);
-	}
+  }
+	// if (execve(la_path, node->contents, ft_shell()->env_args) == -1)
+		//return (perror("bash: execve: "), gbg_coll(NULL, ALL, FLUSH_ALL),
 	// dprintf(2, "LAUNCHING EXECVE CMD %s\n", node->contents[0]);
 	if (execve(la_path, node->contents, env_args) == -1)
 		return (perror("bash: execve: "), ft_free(env_args),

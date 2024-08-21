@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:27:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/01 17:14:36 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/20 16:23:10 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ int	check_redir_syntax(t_token **input)
 			return (print_newline_syntax_error());
 		if (is_a_redir_operator(current) && is_a_token_operator(current->next))
 			return (print_token_syntax_error(current->next));
-        if (is_a_redir_operator(current) && is_a_redir_operator(current->next))
+		if (is_a_redir_operator(current) && is_a_redir_operator(current->next))
 			return (print_token_syntax_error(current->next));
-        if (is_a_token_operator(current) && (!current->next
+		if (is_a_token_operator(current) && (!current->next
 				|| !current->next->content[0]))
 			return (print_token_syntax_error(current));
 		if (is_a_token_operator(current) && is_a_token_operator(current->next))

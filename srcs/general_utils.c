@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:14:54 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/05 06:11:43 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/20 16:19:55 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ bool	ft_env_entry_exists(char *content)
 	t_env	*envlst;
 
 	envlst = (ft_shell())->expanded_env;
-	// printf("The coming key: %s\n", content);
 	while (envlst)
 	{
 		if (!ft_strcmp(content, envlst->content))

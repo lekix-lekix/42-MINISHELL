@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/01 18:16:35 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/20 16:26:18 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,11 @@ t_token	*create_operator_node(char **input)
 	ft_strlcpy(node->content, input_copy, operator_len + 1);
 	node->filename = NULL;
 	node->redirections = NULL;
-    node->pipe_redir[0] = -1;
-    node->pipe_redir[1] = -1;
+	node->pipe_redir[0] = -1;
+	node->pipe_redir[1] = -1;
 	node->next = NULL;
 	node->contents = NULL;
+	node->original_token = NULL;
 	*input += operator_len;
 	return (node);
 }
@@ -64,8 +65,10 @@ t_token	*create_cmd_node(char *input, char *sep)
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	ft_strcpy_sep(node->content, input, sep);
 	node->redirections = NULL;
-    node->pipe_redir[0] = -1;
-    node->pipe_redir[1] = -1;
+	node->pipe_redir[0] = -1;
+	node->pipe_redir[1] = -1;
+	node->contents = NULL;
+	node->original_token = NULL;
 	node->type = CMD;
 	node->filename = NULL;
 	node->next = NULL;

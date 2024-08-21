@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_redir_utils_bis.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 17:56:28 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/19 12:41:34 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/20 16:23:59 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,16 +67,16 @@ void	add_redirection_node(t_redir **lst, t_redir *node)
 	current->next = node;
 }
 
-void    add_front_redir_node(t_redir **lst, t_redir *node)
+void	add_front_redir_node(t_redir **lst, t_redir *node)
 {
-    t_redir *current;
+	t_redir	*current;
 
-    current = *lst;
-    if (!current)
-    {
-        *lst = node;
-        return ;
-    }
-    node->next = current;
-    *lst = node;
+	current = *lst;
+	if (!current)
+	{
+		*lst = node;
+		return ;
+	}
+	node->next = current;
+	*lst = node;
 }

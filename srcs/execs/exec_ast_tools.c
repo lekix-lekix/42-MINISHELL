@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_ast_tools.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 14:20:35 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/01 17:52:09 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/20 17:09:50 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,24 +42,35 @@ int	ast_lst_size(t_ast **lst)
 	return (i);
 }
 
+void	test_tree_size(t_ast *root, int *tree_size)
+{
+	if (root->left)
+		test_tree_size(root->left, tree_size);
+	*tree_size += 1;
+	if (root->right)
+		test_tree_size(root->right, tree_size);
+}
+
 t_ast	*find_top_node(t_ast **lst)
 {
 	t_ast	*current;
-	t_ast	*top_node;
+	int		lst_size;
+	int		tree_size;
 
+	lst_size = ast_list_size(lst);
+	if (lst_size == 1)
+		return (*lst);
 	current = *lst;
-	top_node = NULL;
 	while (current)
 	{
-		if (current->node_type == AND || current->node_type == OR
-			|| current->node_type == PIPE)
-			top_node = current;
-		if (current->node_type == CMD && current->next
-			&& current->next->node_type == CMD)
-			return (top_node);
-		current = current->next;
+		tree_size = 0;
+		test_tree_size(current, &tree_size);
+		if (tree_size == lst_size)
+			return (current);
+		else
+			current = current->next;
 	}
-	return (top_node);
+	return (NULL);
 }
 
 void	set_next_null(t_ast *root)
@@ -69,21 +80,4 @@ void	set_next_null(t_ast *root)
 	root->next = NULL;
 	if (root->right)
 		set_next_null(root->right);
-}
-
-void	print_ast_lst(t_ast **lst)
-{
-	t_ast	*current;
-
-	current = *lst;
-	while (current)
-	{
-		if (current->token_node->contents)
-			printf("current = %s\n", current->token_node->contents[0]);
-		else
-			printf("op_node type = %d\n", current->node_type);
-		if (current->token_node->redirections)
-			print_redir_lst(&current->token_node->redirections);
-		current = current->next;
-	}
 }

@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:17:54 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/11 15:53:58 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/20 16:18:08 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	parse_insert_op_token_node(t_ast *root, t_ast *node, int level)
 {
-    if (root->node_type > node->node_type)
+	if (root->node_type > node->node_type)
 	{
 		if (!root->left)
 			root->left = node;
@@ -126,33 +126,3 @@ void	create_consume_insert_node(t_token **lst, t_token **node, t_ast **tree,
 	if (plus_flag)
 		new_node->node_type -= 1;
 }
-
-// void	create_consume_insert_node(t_token **lst, t_token **node, t_ast **tree,
-// 		t_ast **tree_right)
-// {
-// 	t_ast	*new_node;
-// 	int		plus_flag;
-
-// 	plus_flag = 0;
-// 	new_node = create_ast_node(*node);
-// 	if (*lst == *node)
-// 	{
-// 		consume_node(lst, new_node->token_node);
-// 		*node = NULL;
-// 	}
-// 	consume_node(lst, new_node->token_node);
-// 	if (new_node->node_type == AND)
-// 	{
-// 		new_node->node_type += 1;
-// 		plus_flag = 1;
-// 	}
-//     insert_operator_token_node(tree, new_node);
-// 	if (*tree_right)
-// 		insert_operator_token_node(tree_right, new_node);
-// 	else if (*tree && new_node->node_type < (*tree)->node_type)
-// 		insert_operator_token_node(tree_right, new_node);
-// 	else
-// 		insert_operator_token_node(tree, new_node);
-// 	if (plus_flag)
-// 		new_node->node_type -= 1;
-// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/20 13:46:50 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/20 16:45:29 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ typedef struct s_token
 	char			*filename;
 	char			*content;
 	char			**contents;
+	int				is_in_par;
+	struct s_token	*original_token;
 	struct s_token	*next;
 }					t_token;
 
@@ -267,7 +269,7 @@ t_token				*find_right_par(t_token **lst);
 
 // garbage collector
 void				remove_mem_node(t_lst **lst, void *mem_addr);
-void	print_tree(t_ast **tree); // to remove
+void				print_tree(t_ast **tree);
 
 // parsing redirections
 
@@ -344,12 +346,19 @@ int					close_wait(int par_pid);
 void				ft_start_exec_tree(t_ast *root, t_ast **exec_lst,
 						t_ast **last_op);
 int					iterate_exec_ast_lst(t_ast **lst);
-// int					exec_child(t_ast *node);
 
 // Exec parenthesis
-int					prep_exec_par(t_ast *sub_tree, int *before_par_pipe,
-						int *after_par_pipe);
-int					handle_par_exec(t_ast **current, int *before_par_pipe);
+int					prep_exec_par(t_ast *sub_tree, int *after_par_pipe);
+int					handle_par_exec(t_ast **current);
+void				set_par_lst(t_token **lst);
+t_token				*find_original_token_lst(t_token **lst, t_token *to_find);
+void				delete_begin_end_par_nodes(t_token **lst);
+void				set_par_lst(t_token **lst);
+t_token				*find_left_par_original_token(t_token **lst, t_token *node);
+t_token				*check_after_par_pipe(t_token **par_lst,
+						int **after_par_pipe);
+void				set_back_redir(t_ast **lst, t_token **lst_dup);
+t_ast				*find_token_node(t_ast **lst, t_token *to_find);
 
 // Signals
 void				ft_init_signals(void);
