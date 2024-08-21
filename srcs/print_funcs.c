@@ -19,8 +19,8 @@ int	print_env(t_env **lst)
 	node = *lst;
 	while (node)
 	{
-		printf("field: %s", node->field);
-		printf("content: %s\n", node->content);
+		printf("%s", node->field);
+		printf("%s\n", node->content);
 		node = node->next;
 	}
 	return (0);

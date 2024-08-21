@@ -16,7 +16,8 @@ int	exec_child(t_ast *node)
 {
 	pid_t	*pid;
 	t_lst	*pid_node;
-
+	
+	(ft_shell())->signint_child = true;
 	pid = malloc(sizeof(pid_t));
 	if (!pid || gbg_coll(pid, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);

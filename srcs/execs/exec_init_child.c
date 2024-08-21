@@ -27,7 +27,7 @@ int	ft_check_cmds(t_token *token_node)
 	}
 	else
 		la_status = ft_exec_non_builtins(token_node);
-	return (0);
+	return (la_status);
 }
 
 int	init_only_child_no_fork(t_token *node)
@@ -40,16 +40,18 @@ int	init_only_child_no_fork(t_token *node)
 		ft_shell()->exit_status = ft_check_redirections(node);
 		return (ft_reset_ports(false), 0);
 	}
-    ft_check_redirections(node);
+  ft_check_redirections(node);
 	if (ft_is_builtin(node->contents[0]))
 		return (ft_exec_builtins(node->contents, ft_shell()), ft_reset_ports(false), 0);
 	pid = fork();
+	ft_shell())->signint_child = true;
 	if (pid == -1)
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), perror("bash: fork"), exit(255),
 			-1);
 	if (pid == 0)
 		ft_exec_non_builtins(node);
-    ft_reset_ports(false);
+  ft_reset_ports(false);
+	status = ft_exec_non_builtins(node);
 	waitpid(pid, &status, WUNTRACED);
 	if (WIFEXITED(status))
 		ft_shell()->exit_status = WEXITSTATUS(status);

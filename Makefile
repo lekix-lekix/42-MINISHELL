@@ -70,7 +70,9 @@ SRCS = ./srcs/minishell.c \
 	./srcs/expanders/expands_utils.c \
 	./srcs/expanders/ft_remove_quotes.c \
 	./srcs/expanders/ft_asterisker.c \
-	./srcs/expanders/ft_globaler.c
+	./srcs/expanders/ft_globaler.c \
+	./srcs/signals.c \
+	./srcs/Builtins/ft_exit.c
 
 OBJ = $(SRCS:.c=.o)
 

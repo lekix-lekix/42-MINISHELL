@@ -24,7 +24,6 @@ int	ft_append(t_redir *redirections, int *le_status)
 
 	if (!redirections->filename)
 	{
-		printf("The wasn't a filename\n");
 		*le_status = ft_errmsg();
 		return (*le_status);
 	}
@@ -48,14 +47,14 @@ int	ft_in(t_redir *redirections, int *le_status)
 
 	if (!redirections->filename)
 	{
-		printf("There wasn't a filename\n");
+		// printf("There wasn't a filename\n");
 		*le_status = ft_errmsg();
 		return (*le_status);
 	}
 	fd = open(redirections->filename, O_RDONLY);
 	if (fd == -1)
 	{
-		printf("There was a problem opening the file\n");
+		// printf("There was a problem opening the file\n");
 		*le_status = ft_errmsg();
 		return (*le_status);
 	}
@@ -98,7 +97,7 @@ int	ft_check_redirections(t_token *node)
 	{
 		if (ft_strcmp(redirections->filename, "pipe") == 0)
 			handle_pipe_redirections(redirections, node);
-		else if (redirections->redir_type == REDIR_INPUT && ft_in(redirections,
+		if (redirections->redir_type == REDIR_INPUT && ft_in(redirections,
 				&le_status) != ENO_SUCCESS)
 			return (le_status);
 		else if (redirections->redir_type == REDIR_OUTPUT
@@ -108,7 +107,7 @@ int	ft_check_redirections(t_token *node)
 			&& ft_append(redirections, &le_status) != ENO_SUCCESS)
 			return (le_status);
 		else if (redirections->redir_type == REDIR_HEREDOC)
-			(dup2((ft_shell())->heredoc, 0), close((ft_shell())->heredoc));
+			(dup2(redirections->heredoc, 0), close(redirections->heredoc));
 		redirections = redirections->next;
 	}
 	return (ENO_SUCCESS);

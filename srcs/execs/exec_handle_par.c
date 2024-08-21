@@ -57,6 +57,20 @@ void	create_ast_exec_lst(t_token **lst, t_ast **exec_lst)
 			add_ast_lst(exec_lst, node);
 		}
 		current = current->next;
+		(ft_shell())->signint_child = true;
+		if (before_par_pipe && dup2(before_par_pipe[0], STDIN_FILENO) == -1)
+			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
+				exit(255), -1);
+		if (after_par_pipe && dup2(after_par_pipe[1], STDOUT_FILENO) == -1)
+			return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
+				exit(255), -1);
+		if (before_par_pipe)
+			close(before_par_pipe[0]);
+		if (after_par_pipe)
+			close(after_par_pipe[1]);
+		ft_start_exec(&sub_tree);
+		close_pipes_lst(&ft_shell()->pipes);
+		exit(0);
 	}
 }
 

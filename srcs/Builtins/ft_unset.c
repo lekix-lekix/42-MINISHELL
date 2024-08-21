@@ -6,19 +6,19 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 09:06:23 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/06/17 12:02:10 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/20 14:00:10 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static void	ft_unset_helper(char *key, t_minishell *data)
+static void	ft_unset_helper(char *key)
 {
 	t_env	*current;
 	t_env	*prev;
 
 	prev = NULL;
-	current = data->env_lst;
+	current = ft_shell()->env_lst;
 	while (current)
 	{
 		if (!ft_strncmp(key, current->field, ft_strlen(key)))
@@ -26,7 +26,7 @@ static void	ft_unset_helper(char *key, t_minishell *data)
 			if (prev)
 				prev->next = current->next;
 			else
-				data->env_lst = current->next;
+				ft_shell()->env_lst = current->next;
 			free(current);
 			return ;
 		}
@@ -35,7 +35,23 @@ static void	ft_unset_helper(char *key, t_minishell *data)
 	}
 }
 
-int	ft_exec_unset(char **args, t_minishell *data)
+int	ft_check_key_unset(char *str)
+{
+	int	i;
+
+	i = 1;
+	if (!ft_isalpha(*str) && *str != '_')
+		return (0);
+	while (str[i] && str[i] != '=')
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	ft_exec_unset(char **args)
 {
 	int		i;
 	bool	err;
@@ -46,7 +62,7 @@ int	ft_exec_unset(char **args, t_minishell *data)
 	err = false;
 	while (args[i])
 	{
-		if (!ft_check_key(args[i]))
+		if (!ft_check_key_unset(args[i]))
 		{
 			ft_putstr_fd("minishell: unset: `", 2);
 			ft_putstr_fd(args[i], 2);
@@ -54,10 +70,7 @@ int	ft_exec_unset(char **args, t_minishell *data)
 			err = true;
 		}
 		else
-		{
-			printf("The extracted key: %s\n", ft_extract_val(args[i]));
-			ft_unset_helper(ft_extract_val(args[i]), data);
-		}
+			ft_unset_helper(ft_extract_val(args[i]));
 		i++;
 	}
 	return (err);

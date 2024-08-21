@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   exec_traverse_tree.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:20:09 by lekix             #+#    #+#             */
 /*   Updated: 2024/08/20 15:47:29 by kipouliq         ###   ########.fr       */

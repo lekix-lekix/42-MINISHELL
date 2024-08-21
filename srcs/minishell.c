@@ -15,7 +15,7 @@
 t_minishell	*ft_shell(void)
 {
 	static t_minishell	data;
-
+  
 	return (&data);
 }
 
@@ -43,9 +43,11 @@ int	init_data(t_minishell *data, char **envp)
 	if (!data->path)
 		return (-1);
 	data->env_lst = get_env_lst(envp);
+	data->expanded_env = get_env_lst(envp);
 	data->env_args = envp;
 	if (!data->env_lst)
 		return (-1);
+	tcgetattr(STDIN_FILENO, &ft_shell()->original_term);
 	return (0);
 }
 
@@ -74,6 +76,7 @@ static void	ft_start_execution(t_ast **tree)
 {
 	t_ast	*nodes;
 
+	signal(SIGQUIT, ft_sigquit_handler);
 	nodes = *tree;
 	ft_init_tree(nodes);
 	ft_shell()->pids = NULL;
@@ -81,7 +84,20 @@ static void	ft_start_execution(t_ast **tree)
 	ft_shell()->end_exec = 0;
 	ft_shell()->exec_in_par = 0;
 	ft_shell()->full_exec_tree = *tree;
-	ft_start_exec(&nodes);
+	if ((ft_shell())->heredoc_sigint)
+	{
+		// If the program is quited during heredoc,
+		// we have clean the mess afterword I guess
+		printf("WE ARE HERE 98\n");
+		// gbg_coll(NULL, PARSING, FLUSH_ONE);
+		gbg_coll(NULL, ENV, FREE);
+		// gbg_coll(NULL, ENV, FLUSH_ALL);
+		// clean_token_lst(&nodes->token_node);
+		(ft_shell())->heredoc_sigint = false;
+		return;
+	}
+	tcsetattr(STDIN_FILENO, TCSANOW, &(ft_shell())->original_term);
+	(ft_shell())->exit_status = ft_start_exec(&nodes);
 }
 
 void	gbg_delete_node(t_token *node, int mlc_lst)
@@ -139,11 +155,11 @@ int	start_parsing(char *prompt)
 	return (0);
 }
 
-void	ft_exit(void)
-{
-	gbg_coll(NULL, ALL, FLUSH_ALL);
-	exit(0);
-}
+// void	ft_exit(void)
+// {
+// 	gbg_coll(NULL, ALL, FLUSH_ALL);
+// 	exit(0);
+// }
 
 int	main(int argc, char **argv, char **env)
 {
@@ -154,10 +170,21 @@ int	main(int argc, char **argv, char **env)
 	init_data(data, env);
 	while (1)
 	{
+		ft_init_signals();
 		data->prompt = readline("./minishell$ ");
-        dprintf(2, "coucou\n");
+		if (!data->prompt)
+		{
+			// Also we need to clean here if I'm not mistaking!
+			gbg_coll(NULL, ENV, FLUSH_ALL);
+			gbg_coll(NULL, PARSING, FLUSH_ALL);
+			gbg_coll(NULL, ENV, FREE);
+			(ft_putstr_fd("exit\n", 1));
+			exit(ft_shell()->exit_status);
+		}
 		if (data->prompt || *data->prompt)
 		{
+			if (data->prompt[0])
+				add_history(data->prompt);
 			start_parsing(data->prompt);
 			gbg_coll(NULL, PARSING, FLUSH_ONE);
 			free(data->prompt);

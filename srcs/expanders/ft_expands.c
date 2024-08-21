@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expands.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/05 12:46:10 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/20 14:35:43 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*ft_handle_dollar(char *str, size_t *i)
 	size_t	start;
 	char	*var;
 	char	*env_val;
-
+	
 	(*i)++;
 	if (ft_isdigit(str[*i]) || str[*i] == '@')
 		return ((*i)++, ft_strdup(""));
@@ -32,9 +32,10 @@ char	*ft_handle_dollar(char *str, size_t *i)
 	while (ft_is_valid_var_char(str[*i]))
 		(*i)++;
 	var = ft_substr(str, start, *i - start);
+	printf("THE VAR IS: %s\n", var);
 	env_val = ft_get_envlst_content(var, (ft_shell()));
 	if (!env_val)
-		return (free(var), ft_strdup(""));
+		return (free(var), ft_strdup(str));
 	return (free(var), ft_strdup(env_val));
 }
 
@@ -94,9 +95,10 @@ char	*ft_pre_expand(char *sr)
 {
 	size_t	x;
 	char	*res;
+	char	*temp;
 
 	x = 0;
-	res = ft_strdup("");
+	res = msh_strdup("", PARSING);;
 	while (sr[x] && sr[x] != '\0')
 	{
 		if (sr[x] == '"')
@@ -106,7 +108,11 @@ char	*ft_pre_expand(char *sr)
 		else if (sr[x] == '$')
 			res = ft_strjoin(res, ft_handle_dollar(sr, &x));
 		else
-			res = ft_strjoin(res, ft_handle_normal_str(sr, &x));
+		{	
+			temp = ft_handle_normal_str(sr, &x);
+			res = ft_strjoin(res, temp);
+			free(temp);
+		}
 	}
 	return (res);
 }
@@ -118,7 +124,7 @@ size_t	get_arr_len(char **expanded)
 	x = 0;
 	if (!expanded || !expanded[0])
 		return (0);
-	while (expanded[x])
+	while (expanded && expanded[x])
 		x++;
 	// printf("THE LENS IS: %zu\n", x);
 	return (x);
@@ -126,11 +132,9 @@ size_t	get_arr_len(char **expanded)
 
 char	**ft_expand(char *sr)
 {
-	// char *expanded;
 	char	**expanded;
-	// size_t arg_len;
-	char **globaled;
-	size_t x;
+	char	**globaled;
+	size_t	x;
 
 	x = 0;
 	sr = ft_pre_expand(sr);
@@ -139,24 +143,17 @@ char	**ft_expand(char *sr)
 	sr = ft_clean_empty_chars(sr);
 	if (!sr)
 		return (NULL);
-	// arg_len = ft_strlen(sr);
-	// globaled = (char **)malloc(sizeof(char *) * (arg_len + 1)); // NEEDS PROTECTION AND GARBAGE
 	globaled = ft_globaler(sr);
-	expanded = malloc(sizeof(char *) * (get_arr_len(globaled) + 1)); // NEEDS PROTECTION AND GARBAGE
-	// printf("get arr = %lu\n", get_arr_len(globaled) + 1);
+	free(sr);
+	expanded = malloc(sizeof(char *) * (get_arr_len(globaled) + 1));
 	if (!expanded)
-		return (NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), NULL);
 	while (globaled[x])
 	{
-		// printf("THE GLOBALED: %s\n", ft_strip_quotes(globaled[x]));
 		expanded[x] = ft_strip_quotes(globaled[x]);
 		x++;
 	}
-	// dprintf(2, "EXPANDED X END = %zu\n", x);
+	free(globaled);
 	expanded[x] = 0;
-	// printf("THE GLOBALED LEN: %zu\n", get_arr_len(globaled));
-
-	// sr = ft_strip_quotes(sr);
-	// printf("THE RETURNED STR: %s\n", *expanded);
 	return (expanded);
 }

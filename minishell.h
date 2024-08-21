@@ -81,6 +81,7 @@ typedef struct s_redir
 {
 	t_token_type	redir_type;
 	char			*filename;
+	int				heredoc;
 	struct s_redir	*next;
 }					t_redir;
 
@@ -153,7 +154,6 @@ typedef struct s_minishell
 	int				pids_num;
 	int				stdin;
 	int				stdout;
-	int				heredoc;
 	t_ast			*full_exec_tree;
 	t_ast			*exec_tree;
 	t_ast			*node;
@@ -208,7 +208,7 @@ char				*msh_strdup(const char *s, int mlc_lst);
 
 // The builtins
 int					ft_exec_echo(char **args);
-int					ft_exec_pwd(void);
+int					ft_exec_pwd(char **args);
 int					ft_do_cd(char **path, t_minishell *data);
 void				ft_update_envlst(char *field, char *content, bool create);
 int					print_env(t_env **lst);
@@ -219,7 +219,8 @@ char				*ft_extract_key(char *str);
 int					ft_strcmp(const char *s1, const char *s2);
 bool				ft_is_builtin(char *arg);
 bool				ft_env_entry_exists(char *content);
-int					ft_exec_unset(char **args, t_minishell *data);
+int					ft_exec_unset(char **args);
+void				*ft_unset_cleaner(void *ptr, bool clean);
 int					ft_check_key(char *str);
 char				*ft_get_envlst_content(char *content, t_minishell *data);
 
@@ -358,5 +359,10 @@ t_token				*check_after_par_pipe(t_token **par_lst,
 						int **after_par_pipe);
 void				set_back_redir(t_ast **lst, t_token **lst_dup);
 t_ast				*find_token_node(t_ast **lst, t_token *to_find);
+
+// Signals
+void				ft_init_signals(void);
+void				ft_sigquit_handler(int num);
+void				ft_exit(char **args);
 
 #endif
