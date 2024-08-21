@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/20 16:58:15 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/21 12:01:22 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		data->prompt = readline("./minishell$ ");
+        dprintf(2, "coucou\n");
 		if (data->prompt || *data->prompt)
 		{
 			start_parsing(data->prompt);
