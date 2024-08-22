@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/21 18:27:42 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/22 14:03:24 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,10 @@ int	iterate_exec_ast_lst(t_ast **lst)
 	cmd_nb = ast_list_size(lst);
 	if (!cmd_nb)
 		return (0);
-    printf("EXEC LST ===\n");
-    print_ast_lst(lst);
-    printf("=====\n");
 	while (current)
 	{
-        // printf("current = %s\n", current->token_node->contents[0]);
 		if (current->is_in_par)
 		{
-            printf("is in par\n");
 			par_pid = handle_par_exec(&current);
 			ft_lstadd_back(&ft_shell()->pids, create_lst_node(&par_pid));
 			current = NULL;
@@ -40,7 +35,6 @@ int	iterate_exec_ast_lst(t_ast **lst)
 		prep_exec_child(current);
 		current = current->next;
 	}
-    printf("leaving\n");
 	close_wait(par_pid);
 	return (0);
 }

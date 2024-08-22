@@ -1,3 +1,15 @@
-ls|cat-e
-ctrl-d leaks
 valgrind env | grep qqch
+$PWD (---> )
+$PWD twice
+echo " $yoo  ca va"
+single quotes with any spaces
+empty quotes on the first cmd entered
+expand : $NO_VARIABLE_FOUND (should return enter)
+typing something then ctrl+d : freeze
+< outfile
+check history leaks !
+env -i ./minishell
+
+leaks :
+$WWDWD
+ft_join

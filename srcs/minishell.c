@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/21 16:20:10 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/22 17:45:17 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ static void	ft_start_execution(t_ast **tree)
 	ft_shell()->end_exec = 0;
 	ft_shell()->exec_in_par = 0;
 	ft_shell()->full_exec_tree = *tree;
+    ft_shell()->stdin = dup(STDIN_FILENO);
+    ft_shell()->stdout = dup(STDOUT_FILENO);
 	if ((ft_shell())->heredoc_sigint)
 	{
 		// If the program is quited during heredoc,
@@ -124,18 +126,6 @@ void	check_delete_global_par(t_token **lst)
 	}
 }
 
-void print_lstt(t_token **lst)
-{
-    t_token *current;
-
-    current = *lst;
-    while (current)
-    {
-        printf("current = %s\n", current->content);
-        current = current->next;
-    }
-}
-
 int	start_parsing(char *prompt)
 {
 	t_token	*input;
@@ -158,7 +148,6 @@ int	start_parsing(char *prompt)
 	join_cmd_args(&input);
 	check_delete_global_par(&input);
 	set_par_lst(&input);
-    print_lst(&input);
 	ft_shell()->les_token = lst_dup(&input, NULL);
 	tree = build_ast(&input, NULL);
 	if (tree && check_tree_syntax(&tree) == -1)

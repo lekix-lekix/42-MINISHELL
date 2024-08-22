@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/21 17:45:54 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/22 15:12:31 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,17 +71,19 @@ char	**ft_concat_str_arr(char **arr, char **arr2)
 	len2 = get_arr_len(arr2);
 	total_len = len1 + len2;
 	res = (char **)malloc(sizeof(char *) * (total_len + 1));
+	if (!res || gbg_coll(res, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	x = -1;
 	while (++x < len1)
 	{
-		res[x] = ft_strdup(arr[x]);
-		free(arr[x]);
+		res[x] = msh_strdup(arr[x], PARSING);
+		// free(arr[x]);
 	}
-	free(arr);
+	// free(arr);
 	y = -1;
 	while (++y < len2)
 	{
-		res[x++] = ft_strdup(arr2[y]);
+		res[x++] = msh_strdup(arr2[y], PARSING);
 		// free(arr2[y]);
 	}
 	// free(arr2);
@@ -109,7 +111,7 @@ static void	ft_init_leaf(t_ast *node)
 		temp_contents = ft_concat_str_arr(temp_contents, la_args);
 	}
 	io->contents = temp_contents;
-	ft_free(la_args);
+	// ft_free(la_args);
 	while (redirections)
 	{
 		if (redirections->redir_type == REDIR_HEREDOC)

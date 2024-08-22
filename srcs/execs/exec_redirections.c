@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/21 18:22:15 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/22 14:12:13 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ int	ft_check_redirections(t_token *node)
 	redirections = node->redirections;
 	while (redirections)
 	{
-        // printf("HELLO IM NODE %s\n", node->contents[0]);
 		if (ft_strcmp(redirections->filename, "pipe") == 0)
 			handle_pipe_redirections(redirections, node);
 		else if (redirections->redir_type == REDIR_INPUT && ft_in(redirections,

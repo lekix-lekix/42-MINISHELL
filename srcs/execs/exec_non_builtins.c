@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/21 18:21:24 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/22 17:36:11 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,7 @@ int	ft_exec_non_builtins(t_token *node)
 {
 	char	*la_path;
 	char	**env_args;
-    
-    printf("NODE %s REDIR LST =====\n", node->contents[0]);
-    print_redir_lst(&node->redirections);
-	ft_shell()->exit_status = ft_check_redirections(node);
+
 	env_args = env_lst_to_arr(&ft_shell()->env_lst);
 	la_path = ft_check_path(node->contents[0], env_args);
 	if (!la_path)
@@ -27,16 +24,12 @@ int	ft_exec_non_builtins(t_token *node)
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(node->contents[0], 2);
 		// ft_putchar_fd(node->contents[1], 2);
-		ft_putstr_fd(" :", 2);
-		return (ft_print_err(CMD_ERR), -1);
+		ft_putstr_fd(":", 2);
+		return (ft_print_err(CMD_ERR), gbg_coll(NULL, ALL, FLUSH_ALL),
+			exit(127), -1);
 	}
-	dprintf(2, "LAUNCHING EXECVE CMD %s\n", node->contents[0]);
+    // dprintf(2, "launching cmd %s\n", node->contents[0]);
 	if (execve(la_path, node->contents, ft_shell()->env_args) == -1)
 		return (perror("bash: execve: "), gbg_coll(NULL, ALL, FLUSH_ALL), -1);
-	// // if (execve(la_path, node->contents, env_args) == -1)
-	// // 	return (perror("bash: execve: "), ft_free(env_args),
-	// // 		exit(255), -1);
-	// // return (perror("bash: execve: "), gbg_coll(NULL, ALL, FLUSH_ALL),
-	// // 	exit(255), -1);
 	return (0);
 }

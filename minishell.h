@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/20 16:45:29 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/22 18:06:46 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,9 @@
 # define PER_ERR \
 	"Permission denied, you can't \
 open this file! Or file doesn't exit, Or it's a directory"
-# define CMD_ERR "Command not found!"
+# define CMD_ERR " command not found"
 # define OPEN_ERR "Error opening file"
+# define IS_DIR_ERR " Is a directory"
 # define DUP_ERR "An err has occoured with dup2"
 # define FORK_C2 "An Error has occuered with Fork child2"
 # define FORK_C1 "An Error has occuered with Fork child1"

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_remove_quotes.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:36:19 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/15 17:40:03 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/22 15:08:01 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ char	*ft_strip_quotes(char *str)
 	i = 0;
 	j = 0;
 	ret = ft_calloc(1 + ft_unquoted_strlen(str), sizeof(char));
-	if (!ret)
-		return (NULL);
+	if (!ret || gbg_coll(ret, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	while (str[i])
 	{
 		if (str[i] == '"' || str[i] == '\'')
@@ -68,7 +68,6 @@ char	*ft_strip_quotes(char *str)
 	}
 	return (ret);
 }
-
 
 char	*ft_clean_empty_chars(char *sr)
 {
@@ -82,6 +81,8 @@ char	*ft_clean_empty_chars(char *sr)
 			&& sr[1] == '"' && !sr[2]))
 		return (sr);
 	tmp = ft_calloc(ft_strlen(sr) + 1, sizeof(char));
+	if (!tmp || gbg_coll(tmp, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	x = 0;
 	y = 0;
 	while (sr[x])
@@ -92,8 +93,10 @@ char	*ft_clean_empty_chars(char *sr)
 		else
 			tmp[y++] = sr[x++];
 	}
-	free(sr);
+	// free(sr);
 	dstsize = ft_strlen(tmp) + 1;
 	ret = ft_calloc(dstsize, sizeof(char));
-	return (ft_strlcpy(ret, tmp, dstsize), free(tmp), ret);
+	if (!ret || gbg_coll(ret, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+	return (ft_strlcpy(ret, tmp, dstsize), ret);
 }

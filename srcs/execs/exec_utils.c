@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 00:17:24 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/19 05:37:54 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/22 14:25:54 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ int	close_wait(int par_pid)
 	ft_shell()->pids = NULL;
 	return (0);
 }
-
 
 static void	ft_del(void *ptr)
 {

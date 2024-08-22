@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/21 17:47:52 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/22 17:23:16 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	ft_check_cmds(t_token *token_node)
 	if (ft_is_builtin(token_node->contents[0]))
 	{
 		la_status = ft_exec_builtins(token_node->contents, ft_shell());
+        gbg_coll(NULL, ALL, FLUSH_ALL);
 		exit(la_status);
 	}
 	else
