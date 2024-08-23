@@ -1,15 +1,20 @@
-valgrind env | grep qqch
-$PWD (---> )
-$PWD twice
+regular failing tests :
+
 echo " $yoo  ca va"
 single quotes with any spaces
 empty quotes on the first cmd entered
 expand : $NO_VARIABLE_FOUND (should return enter)
-typing something then ctrl+d : freeze
-< outfile
+< outfile : prints a '\n' (and shouldnt)
 check history leaks !
 env -i ./minishell
+append operator
 
 leaks :
-$WWDWD
-ft_join
+
+to do :
+- fix export
+- fix quotes
+- include quotes in tokenizer for syntax check
+- fix exit statuses
+- if exit(255) --> shut down whole minishell
+- test all mallocs

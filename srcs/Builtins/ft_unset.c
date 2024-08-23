@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 09:06:23 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/20 14:00:10 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/23 17:25:31 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ static void	ft_unset_helper(char *key)
 				prev->next = current->next;
 			else
 				ft_shell()->env_lst = current->next;
-			free(current);
 			return ;
 		}
 		prev = current;

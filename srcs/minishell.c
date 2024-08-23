@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/22 17:45:17 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/23 17:15:30 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,7 @@ int	start_parsing(char *prompt)
 		return (-1);
 	input = tokenize_input(prompt);
 	clean_token_lst(&input);
+    print_lst(&input);
 	if (check_redir_syntax(&input) == -1 || check_par_syntax(&input) == -1)
 		return (-1);
 	split_lst_contents(&input);
@@ -167,7 +168,7 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		ft_init_signals();
-		data->prompt = readline("./minishell$ ");
+		data->prompt = readline("minishell$ ");
 		if (!data->prompt)
 		{
 			// Also we need to clean here if I'm not mistaking!

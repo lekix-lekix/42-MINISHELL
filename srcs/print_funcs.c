@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:55:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/21 18:27:05 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/23 17:09:51 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,8 @@ void	print_lst(t_token **lst)
 	while (root)
 	{
 		printf("--------\n");
-		printf("content = '%s'", root->content);
-        if (root->type == CMD)
-            printf(" %s\n", root->contents[1]);
-        else
-            printf("\n");
+		printf("content = '%s'\n", root->content);
 		printf("type = %u\n", root->type);
-        printf("in par = %d\n", root->is_in_par);
 		if (root->redirections)
 			print_redir_lst(&root->redirections);
 		root = root->next;

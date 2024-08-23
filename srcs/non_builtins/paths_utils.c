@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:19:27 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/22 18:18:02 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/23 16:22:08 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,38 @@
 
 char	**ft_get_paths(char **env);
 char	*ft_join(char *s1, char *s2);
-char	*check_cmd_access(char *cmd);
-char	*check_paths(char **paths, char *cmd);
+char	*check_cmd_access(char *cmd, int *exit_status);
+char	*check_paths(char **paths, char *cmd, int *exit_status);
 char	*check_cmd_path(char *cmd);
 
-char	*ft_check_path(char *cmd, char **env)
+int	print_msh_error(char *err, char *cmd)
+{
+	char	*str;
+
+	str = ft_join("minishell: ", cmd);
+	str = ft_join(str, ": ");
+	str = ft_join(str, err);
+	str = ft_join(str, "\n");
+	if (!str)
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
+	write(2, str, ft_strlen(str));
+	return (0);
+}
+
+char	*ft_check_path(char *cmd, char **env, int *exit_status)
 {
 	char	**paths;
 	char	*fpath;
 
-	fpath = check_cmd_access(cmd);
-	if (fpath != NULL)
-		return (fpath);
-	fpath = check_cmd_path(cmd);
-	if (fpath != NULL)
-		return (fpath);
+	if (!cmd || !cmd[0])
+		return (print_msh_error(CMD_ERR, cmd), *exit_status = 127, NULL);
+	fpath = check_cmd_access(cmd, exit_status);
+	if (!fpath)
+		return (NULL);
 	paths = ft_get_paths(env);
 	if (!paths || paths[0] == NULL)
-		return (cmd);
-	fpath = check_paths(paths, cmd);
+		return (NULL);
+	fpath = check_paths(paths, cmd, exit_status);
 	if (fpath != NULL)
 		return (fpath);
 	return (ft_free(paths), NULL);
@@ -49,6 +62,8 @@ char	**ft_get_paths(char **env)
 		if (ft_strncmp("PATH", env[x], 4) == 0)
 		{
 			path = ft_split(env[x] + 5, ':');
+			if (!path)
+				return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 			return (path);
 		}
 		x++;
@@ -56,11 +71,21 @@ char	**ft_get_paths(char **env)
 	return (NULL);
 }
 
-char	*check_cmd_access(char *cmd)
+char	*check_cmd_access(char *cmd, int *exit_status)
 {
-	if (access(cmd, F_OK | R_OK | X_OK) == 0)
-		return (cmd);
-	return (NULL);
+	struct stat	file_stat;
+	int			err;
+
+	err = access(cmd, F_OK | R_OK | X_OK);
+	if (err == 0)
+	{
+		stat(cmd, &file_stat);
+		if (file_stat.st_mode == 16877)
+			return (print_msh_error(IS_DIR_ERR, cmd), *exit_status = 126, NULL);
+	}
+	else if (err == -1 && errno == EACCES)
+		return (print_msh_error(PER_ERR, cmd), *exit_status = 126, NULL);
+	return (cmd);
 }
 
 char	*check_cmd_path(char *cmd)
@@ -74,7 +99,7 @@ char	*check_cmd_path(char *cmd)
 	return (NULL);
 }
 
-char	*check_paths(char **paths, char *cmd)
+char	*check_paths(char **paths, char *cmd, int *exit_status)
 {
 	char	*fpath;
 	char	*tmp;
@@ -85,12 +110,8 @@ char	*check_paths(char **paths, char *cmd)
 	{
 		tmp = ft_join(paths[x], "/");
 		fpath = ft_join(tmp, cmd);
-		free(tmp);
-		if (!fpath)
-			return (ft_free(paths), NULL);
 		if (access(fpath, F_OK | R_OK | X_OK) == 0)
-			return (ft_free(paths), fpath);
-		(free(fpath), fpath = NULL);
+			return (fpath);
 	}
-	return (NULL);
+	return (print_msh_error(CMD_ERR, cmd), *exit_status = 127, NULL);
 }
