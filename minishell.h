@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/23 15:33:16 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:42:41 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
-# include <sys/types.h>
 # include <sys/stat.h>
+# include <sys/types.h>
 # include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h>
@@ -170,6 +170,7 @@ t_minishell			*ft_shell(void);
 int					gbg_coll(void *mem_addr, int which_list, int rule);
 t_env				*get_env_lst(char **envp);
 int					ft_strlen_sep(char *str, char *sep);
+int					ft_strcpy_sep_ptr(char *dest, char *input, char *sep);
 
 // tokenization
 int					trim_token_fields(t_token **lst);

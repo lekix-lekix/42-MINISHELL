@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_lst_tools.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:50:13 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/07/12 16:58:24 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/26 18:18:03 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,31 @@ void	split_lst_contents(t_token **lst)
 	{
 		prev = current;
 		if (current->content)
-			contents = msh_split(current->content, ' ', PARSING);
-		if (contents)
 		{
-			create_insert_split_nodes(prev, current, contents);
-			remove_token_node(lst, current);
-			current = *lst;
-			continue ;
+			if (ft_strchr(current->content, '\''))
+            {
+                printf("1\n");
+				contents = msh_split(current->content, '\'', PARSING);
+            }
+			else if (ft_strchr(current->content, '\"'))
+            {
+                printf("2\n");
+				contents = msh_split(current->content, '\"', PARSING);
+            }
+			else
+            {
+                printf("3\n");
+				contents = msh_split(current->content, ' ', PARSING);
+            }
+			if (contents)
+			{
+				create_insert_split_nodes(prev, current, contents);
+				remove_token_node(lst, current);
+				current = *lst;
+				continue ;
+			}
+			current = current->next;
 		}
-		current = current->next;
 	}
 }
 

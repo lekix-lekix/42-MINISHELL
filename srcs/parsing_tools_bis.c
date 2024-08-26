@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 15:05:08 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/28 18:12:21 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/26 17:03:58 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,27 @@ int	is_a_token_operator(t_token *node)
 	return (node->type > ARGS_FLAGS && node->type < PAR_LEFT);
 }
 
+int	ft_strcpy_sep_ptr(char *dest, char *input, char *sep)
+{
+	int	i;
+
+	i = 0;
+	if (!input)
+	{
+		dest[0] = '\0';
+		return (1);
+	}
+	if (!sep)
+		return (ft_strlcpy(dest, input, ft_strlen(input) + 1));
+	while (input + i && input + i != sep)
+    {
+        dest[i] = input[i];
+        i++;
+    }
+	dest[i] = '\0';
+	return (i);
+}
+
 int	ft_strcpy_sep(char *dest, char *input, char *sep)
 {
 	int	i;
@@ -69,7 +90,7 @@ int	ft_strlen_sep(char *str, char *sep)
 		return (0);
 	if (!sep)
 		return (ft_strlen(str));
-	while (str[i] && str[i] != *sep)
+	while (str + i && str + i != sep)
 		i++;
-	return (i + 1);
+	return (i);
 }

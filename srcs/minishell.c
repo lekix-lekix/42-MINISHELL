@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/26 14:17:12 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:32:08 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ int	start_parsing(char *prompt)
 	tree = build_ast(&input, NULL);
 	if (tree && check_tree_syntax(&tree) == -1)
 		return (-1);
-	// print_tree(&tree);
+	print_tree(&tree);
 	ft_shell()->exec_tree = tree;
 	ft_start_execution(&tree);
 	return (0);
