@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:14:54 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/20 16:19:55 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/23 15:53:40 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ char	*ft_join(char *s1, char *s2)
 	s_len = ft_strlen(s1);
 	total_len = (ft_strlen(s1) + ft_strlen(s2));
 	new_arr = (char *)malloc(sizeof(char) * (total_len + 1));
-	if (!new_arr)
-		return (NULL);
+	if (!new_arr || gbg_coll(new_arr, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	i = -1;
 	while (s1[++i])
 		new_arr[i] = s1[i];

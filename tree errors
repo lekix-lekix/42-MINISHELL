@@ -1,3 +1,24 @@
-ls|cat-e
-ctrl-d leaks
-valgrind env | grep qqch
+regular failing tests :
+
+echo " $yoo  ca va"
+single quotes with any spaces : crash
+double quotes with any space : invalid read
+empty quotes on the first cmd entered
+expand : $NO_VARIABLE_FOUND (should return enter)
+< outfile : prints a '\n' (and shouldnt)
+check history leaks !
+env -i ./minishell
+append operator
+export hola=bonjour : memory problems
+
+leaks :
+
+to do :
+- fix export
+- fix quotes
+- include quotes in tokenizer for syntax check | keep quotes as a single block
+- fix exit statuses
+- if exit(255) --> shut down whole minishell
+- test all mallocs
+
+valgrind flags :  valgrind --trace-children=yes --show-leak-kinds=all --leak-check=full --suppressions="./no_rl_leaks" ./minishell

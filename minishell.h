@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/20 16:45:29 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/23 15:33:16 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,15 @@
 # include <stdlib.h>
 # include <string.h>
 # include <sys/types.h>
+# include <sys/stat.h>
 # include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h>
 
-# define PER_ERR \
-	"Permission denied, you can't \
-open this file! Or file doesn't exit, Or it's a directory"
-# define CMD_ERR "Command not found!"
+# define PER_ERR "Permission denied"
+# define CMD_ERR "command not found"
 # define OPEN_ERR "Error opening file"
+# define IS_DIR_ERR "Is a directory"
 # define DUP_ERR "An err has occoured with dup2"
 # define FORK_C2 "An Error has occuered with Fork child2"
 # define FORK_C1 "An Error has occuered with Fork child1"
@@ -241,7 +241,7 @@ int					print_env(t_env **lst);
 char				*msh_strdup(const char *s, int mlc_lst);
 
 // paths utils
-char				*ft_check_path(char *cmd, char **env);
+char				*ft_check_path(char *cmd, char **env, int *exit_status);
 void				lst_env_add_back(t_env **lst, t_env *new);
 void				consume_node(t_token **lst, t_token *node);
 int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
@@ -303,8 +303,8 @@ void				ft_reset_ports(bool piped);
 
 // Expanders
 void				ft_heredoc_expander(char *str, int fd);
-int					ft_exec_non_builtins_single_cmd(char **args,
-						t_redir *redirections);
+// int					ft_exec_non_builtins_single_cmd(char **args,
+// 						t_redir *redirections);
 bool				ft_is_valid_var_char(char c);
 char				**ft_expand(char *sr);
 char				*ft_strip_quotes(char *str);

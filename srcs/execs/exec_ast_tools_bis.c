@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_ast_tools_bis.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:10:07 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/05 23:49:17 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/22 14:04:49 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ t_ast	*ast_lst_dup(t_ast **lst, t_ast *node)
 
 	current = *lst;
 	lst_cpy = NULL;
-	if (!node)
-		printf("lst dup node = NULL\n");
 	while (current && current != node)
 	{
 		current_cpy = malloc(sizeof(t_ast));

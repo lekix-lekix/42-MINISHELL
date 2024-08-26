@@ -6,7 +6,11 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:31:03 by sabakar-          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/08/26 06:09:47 by sabakar-         ###   ########.fr       */
+=======
+/*   Updated: 2024/08/23 16:53:33 by kipouliq         ###   ########.fr       */
+>>>>>>> kilian_test_more
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +30,11 @@ int	ft_strncmp_loco(const char *s1, const char *s2, size_t n)
 			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 		i++;
 	}
+<<<<<<< HEAD
 // printf("THE KEYS are equal: %s, %s\n", s1, s2);			
+=======
+	// printf("THE KEYS are equal: %s, %s\n", s1, s2);
+>>>>>>> kilian_test_more
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 

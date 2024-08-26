@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:13:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/02 14:55:25 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/21 18:20:00 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	apply_redir_lst(t_token **lst, t_token *end_node, t_redir **redir_lst)
 		if (current->type == CMD)
 		{
 			redir_save = current->redirections;
-			print_redir_lst(&redir_save);
+			// print_redir_lst(&redir_save);
 			current->redirections = redir_lst_dup(redir_lst);
 			find_last_redir_node(&current->redirections)->next = redir_save;
 		}

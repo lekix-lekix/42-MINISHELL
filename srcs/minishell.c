@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/26 10:28:05 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/26 14:17:12 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,13 +84,15 @@ static void	ft_start_execution(t_ast **tree)
 	ft_shell()->end_exec = 0;
 	ft_shell()->exec_in_par = 0;
 	ft_shell()->full_exec_tree = *tree;
+    ft_shell()->stdin = dup(STDIN_FILENO);
+    ft_shell()->stdout = dup(STDOUT_FILENO);
 	if ((ft_shell())->heredoc_sigint)
 	{
 		// If the program is quited during heredoc,
 		// we have clean the mess afterword I guess
 		printf("WE ARE HERE 98\n");
 		// gbg_coll(NULL, PARSING, FLUSH_ONE);
-		gbg_coll(NULL, ENV, FREE);
+		gbg_coll(NULL, ALL, FLUSH_ALL);
 		// gbg_coll(NULL, ENV, FLUSH_ALL);
 		// clean_token_lst(&nodes->token_node);
 		(ft_shell())->heredoc_sigint = false;
@@ -137,6 +139,7 @@ int	start_parsing(char *prompt)
 		return (-1);
 	input = tokenize_input(prompt);
 	clean_token_lst(&input);
+    print_lst(&input);
 	if (check_redir_syntax(&input) == -1 || check_par_syntax(&input) == -1)
 		return (-1);
 	split_lst_contents(&input);
@@ -156,12 +159,6 @@ int	start_parsing(char *prompt)
 	return (0);
 }
 
-// void	ft_exit(void)
-// {
-// 	gbg_coll(NULL, ALL, FLUSH_ALL);
-// 	exit(0);
-// }
-
 int	main(int argc, char **argv, char **env)
 {
 	t_minishell	*data;
@@ -172,13 +169,11 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		ft_init_signals();
-		data->prompt = readline("./minishell$ ");
+		data->prompt = readline("minishell$ ");
 		if (!data->prompt)
 		{
 			// Also we need to clean here if I'm not mistaking!
-			gbg_coll(NULL, ENV, FLUSH_ALL);
-			gbg_coll(NULL, PARSING, FLUSH_ALL);
-			gbg_coll(NULL, ENV, FREE);
+            gbg_coll(NULL, ALL, FLUSH_ALL);
 			(ft_putstr_fd("exit\n", 1));
 			exit(ft_shell()->exit_status);
 		}

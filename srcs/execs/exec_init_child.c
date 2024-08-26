@@ -6,7 +6,11 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/08/26 05:41:08 by sabakar-         ###   ########.fr       */
+=======
+/*   Updated: 2024/08/23 16:05:45 by kipouliq         ###   ########.fr       */
+>>>>>>> kilian_test_more
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +27,7 @@ int	ft_check_cmds(t_token *token_node)
 	if (ft_is_builtin(token_node->contents[0]))
 	{
 		la_status = ft_exec_builtins(token_node->contents, ft_shell());
+        gbg_coll(NULL, ALL, FLUSH_ALL);
 		exit(la_status);
 	}
 	else
