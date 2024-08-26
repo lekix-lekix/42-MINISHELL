@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/26 14:17:37 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/26 14:18:31 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*ft_handle_dollar(char *str, size_t *i)
 	}
 	else if (!ft_is_valid_var_char(str[*i]))
 	{
-		res = ft_strdup("$");
+		res = ft_strdup("");
 		if (!res || gbg_coll(res, PARSING, ADD))
 			return (gbg_coll(res, PARSING, ADD), exit(255), NULL);
 		return (res);
@@ -51,7 +51,7 @@ char	*ft_handle_dollar(char *str, size_t *i)
 	env_val = ft_get_envlst_content(var, ft_shell());
 	if (!env_val)
 	{
-		res = ft_strdup(str);
+		res = ft_strdup("");
 		if (!res || gbg_coll(res, PARSING, ADD))
 			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 		return (free(var), res);

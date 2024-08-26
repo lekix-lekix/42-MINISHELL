@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prep_exec_child.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:34:26 by lekix             #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/08/21 17:54:07 by sabakar-         ###   ########.fr       */
-=======
-/*   Updated: 2024/08/22 14:04:14 by kipouliq         ###   ########.fr       */
->>>>>>> kilian_test_more
+/*   Updated: 2024/08/26 14:21:52 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +17,6 @@ int	exec_child(t_ast *node)
 	pid_t	*pid;
 	t_lst	*pid_node;
 
-<<<<<<< HEAD
-=======
-	(ft_shell())->signint_child = true;
->>>>>>> kilian_test_more
 	pid = malloc(sizeof(pid_t));
 	if (!pid || gbg_coll(pid, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
