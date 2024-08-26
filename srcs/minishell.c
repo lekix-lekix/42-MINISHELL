@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/23 17:15:30 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/26 12:17:40 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ static void	ft_start_execution(t_ast **tree)
 		// we have clean the mess afterword I guess
 		printf("WE ARE HERE 98\n");
 		// gbg_coll(NULL, PARSING, FLUSH_ONE);
-		gbg_coll(NULL, ENV, FREE);
+		gbg_coll(NULL, ALL, FLUSH_ALL);
 		// gbg_coll(NULL, ENV, FLUSH_ALL);
 		// clean_token_lst(&nodes->token_node);
 		(ft_shell())->heredoc_sigint = false;
@@ -172,9 +172,7 @@ int	main(int argc, char **argv, char **env)
 		if (!data->prompt)
 		{
 			// Also we need to clean here if I'm not mistaking!
-			gbg_coll(NULL, ENV, FLUSH_ALL);
-			gbg_coll(NULL, PARSING, FLUSH_ALL);
-			gbg_coll(NULL, ENV, FREE);
+            gbg_coll(NULL, ALL, FLUSH_ALL);
 			(ft_putstr_fd("exit\n", 1));
 			exit(ft_shell()->exit_status);
 		}

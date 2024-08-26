@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/20 16:26:18 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/26 13:59:33 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,26 @@ void	create_insert_token_nodes(t_token **lst, char **input, char **operator)
 	*input = *operator;
 }
 
+void    find_quote(char **input)
+{
+    char *str;
+    int i;
+
+    i = -1;
+    str = *input;
+    if (!str)
+        return ;
+    while (str[++i])
+    {
+        if (str[i] == '\'' || str[i] == '\"')
+        {
+            *input = ft_strchr(str + i + 1, str[i]);
+            printf("new input = %s\n", *input);
+            return ;
+        }
+    }
+}
+
 t_token	*tokenize_input(char *input)
 {
 	t_token	*root;
@@ -99,6 +119,7 @@ t_token	*tokenize_input(char *input)
 	input_parse = input;
 	while (1)
 	{
+        // find_quote(&input);
 		operator = find_operator(input_parse);
 		if (!operator)
 		{
