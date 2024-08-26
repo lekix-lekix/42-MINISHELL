@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle_par.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:15:37 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/21 13:46:36 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/21 17:54:13 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	prep_exec_par(t_ast *sub_tree, int *after_par_pipe)
 			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
 		if (pid == 0)
 		{
+			(ft_shell())->signint_child = true;
 			set_pipe_stdout(after_par_pipe);
 			ft_start_exec(&sub_tree);
 			close_pipes_lst(&ft_shell()->pipes);

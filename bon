@@ -1,6 +1,8 @@
+NODE ls REDIR LST =====
 redir type = 8
-redir filename = pipe
+redir filename = bon
 42-MEGALIBFT
+bon
 Docker
 Dockers
 log

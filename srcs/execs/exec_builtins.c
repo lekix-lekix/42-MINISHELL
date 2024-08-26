@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:31:03 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/20 16:59:05 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/26 06:09:47 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	ft_strncmp_loco(const char *s1, const char *s2, size_t n)
 			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 		i++;
 	}
-	printf("THE KEYS are equal: %s, %s\n", s1, s2);
+// printf("THE KEYS are equal: %s, %s\n", s1, s2);			
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/21 15:28:17 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/26 10:28:05 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ int	start_parsing(char *prompt)
 	tree = build_ast(&input, NULL);
 	if (tree && check_tree_syntax(&tree) == -1)
 		return (-1);
+	// print_tree(&tree);
 	ft_shell()->exec_tree = tree;
 	ft_start_execution(&tree);
 	return (0);

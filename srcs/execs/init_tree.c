@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/20 11:58:12 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/26 13:46:09 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,10 +115,14 @@ static void	ft_init_leaf(t_ast *node)
 		if (redirections->redir_type == REDIR_HEREDOC)
 		{
 			pipe(p);
+			(signal(SIGQUIT, SIG_IGN));
 			(ft_shell())->signint_child = true;
-			(signal(SIGQUIT, SIG_IGN), pid = fork());
+			pid = fork();
 			if (pid == 0)
+			{	
+				// printf("WE forked and inside heredoc\n");
 				ft_heredoc(io, p);
+			}
 			if (ft_leave_leaf(p, &pid))
 				return ;
 			redirections->heredoc = p[0];

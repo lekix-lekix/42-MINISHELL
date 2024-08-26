@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prep_exec_child.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:34:26 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/20 17:11:35 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/21 17:54:07 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ int	exec_child(t_ast *node)
 {
 	pid_t	*pid;
 	t_lst	*pid_node;
-	
-	(ft_shell())->signint_child = true;
+
 	pid = malloc(sizeof(pid_t));
 	if (!pid || gbg_coll(pid, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
@@ -26,7 +25,10 @@ int	exec_child(t_ast *node)
 		return (perror("bash: fork: "), gbg_coll(NULL, ALL, FLUSH_ALL),
 			exit(255), -1);
 	if (*pid == 0)
+	{
+		(ft_shell())->signint_child = true;
 		ft_check_cmds(node->token_node);
+	};
 	pid_node = create_lst_node(pid);
 	ft_lstadd_back(&ft_shell()->pids, pid_node);
 	ft_shell()->pids_num += 1;

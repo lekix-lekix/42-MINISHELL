@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/20 14:35:43 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/26 13:45:49 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,15 @@ char	*ft_handle_dollar(char *str, size_t *i)
 		return (ft_itoa((ft_shell())->exit_status));
 	}
 	else if (!ft_is_valid_var_char(str[*i]))
-		return (ft_strdup("$"));
+		return (ft_strdup(""));
 	start = *i;
 	while (ft_is_valid_var_char(str[*i]))
 		(*i)++;
 	var = ft_substr(str, start, *i - start);
-	printf("THE VAR IS: %s\n", var);
 	env_val = ft_get_envlst_content(var, (ft_shell()));
+	// printf("THE VAR IS: %s\n", env_val);
 	if (!env_val)
-		return (free(var), ft_strdup(str));
+		return (free(var), ft_strdup(""));
 	return (free(var), ft_strdup(env_val));
 }
 
@@ -57,9 +57,7 @@ static char	*ft_handle_dquote_str(char *str, size_t *i)
 
 	start = *i;
 	while (str[*i] != '"' && str[*i] != '$')
-	{
 		(*i)++;
-	}
 	return (ft_substr(str, start, *i - start));
 }
 
