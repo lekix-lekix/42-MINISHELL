@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:50:13 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/26 18:18:03 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/27 17:47:10 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,49 +41,6 @@ void	create_insert_split_nodes(t_token *prev, t_token *splt_node,
 	}
 	find_last_node(&new_lst)->next = splt_node->next;
 	prev->next = new_lst;
-}
-
-void	split_lst_contents(t_token **lst)
-{
-	t_token	*current;
-	t_token	*prev;
-	char	**contents;
-
-	contents = NULL;
-	prev = NULL;
-	current = *lst;
-	if (!current)
-		return ;
-	while (current)
-	{
-		prev = current;
-		if (current->content)
-		{
-			if (ft_strchr(current->content, '\''))
-            {
-                printf("1\n");
-				contents = msh_split(current->content, '\'', PARSING);
-            }
-			else if (ft_strchr(current->content, '\"'))
-            {
-                printf("2\n");
-				contents = msh_split(current->content, '\"', PARSING);
-            }
-			else
-            {
-                printf("3\n");
-				contents = msh_split(current->content, ' ', PARSING);
-            }
-			if (contents)
-			{
-				create_insert_split_nodes(prev, current, contents);
-				remove_token_node(lst, current);
-				current = *lst;
-				continue ;
-			}
-			current = current->next;
-		}
-	}
 }
 
 void	insert_node_lst(t_token **lst, t_token *node)

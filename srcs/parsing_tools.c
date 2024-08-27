@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:53:14 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/28 18:12:26 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/27 17:29:56 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,35 @@ int	is_an_operator(char c)
 		|| c == '>');
 }
 
+int	is_a_quote(char c)
+{
+	return (c == '\"' || c == '\'');
+}
+
+int	find_next_quote(char *str, char quote, int i)
+{
+	while (str[++i])
+	{
+		if (str[i] == quote)
+			return (i);
+	}
+	return (-1);
+}
+
 char	*find_operator(char *str)
 {
 	int	i;
 
-	i = -1;
+	i = 0;
 	if (!str | !str[0])
 		return (NULL);
-	while (str[++i])
+	while (str && str[i])
 	{
+		if (is_a_quote(str[i]))
+			i = find_next_quote(str, str[i], i);
 		if (is_an_operator(str[i]))
 			return (str + i);
+		i++;
 	}
 	return (NULL);
 }

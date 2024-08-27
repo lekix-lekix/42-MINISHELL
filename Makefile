@@ -6,7 +6,7 @@
 #    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/08/20 16:43:08 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/08/27 17:47:56 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,6 +57,7 @@ SRCS = ./srcs/minishell.c \
 	./srcs/parsing_redir_bis.c \
 	./srcs/parsing_redir_utils.c \
 	./srcs/parsing_redir_utils_bis.c \
+	./srcs/parsing_split_token_content.c \
 	./srcs/print_syntax_errors.c \
 	./srcs/ast_print.c \
 	./srcs/ast_par_utils.c \

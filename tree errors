@@ -1,22 +1,22 @@
 regular failing tests :
 
-echo " $yoo  ca va"
-single quotes with any spaces : crash
-double quotes with any space : invalid read
+> outfile cat : crash
+>> outfile cat : syntax error ?
+
 empty quotes on the first cmd entered
 expand : $NO_VARIABLE_FOUND (should return enter)
 < outfile : prints a '\n' (and shouldnt)
 check history leaks !
 env -i ./minishell
 append operator
-export hola=bonjour : memory problems
+export hola=bonjour : memory problems q
 
 leaks :
 
 to do :
 - fix export
-- fix quotes
-- include quotes in tokenizer for syntax check | keep quotes as a single block
+- fix quotes ----> FIXED !
+- include quotes in tokenizer for syntax check | keep quotes as a single block --> FIXED !
 - fix exit statuses
 - if exit(255) --> shut down whole minishell
 - test all mallocs

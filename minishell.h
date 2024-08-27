@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/26 16:42:41 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/27 16:21:29 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,8 @@ typedef struct s_minishell
 }					t_minishell;
 
 t_minishell			*ft_shell(void);
-
+int					init_data(t_minishell *data, char **envp);
+int					start_parsing(char *prompt);
 int					gbg_coll(void *mem_addr, int which_list, int rule);
 t_env				*get_env_lst(char **envp);
 int					ft_strlen_sep(char *str, char *sep);
@@ -203,7 +204,7 @@ void				remove_token_node(t_token **lst, t_token *node);
 int					only_spaces(char *str);
 void				gbg_delete_node(t_token *node, int mlc_lst);
 int					clean_token_lst(t_token **lst);
-void				split_lst_contents(t_token **lst);
+int					split_lst_contents(t_token **lst);
 int					is_a_token_operator(t_token *node);
 char				*msh_strdup(const char *s, int mlc_lst);
 

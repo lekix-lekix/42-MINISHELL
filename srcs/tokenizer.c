@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/26 17:26:35 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/27 17:29:46 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,7 @@ t_token	*create_cmd_node(char *input, char *sep)
 	t_token	*node;
 	int		cmd_len;
 
-    // printf("input cmd = %s sep = %s\n", input, sep);
 	cmd_len = ft_strlen_sep(input, sep);
-    // printf("cmd len = %d\n", cmd_len);
 	node = malloc(sizeof(t_token));
 	if (!node || gbg_coll(node, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
@@ -81,9 +79,7 @@ void	create_insert_token_nodes(t_token **lst, char **input, char **operator)
 	t_token	*op_node;
 	t_token	*cmd_node;
 
-    // printf("operatr befre op_node = %s\n", *operator);
 	op_node = create_operator_node(operator);
-    // printf("operatr after op_node = %s\n", *operator);
 	cmd_node = create_cmd_node(*input, *operator);
 	insert_node_lst(lst, cmd_node);
 	insert_node_lst(lst, op_node);
@@ -96,13 +92,11 @@ char    *find_quote(char *input)
     int i;
 
     i = -1;
-    printf("findng quote\n");
     while (input[++i])
     {
         if (input[i] == '\'' || input[i] == '\"')
         {
             str = ft_strchr(input + i + 1, input[i]);
-            printf("new input = %s\n", str);
             return (str);
         }
     }
@@ -113,7 +107,7 @@ t_token	*tokenize_input(char *input)
 {
 	t_token	*root;
 	t_token	*cmd_node;
-	char	*end_quote;
+	// char	*end_quote;
 	char	*tmp_input;
 	char	*operator;
 
@@ -121,20 +115,7 @@ t_token	*tokenize_input(char *input)
     tmp_input = NULL;
 	while (1)
 	{
-		printf("hey yo\n");
-		end_quote = find_quote(input);
-        if (!end_quote)
-            printf("NO QUOTE!\n");
-		if (end_quote)
-		{
-            cmd_node = create_cmd_node(input, end_quote + 1);
-            printf("cmd node = %s\n", cmd_node->content);
-            insert_node_lst(&root, cmd_node);
-            input = end_quote + 1;
-            continue ;
-		}
-		operator= find_operator(input);
-		printf("operator = '%s'\n", operator);
+		operator = find_operator(input);
 		if (!operator)
 		{
 			cmd_node = create_cmd_node(input, NULL);

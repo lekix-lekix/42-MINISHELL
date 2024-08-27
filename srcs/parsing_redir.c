@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:13:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/21 18:20:00 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/27 18:19:35 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	handle_redirection(t_token **lst, t_token **redir_node)
 	add_redirection_node(&cmd_node->redirections, new_redir);
 	remove_token_node(lst, *redir_node);
 	remove_token_node(lst, filename_token);
-	*redir_node = *lst;
+	*redir_node = *lst; 
 	return (0);
 }
 

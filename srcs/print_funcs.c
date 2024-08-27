@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:55:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/23 17:09:51 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/27 14:45:26 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,23 @@ void	print_redir_lst(t_redir **lst)
 void	print_lst(t_token **lst)
 {
 	t_token	*root;
+	int		i;
 
 	root = *lst;
 	while (root)
 	{
+		i = 0;
 		printf("--------\n");
-		printf("content = '%s'\n", root->content);
+		if (root->content)
+			printf("content = '%s'\n", root->content);
+		if (root->contents)
+		{
+			while (root->contents[i])
+			{
+				printf("contents[%d] = %s\n", i, root->contents[i]);
+				i++;
+			}
+		}
 		printf("type = %u\n", root->type);
 		if (root->redirections)
 			print_redir_lst(&root->redirections);
@@ -65,19 +76,19 @@ void	print_lst(t_token **lst)
 	}
 }
 
-void    print_ast_lst(t_ast **lst)
+void	print_ast_lst(t_ast **lst)
 {
-    t_ast *current;
+	t_ast	*current;
 
-    current = *lst;
-    while (current)
-    {
-        printf("--------\n");
+	current = *lst;
+	while (current)
+	{
+		printf("--------\n");
 		printf("content = '%s'", current->token_node->contents[0]);
-        if (current->node_type == CMD)
-            printf(" %s\n", current->token_node->contents[0]);
+		if (current->node_type == CMD)
+			printf(" %s\n", current->token_node->contents[0]);
 		if (current->token_node->redirections)
 			print_redir_lst(&current->token_node->redirections);
 		current = current->next;
-    }
+	}
 }
