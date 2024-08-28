@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/26 14:20:31 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/28 18:41:04 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	init_only_child_no_fork(t_token *node)
 	pid_t	pid;
 	int		status;
 
-	if (!node->contents[0])
+	if (!node->contents || !node->contents[0])
 	{
 		ft_shell()->exit_status = ft_check_redirections(node);
 		return (ft_reset_ports(false), 0);

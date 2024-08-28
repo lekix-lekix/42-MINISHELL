@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/27 16:21:29 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/28 18:12:44 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,8 @@ int					check_operator_len(char *str);
 char				*skip_spaces(char *str);
 int					print_env(t_env **lst);
 char				*msh_strdup(const char *s, int mlc_lst);
+int					content_count_words(char *str);
+char				*get_next_word(char **input_str);
 
 // paths utils
 char				*ft_check_path(char *cmd, char **env, int *exit_status);

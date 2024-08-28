@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/27 18:30:27 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/28 18:30:07 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,15 +139,19 @@ int	start_parsing(char *prompt)
 		return (-1);
 	input = tokenize_input(prompt);
 	clean_token_lst(&input);
+    set_redir_lst(&input);
+    printf("===\n");
+    print_lst(&input);
+    printf("===\n");
 	if (check_redir_syntax(&input) == -1 || check_par_syntax(&input) == -1)
 		return (-1);
-	split_lst_contents(&input);
     printf("===\n");
     print_lst(&input);
     printf("===\n");
     if (check_redirections(&input) == -1)
 		return (-1);
-    printf("===\n");
+	split_lst_contents(&input);
+    printf("==============\n");
     print_lst(&input);
     printf("===\n");
 	clean_token_lst(&input);
