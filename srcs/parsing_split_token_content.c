@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_split_token_content.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:46:45 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/28 13:48:44 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/28 15:05:04 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ int	split_lst_contents(t_token **lst)
 		{
 			content_cpy = msh_strdup(current->content, PARSING);
 			words_count = content_count_words(content_cpy);
-            printf("words count = %d\n", words_count);
 			current->contents = malloc(sizeof(char *) * (words_count + 1));
 			if (!current->contents || gbg_coll(current->contents, PARSING, ADD))
 				return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
@@ -102,7 +101,7 @@ int	split_lst_contents(t_token **lst)
 			while (++i < words_count)
             {
 				current->contents[i] = get_next_word(&content_cpy);
-                printf("current->contents = %s\n", current->contents[i]);
+                // printf("current->contents = %s\n", current->contents[i]);
             }
 			current->contents[words_count] = NULL;
 		}

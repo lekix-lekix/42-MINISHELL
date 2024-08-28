@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:36:19 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/28 14:42:39 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/28 14:44:12 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*ft_strip_quotes(char *str)
 	j = 0;
 	ret = ft_calloc(1 + ft_unquoted_strlen(str), sizeof(char));
 	if (!ret || gbg_coll(ret, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+						return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	while (str[i])
 	{
 		if (str[i] == '"' || str[i] == '\'')

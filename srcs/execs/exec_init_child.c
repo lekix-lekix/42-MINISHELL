@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/28 12:01:50 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/28 15:05:31 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ int	init_only_child_no_fork(t_token *node)
 		return (ft_reset_ports(false), 0);
 	}
 	ft_check_redirections(node);
-	printf("THE FST ARGS OF THE NODE: %s\n", node->content);
-	// printf("THE SEC ARGS OF THE NODE: %s\n", node->contents[1]);
 	if (ft_is_builtin(node->contents[0]))
 		return (ft_exec_builtins(node->contents, ft_shell()),
 			ft_reset_ports(false), 0);
