@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_non_builtins.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/26 14:20:19 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:42:39 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	ft_exec_non_builtins(t_token *node)
 	if (!la_path)
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(exit_status), -1);
 	// dprintf(2, "launching cmd %s\n", node->contents[0]);
-	if (execve(la_path, node->contents, ft_shell()->env_args) == -1)
+	if (execve(la_path, node->contents, env_args) == -1)
 		return (perror("bash: execve: "), gbg_coll(NULL, ALL, FLUSH_ALL), -1);
 	return (0);
 }

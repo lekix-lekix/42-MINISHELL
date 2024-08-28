@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:31:03 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/26 14:19:25 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/28 11:54:29 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int	ft_exec_builtins(char **args, t_minishell *data)
 
 bool	ft_is_builtin(char *arg)
 {
+	printf("THE INCOMING ARG: %s\n", arg);
 	if (!ft_strncmp_loco(arg, "cd", ft_strlen(arg)) || !ft_strncmp_loco(arg,
 			"pwd", ft_strlen(arg)) || !ft_strncmp_loco("echo", arg,
 			ft_strlen(arg)) || !ft_strncmp_loco(arg, "export", ft_strlen(arg))

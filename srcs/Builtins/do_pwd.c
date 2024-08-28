@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:20:35 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/20 13:48:47 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:46:05 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,6 @@ int	ft_exec_pwd(char **args)
 		return (1);
 	ft_putstr_fd(cwd, 1);
 	ft_putstr_fd("\n", 1);
+	free(cwd);
 	return (0);
 }

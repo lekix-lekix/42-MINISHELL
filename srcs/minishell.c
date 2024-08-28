@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/27 18:30:27 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/28 14:11:21 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ static void	ft_start_execution(t_ast **tree)
 
 	signal(SIGQUIT, ft_sigquit_handler);
 	nodes = *tree;
+	// print_tree(&nodes);
 	ft_init_tree(nodes);
 	ft_shell()->pids = NULL;
 	ft_shell()->pipes = NULL;
@@ -146,6 +147,8 @@ int	start_parsing(char *prompt)
     print_lst(&input);
     printf("===\n");
     if (check_redirections(&input) == -1)
+	// print_lst(&input);
+	if (check_redirections(&input) == -1)
 		return (-1);
     printf("===\n");
     print_lst(&input);
@@ -188,6 +191,7 @@ int	main(int argc, char **argv, char **env)
 				add_history(data->prompt);
 			start_parsing(data->prompt);
 			gbg_coll(NULL, PARSING, FLUSH_ONE);
+			// gbg_coll(NULL, PARSING, FLUSH_ALL);
 			free(data->prompt);
 		}
 	}
