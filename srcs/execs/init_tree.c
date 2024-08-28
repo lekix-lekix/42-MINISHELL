@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_tree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/26 14:20:40 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/28 13:00:39 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,23 +71,28 @@ char	**ft_concat_str_arr(char **arr, char **arr2)
 	len2 = get_arr_len(arr2);
 	total_len = len1 + len2;
 	res = (char **)malloc(sizeof(char *) * (total_len + 1));
-	if (!res || gbg_coll(res, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+	// if (!res || gbg_coll(res, PARSING, ADD))
+	// 	return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	x = -1;
 	while (++x < len1)
 	{
+		// res[x] = ft_strdup(arr[x]);
 		res[x] = msh_strdup(arr[x], PARSING);
-		// free(arr[x]);
+		free(arr[x]);
 	}
 	// free(arr);
 	y = -1;
 	while (++y < len2)
 	{
 		res[x++] = msh_strdup(arr2[y], PARSING);
+		// res[x++] = ft_strdup(arr2[y]);
 		// free(arr2[y]);
 	}
 	// free(arr2);
 	res[total_len] = NULL;
+	// int g = -1;
+	// while (res[++g])
+	// 	printf("THE CONTENTS IN cont: %s\n", res[g]);
 	return (res);
 }
 
@@ -103,6 +108,7 @@ static void	ft_init_leaf(t_ast *node)
 
 	idx = -1;
 	io = node->token_node;
+	// print_lst(&io);
 	temp_contents = NULL;
 	redirections = node->token_node->redirections;
 	while (io->contents[++idx])
