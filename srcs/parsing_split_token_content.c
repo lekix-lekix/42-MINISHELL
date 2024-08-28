@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:46:45 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/27 18:28:25 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/28 13:48:44 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	content_count_words(char *str)
 	return (count);
 }
 
-char	*quotes_block(char *str, char **input_str, int i)
+char	*get_quotes_block(char *str, char **input_str, int i)
 {
 	char	*word;
 	char	*sep;
@@ -66,7 +66,7 @@ char	*get_next_word(char **input_str)
 	while (str[i] && ft_is_space(str[i]))
 		i++;
 	if (str[i] == '\'' || str[i] == '\"')
-        return (quotes_block(str, input_str, i));
+        return (get_quotes_block(str, input_str, i));
 	j = i;
 	while (str[j] && !ft_is_space(str[j]))
 		j++;
