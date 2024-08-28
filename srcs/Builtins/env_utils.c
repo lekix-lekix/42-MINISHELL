@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/23 17:36:02 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/28 14:41:06 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,20 +91,19 @@ char	*ft_extract_val(char *str)
 	char	*final_str;
 
 	i = 0;
+	final_str = NULL;
 	while (str[i])
 	{
 		if (str[i] == '=')
 		{
-			final_str = ft_substr(final_str, 0, i + 1);
+			final_str = ft_substr(str, 0, i + 1);
 			if (!final_str || gbg_coll(final_str, ENV, ADD))
 				return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 			return (final_str);
 		}
 		i++;
 	}
-	final_str = ft_strdup(str);
-	if (!final_str || gbg_coll(final_str, ENV, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+	final_str = msh_strdup(str, ENV);
 	return (final_str);
 }
 
