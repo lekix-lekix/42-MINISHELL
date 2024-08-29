@@ -1,8 +1,5 @@
 regular failing tests :
 
-> outfile cat : crash
->> outfile cat : syntax error ?
-
 empty quotes on the first cmd entered
 expand : $NO_VARIABLE_FOUND (should return enter)
 < outfile : prints a '\n' (and shouldnt)
@@ -21,4 +18,4 @@ to do :
 - if exit(255) --> shut down whole minishell
 - test all mallocs
 
-valgrind flags :  valgrind --trace-children=yes --show-leak-kinds=all --leak-check=full --suppressions="./no_rl_leaks" ./minishell
+valgrind flags :  valgrind --trace-children=yes --show-leak-kinds=all --leak-check=full --suppressions="./no_rl_leaks" ./minishell  

@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:46:45 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/28 13:48:44 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/29 16:16:08 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	*get_next_word(char **input_str)
 	while (str[i] && ft_is_space(str[i]))
 		i++;
 	if (str[i] == '\'' || str[i] == '\"')
-        return (get_quotes_block(str, input_str, i));
+		return (get_quotes_block(str, input_str, i));
 	j = i;
 	while (str[j] && !ft_is_space(str[j]))
 		j++;
@@ -92,18 +92,22 @@ int	split_lst_contents(t_token **lst)
 	{
 		if (current->content)
 		{
-			content_cpy = msh_strdup(current->content, PARSING);
-			words_count = content_count_words(content_cpy);
-            printf("words count = %d\n", words_count);
+			words_count = content_count_words(current->content);
+			if (!words_count)
+			{
+				content_cpy = malloc(sizeof(char));
+				if (!content_cpy || gbg_coll(content_cpy, PARSING, ADD))
+					return (gbg_coll(NULL, ALL, FLUSH_ALL));
+				content_cpy[0] = '\0';
+			}
+			else
+				content_cpy = msh_strdup(current->content, PARSING);
 			current->contents = malloc(sizeof(char *) * (words_count + 1));
 			if (!current->contents || gbg_coll(current->contents, PARSING, ADD))
 				return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
 			i = -1;
 			while (++i < words_count)
-            {
 				current->contents[i] = get_next_word(&content_cpy);
-                printf("current->contents = %s\n", current->contents[i]);
-            }
 			current->contents[words_count] = NULL;
 		}
 		current = current->next;

@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/28 18:30:07 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/29 17:08:50 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,29 +138,22 @@ int	start_parsing(char *prompt)
 	if (check_quotes(prompt))
 		return (-1);
 	input = tokenize_input(prompt);
+    // printf("=======\n");
+    // print_lst(&input);
+    // printf("=======\n");
 	clean_token_lst(&input);
     set_redir_lst(&input);
-    printf("===\n");
-    print_lst(&input);
-    printf("===\n");
 	if (check_redir_syntax(&input) == -1 || check_par_syntax(&input) == -1)
 		return (-1);
-    printf("===\n");
-    print_lst(&input);
-    printf("===\n");
     if (check_redirections(&input) == -1)
 		return (-1);
 	split_lst_contents(&input);
-    printf("==============\n");
-    print_lst(&input);
-    printf("===\n");
 	clean_token_lst(&input);
-	// join_cmd_args(&input);
 	check_delete_global_par(&input);
 	set_par_lst(&input);
 	ft_shell()->les_token = lst_dup(&input, NULL);
 	tree = build_ast(&input, NULL);
-	print_tree(&tree);
+	// print_tree(&tree);
 	if (tree && check_tree_syntax(&tree) == -1)
 		return (-1);
 	ft_shell()->exec_tree = tree;

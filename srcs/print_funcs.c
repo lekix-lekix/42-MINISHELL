@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:55:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/27 14:45:26 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/29 16:54:05 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	print_lst(t_token **lst)
 	{
 		i = 0;
 		printf("--------\n");
+        // printf("node addr = %p\n", root);
 		if (root->content)
 			printf("content = '%s'\n", root->content);
 		if (root->contents)
