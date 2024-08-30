@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   paths_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:19:27 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/23 16:22:08 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/30 22:13:11 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,11 @@ char	*check_cmd_access(char *cmd, int *exit_status)
 	if (err == 0)
 	{
 		stat(cmd, &file_stat);
-		if (file_stat.st_mode == 16877)
+		if (S_ISDIR(file_stat.st_mode))
 			return (print_msh_error(IS_DIR_ERR, cmd), *exit_status = 126, NULL);
 	}
 	else if (err == -1 && errno == EACCES)
-		return (print_msh_error(PER_ERR, cmd), *exit_status = 126, NULL);
+		return (print_msh_error(PER_ERR, cmd), *exit_status = 127, NULL);
 	return (cmd);
 }
 

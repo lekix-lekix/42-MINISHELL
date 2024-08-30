@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/30 06:31:05 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/30 21:44:06 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,10 @@ char	*ft_get_envlst_content(char *key, t_minishell *data)
 	{
 		// I'm using a function that I shuldn't use here,
 		// don't delete this comment unless you change this function
-		if (!ft_strncmp_loco(key, envlst->field, ft_strlen(key)))
+
+        // that is something you shouldnt use indeed
+		// if (!ft_strncmp_loco(key, envlst->field, ft_strlen(key)))
+        if (!ft_strcmp(key, envlst->field))
 			return (envlst->content);
 		envlst = envlst->next;
 	}
