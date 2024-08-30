@@ -1,12 +1,14 @@
 regular failing tests :
 
+export=" sdjalkdj sasd "
+fd leaks (stdin stdout dup)
+infinite loop : unable to quit with ctrl-d
 empty quotes on the first cmd entered
 expand : $NO_VARIABLE_FOUND (should return enter)
-< outfile : prints a '\n' (and shouldnt)
+< outfile : prints a '\n' (and shouldnt) / crash
 check history leaks !
 env -i ./minishell
 append operator
-export hola=bonjour : memory problems q
 
 leaks :
 

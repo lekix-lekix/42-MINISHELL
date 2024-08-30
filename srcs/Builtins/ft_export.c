@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:02:12 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/20 13:59:43 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/30 07:05:43 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,12 +78,12 @@ int	ft_exec_export(char **args)
 	int		exit_s;
 	char	*key;
 	t_env	*envlst;
-	t_env	*le_env;
+	// t_env	*le_env;
 
 	exit_s = 0;
 	i = 1;
 	envlst = ft_shell()->expanded_env;
-	le_env = ft_shell()->env_lst;
+	// le_env = ft_shell()->env_lst;
 	if (!args[1] || args[1][0] == '$')
 		return ( ft_export_list(&envlst), 0);
 	while (args[i])

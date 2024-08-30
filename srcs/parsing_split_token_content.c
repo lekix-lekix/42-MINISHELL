@@ -3,14 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_split_token_content.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:46:45 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/29 16:16:08 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/30 13:58:57 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	is_quote(char c)
+{
+	return (c == '\'' || c == '\"');
+}
+
+int	get_end_quote(char *str, int i, char c)
+{
+	while (str && str[i] != c)
+		i++;
+	return (i);
+}
 
 int	content_count_words(char *str)
 {
@@ -23,17 +35,16 @@ int	content_count_words(char *str)
 	{
 		while (str[i] && ft_is_space(str[i]))
 			i++;
-		if (str[i] == '\'' || str[i] == '\"')
-		{
-			str = ft_strchr(str + i + 1, str[i]) + 1;
+		if (str[i])
 			count++;
-			i = 0;
-			continue ;
-		}
-		if (str[i] && !ft_is_space(str[i]))
-			count++;
+		if (is_quote(str[i]))
+			i = get_end_quote(str, i + 1, str[i]) + 1;
 		while (str[i] && !ft_is_space(str[i]))
+		{
+			if (is_quote(str[i]))
+				i = get_end_quote(str, i + 1, str[i]);
 			i++;
+		}
 	}
 	return (count);
 }
@@ -52,6 +63,21 @@ char	*get_quotes_block(char *str, char **input_str, int i)
 	return (word);
 }
 
+int	get_end_word_idx(char *str, int i)
+{
+	while (str[i])
+	{
+		if (i > 0 && is_quote(str[i]))
+			return (i);
+		if (is_quote(str[i]))
+			i = get_end_quote(str, i + 1, str[i]);
+		if (ft_is_space(str[i]))
+			return (i);
+		i++;
+	}
+	return (i);
+}
+
 char	*get_next_word(char **input_str)
 {
 	char	*word;
@@ -65,11 +91,7 @@ char	*get_next_word(char **input_str)
 		return (NULL);
 	while (str[i] && ft_is_space(str[i]))
 		i++;
-	if (str[i] == '\'' || str[i] == '\"')
-		return (get_quotes_block(str, input_str, i));
-	j = i;
-	while (str[j] && !ft_is_space(str[j]))
-		j++;
+	j = get_end_word_idx(str, i);
 	word = malloc(sizeof(char) * (ft_strlen_sep(str + i, str + j) + 1));
 	if (!word || gbg_coll(word, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
@@ -93,6 +115,7 @@ int	split_lst_contents(t_token **lst)
 		if (current->content)
 		{
 			words_count = content_count_words(current->content);
+			// dprintf(2, "words count = %d\n", words_count);
 			if (!words_count)
 			{
 				content_cpy = malloc(sizeof(char));
@@ -107,7 +130,11 @@ int	split_lst_contents(t_token **lst)
 				return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
 			i = -1;
 			while (++i < words_count)
+			{
 				current->contents[i] = get_next_word(&content_cpy);
+				// dprintf(2, "current->contents[%d] = %s\n", i,
+					// current->contents[i]);
+			}
 			current->contents[words_count] = NULL;
 		}
 		current = current->next;

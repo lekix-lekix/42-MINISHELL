@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_funcs.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:55:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/29 16:54:05 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/30 09:53:47 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	print_env(t_env **lst)
 	node = *lst;
 	while (node)
 	{
-		printf("%s", node->field);
+		printf("%s=", node->field);
 		printf("%s\n", node->content);
 		node = node->next;
 	}

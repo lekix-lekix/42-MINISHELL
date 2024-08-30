@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_redir.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:13:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/29 16:18:41 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/30 14:04:01 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,15 @@ int	handle_redirection(t_token **lst, t_token **redir_operator)
 		return (-1);
 	filename_token = (*redir_operator)->next;
 	if (content_count_words(filename_token->content) > 1)
+    {
+        // printf("nb of words = %d\n", content_count_words(filename_token->content));
 		filename_token->type = CMD;
+    }
 	filename = get_next_word(&filename_token->content);
+    // printf("filename token after gnw = %s\n", filename_token->content);
 	new_redir = create_redir_node((*redir_operator)->type, filename);
 	redir_cmd = find_redir_node(lst, *redir_operator);
+    // printf("redir cmd = %s\n", redir_cmd->content);
 	if (!redir_cmd)
 	{
 		add_redirection_node(&filename_token->redirections, new_redir);

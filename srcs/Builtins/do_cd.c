@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:44:43 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/20 09:50:36 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/30 09:17:59 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	ft_cdhome(t_minishell *data);
 static int	ft_change_cwd(void);
-static int	ft_cderr_msg(char *err_msg);
+// static int	ft_cderr_msg(char *err_msg);
 
 static int	ft_change_cwd(void)
 {
@@ -39,20 +39,28 @@ static int	ft_cdhome(t_minishell *data)
 	return (1);
 }
 
-static int	ft_cderr_msg(char *err_msg)
-{
-	ft_putstr_fd("minishell: cd: `", 2);
-	ft_putstr_fd(err_msg, 2);
-	ft_putstr_fd("' can't cd!\n", 2);
-	return (1);
-}
+// static int	ft_cderr_msg(char *err_msg)
+// {
+// 	ft_putstr_fd("minishell: cd: `", 2);
+// 	ft_putstr_fd(err_msg, 2);
+// 	ft_putstr_fd("' can't cd!\n", 2);
+// 	return (1);
+// }
 
 int	ft_do_cd(char **path, t_minishell *data)
 {
 	if (!path[1])
 		return (ft_cdhome(data));
+    if (get_arr_len(path) > 2)
+    {
+        write(2, "minishell: cd: too many arguments\n", 35);
+        return (1);
+    }
 	if (chdir(path[1]) != ENO_SUCCESS)
-		return (ft_cderr_msg(path[1]));
+    {
+        perror("minishell: cd");
+		return (1);
+    }
 	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD", data), false);
 	return (ft_change_cwd());
 }

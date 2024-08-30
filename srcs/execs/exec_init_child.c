@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_init_child.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/28 18:41:04 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/30 06:40:13 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,10 @@ int	init_only_child_no_fork(t_token *node)
 	}
 	ft_check_redirections(node);
 	if (ft_is_builtin(node->contents[0]))
-		return (ft_exec_builtins(node->contents, ft_shell()),
-			ft_reset_ports(false), 0);
+    {
+        ft_shell()->exit_status = ft_exec_builtins(node->contents, ft_shell());
+		return (ft_reset_ports(false), 0);
+    }
 	pid = fork();
 	if (pid == -1)
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), perror("bash: fork"), exit(255),

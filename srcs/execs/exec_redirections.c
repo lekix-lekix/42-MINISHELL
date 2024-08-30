@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/29 12:04:37 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/30 15:16:50 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,17 @@ int	ft_in(t_redir *redirections, int *le_status)
 	if (!redirections->filename)
 	{
 		// printf("There wasn't a filename\n");
+        // dprintf(2, "filename pb\n");
 		*le_status = ft_errmsg();
 		return (*le_status);
 	}
 	fd = open(redirections->filename, O_RDONLY);
 	if (fd == -1)
 	{
+        dprintf(2, "filename = '%s'\n", redirections->filename);
 		// printf("There was a problem opening the file\n");
+        // dprintf(2, "open problem\n");
+        // perror("open :");
 		*le_status = ft_errmsg();
 		return (*le_status);
 	}
@@ -93,6 +97,8 @@ int	ft_check_redirections(t_token *node)
 	int		le_status;
 
 	redirections = node->redirections;
+    expand_redirections(&redirections);
+    // print_redir_lst(&redirections);
 	while (redirections)
 	{
 		if (ft_strcmp(redirections->filename, "pipe") == 0)

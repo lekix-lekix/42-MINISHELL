@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/29 16:58:05 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/30 06:21:13 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,11 @@ t_token	*tokenize_input(char *input)
 {
 	t_token	*root;
 	t_token	*cmd_node;
-	char	*tmp_input;
+	// char	*tmp_input;
 	char	*operator;
 
 	root = NULL;
-    tmp_input = NULL;
+    // tmp_input = NULL;
 	while (1)
 	{
 		operator = find_operator(input);

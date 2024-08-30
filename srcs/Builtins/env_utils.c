@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/23 17:36:02 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/30 06:31:05 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,6 @@ void	ft_update_envlst(char *key, char *value, bool create)
 		if (value)
 			lst_env_add_back(&le_env, ft_envlst_new(key, value));
 	}
-	// print_env(&le_env);
-	// print_env(&envlst);
 }
 
 char	*ft_extract_val(char *str)
@@ -91,11 +89,12 @@ char	*ft_extract_val(char *str)
 	char	*final_str;
 
 	i = 0;
+    final_str = NULL;
 	while (str[i])
 	{
 		if (str[i] == '=')
 		{
-			final_str = ft_substr(final_str, 0, i + 1);
+			final_str = ft_substr(str, 0, i + 1);
 			if (!final_str || gbg_coll(final_str, ENV, ADD))
 				return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 			return (final_str);
@@ -119,13 +118,12 @@ char	*ft_extract_key(char *str)
 		if (str[i] == '=')
 		{
 			i++;
-            final_str = ft_substr(str, i, ft_strlen(str) - i);
-            if (!final_str || gbg_coll(final_str, ENV, ADD))
-                return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+			final_str = ft_substr(str, i, ft_strlen(str) - i);
+			if (!final_str || gbg_coll(final_str, ENV, ADD))
+				return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 			return (final_str);
 		}
 		i++;
 	}
 	return (NULL);
 }
-    

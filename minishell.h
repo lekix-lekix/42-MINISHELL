@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/29 12:02:23 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/30 15:09:07 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,6 +318,7 @@ size_t				ft_count_match(char *pattern);
 bool				ft_match_star(char *pattern, char *str);
 char				**ft_globaler(char *str);
 size_t				get_arr_len(char **expanded);
+void				expand_redirections(t_redir **redirections);
 
 // Exec AST tools
 void				set_is_in_par(t_ast *root, int flag);
