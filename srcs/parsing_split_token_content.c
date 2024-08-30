@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:46:45 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/30 13:58:57 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/30 20:01:12 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ int	get_end_word_idx(char *str, int i)
 {
 	while (str[i])
 	{
-		if (i > 0 && is_quote(str[i]))
-			return (i);
+		// if (i > 0 && is_quote(str[i]))
+		// 	return (i);
 		if (is_quote(str[i]))
 			i = get_end_quote(str, i + 1, str[i]);
 		if (ft_is_space(str[i]))

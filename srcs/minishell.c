@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/30 14:11:27 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/30 21:13:38 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,10 +212,10 @@ int	start_parsing(char *prompt)
 	if (check_redir_syntax(&input) == -1 || check_par_syntax(&input) == -1)
 		return (-1);
 	// printf("==============\n");
-	// printf("=======\n");
+    join_cmd_args(&input);
+    // printf("=======\n");
 	// print_lst(&input);
 	// printf("=======\n");
-    join_cmd_args(&input);
 	// split_lst_contents(&input);
 	clean_token_lst(&input);
 	check_delete_global_par(&input);

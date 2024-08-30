@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:13:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/30 14:04:01 by lekix            ###   ########.fr       */
+/*   Updated: 2024/08/30 20:05:36 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	handle_redirection(t_token **lst, t_token **redir_operator)
 	filename_token = (*redir_operator)->next;
 	if (content_count_words(filename_token->content) > 1)
     {
-        // printf("nb of words = %d\n", content_count_words(filename_token->content));
+        printf("nb of words = %d\n", content_count_words(filename_token->content));
 		filename_token->type = CMD;
     }
 	filename = get_next_word(&filename_token->content);
