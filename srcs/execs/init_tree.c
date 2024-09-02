@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/01 18:01:24 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/02 14:49:03 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,22 +70,15 @@ char	**ft_concat_str_arr(char **arr, char **arr2)
 	len1 = get_arr_len(arr);
 	len2 = get_arr_len(arr2);
 	total_len = len1 + len2;
-	// printf("THE TOTAL LEN IS: %d\n", total_len);
 	res = (char **)malloc(sizeof(char *) * (total_len + 1));
 	if (!res || gbg_coll(res, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	x = -1;
 	while (++x < len1)
-	{
-		// if (!arr[x] || !*arr[x])
-		// 	continue ;
 		res[x] = msh_strdup(arr[x], PARSING);
-	}
 	y = -1;
 	while (++y < len2)
 	{
-		// if (!arr2[y] || !*arr2[y])
-		// 	continue ;
 		res[x] = msh_strdup(arr2[y], PARSING);
 		x++;
 	}
@@ -110,7 +103,6 @@ static void	ft_init_leaf(t_ast *node)
 	while (io->contents[++idx])
 	{
 		la_args = ft_expand(io->contents[idx]);
-		// printf("THE RETURNED SH!T: %s\n", la_args[0]);
 		temp_contents = ft_concat_str_arr(temp_contents, la_args);
 	}
 	io->contents = temp_contents;
