@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/28 14:41:06 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/02 14:04:26 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,10 @@ char	*ft_get_envlst_content(char *key, t_minishell *data)
 	{
 		// I'm using a function that I shuldn't use here,
 		// don't delete this comment unless you change this function
-		if (!ft_strncmp_loco(key, envlst->field, ft_strlen(key)))
+
+        // that is something you shouldnt use indeed
+		// if (!ft_strncmp_loco(key, envlst->field, ft_strlen(key)))
+        if (!ft_strcmp(key, envlst->field))
 			return (envlst->content);
 		envlst = envlst->next;
 	}
@@ -81,8 +84,6 @@ void	ft_update_envlst(char *key, char *value, bool create)
 		if (value)
 			lst_env_add_back(&le_env, ft_envlst_new(key, value));
 	}
-	// print_env(&le_env);
-	// print_env(&envlst);
 }
 
 char	*ft_extract_val(char *str)
@@ -91,7 +92,7 @@ char	*ft_extract_val(char *str)
 	char	*final_str;
 
 	i = 0;
-	final_str = NULL;
+    final_str = NULL;
 	while (str[i])
 	{
 		if (str[i] == '=')
@@ -118,13 +119,12 @@ char	*ft_extract_key(char *str)
 		if (str[i] == '=')
 		{
 			i++;
-            final_str = ft_substr(str, i, ft_strlen(str) - i);
-            if (!final_str || gbg_coll(final_str, ENV, ADD))
-                return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+			final_str = ft_substr(str, i, ft_strlen(str) - i);
+			if (!final_str || gbg_coll(final_str, ENV, ADD))
+				return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 			return (final_str);
 		}
 		i++;
 	}
 	return (NULL);
 }
-    

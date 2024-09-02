@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/27 17:29:46 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/08/30 06:21:13 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	create_insert_token_nodes(t_token **lst, char **input, char **operator)
 	cmd_node = create_cmd_node(*input, *operator);
 	insert_node_lst(lst, cmd_node);
 	insert_node_lst(lst, op_node);
-	*input = *operator + 1;
+	*input = *operator + ft_strlen(op_node->content);
 }
 
 char    *find_quote(char *input)
@@ -107,15 +107,15 @@ t_token	*tokenize_input(char *input)
 {
 	t_token	*root;
 	t_token	*cmd_node;
-	// char	*end_quote;
-	char	*tmp_input;
+	// char	*tmp_input;
 	char	*operator;
 
 	root = NULL;
-    tmp_input = NULL;
+    // tmp_input = NULL;
 	while (1)
 	{
 		operator = find_operator(input);
+        // printf("operator")
 		if (!operator)
 		{
 			cmd_node = create_cmd_node(input, NULL);

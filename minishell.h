@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/27 16:21:29 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/02 13:51:21 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,8 +241,12 @@ int					check_operator_len(char *str);
 char				*skip_spaces(char *str);
 int					print_env(t_env **lst);
 char				*msh_strdup(const char *s, int mlc_lst);
+int					content_count_words(char *str);
+char				*get_next_word(char **input_str);
 
 // paths utils
+// char				*ft_check_path(char **contents, char **env,
+					// int *exit_status, int *i);
 char				*ft_check_path(char *cmd, char **env, int *exit_status);
 void				lst_env_add_back(t_env **lst, t_env *new);
 void				consume_node(t_token **lst, t_token *node);
@@ -316,6 +320,7 @@ size_t				ft_count_match(char *pattern);
 bool				ft_match_star(char *pattern, char *str);
 char				**ft_globaler(char *str);
 size_t				get_arr_len(char **expanded);
+void				expand_redirections(t_redir **redirections);
 
 // Exec AST tools
 void				set_is_in_par(t_ast *root, int flag);

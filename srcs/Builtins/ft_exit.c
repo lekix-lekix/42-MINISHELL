@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 17:18:16 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/19 05:07:31 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/30 09:42:41 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 static void	ft_err(char *sr_err)
 {
-	gbg_coll(NULL, ALL, FLUSH_ALL);
 	ft_putstr_fd("minishell: exit: ", 2);
 	ft_putstr_fd(sr_err, 2);
 	ft_putstr_fd(": numeric argument required\n", 2);
+	// gbg_coll(NULL, ALL, FLUSH_ALL);
 }
 
 static bool	ft_isnumber(char *str)
@@ -56,9 +56,7 @@ static int	ft_exittoi(char *sr)
 	sign = 1;
 	ft_skip_spaces_and_get_sign(sr, &i, &sign);
 	if (!ft_isnumber(sr + i))
-	{	
-		(ft_err(sr));
-	}
+		return (ft_err(sr), 2);
 	result = 0;
 	while (sr[i])
 	{
@@ -79,12 +77,13 @@ void	ft_exit(char **args)
 	{
 		if (args[2] && ft_isnumber(args[1]))
 		{
-			gbg_coll(NULL, ALL, FLUSH_ALL);
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+            return ;
 			// exit(ENO_GENERAL);
 		}
 		else
 			exit_s = ft_exittoi(args[1]);
 	}
-	// exit(exit_s);
+    gbg_coll(NULL, ALL, FLUSH_ALL);
+	exit(exit_s);
 }

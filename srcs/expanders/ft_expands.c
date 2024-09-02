@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expands.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/28 14:23:46 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/02 14:05:25 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ char	**ft_expand(char *sr)
 	// free(sr);
 	expanded = malloc(sizeof(char *) * (get_arr_len(globaled) + 1));
 	if (!expanded || gbg_coll(expanded, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	while (globaled[x])
 	{
 		expanded[x] = ft_strip_quotes(globaled[x]);
@@ -196,4 +196,17 @@ char	**ft_expand(char *sr)
 	}
 	expanded[x] = 0;
 	return (expanded);
+}
+
+void    expand_redirections(t_redir **redirections)
+{
+    t_redir *current;
+
+    current = *redirections;
+    while (current)
+    {
+        current->filename = ft_pre_expand(current->filename);
+        current->filename = ft_strip_quotes(current->filename);
+        current = current->next;
+    }
 }

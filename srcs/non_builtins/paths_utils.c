@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:19:27 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/23 16:22:08 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/02 13:50:16 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,34 @@ int	print_msh_error(char *err, char *cmd)
 	write(2, str, ft_strlen(str));
 	return (0);
 }
+
+// char	*ft_check_path(char **contents, char **env, int *exit_status, int *i)
+// {
+// 	char	**paths;
+// 	char	*fpath;
+// 	char	*cmd;
+
+//     printf("i = %d\n", *i);
+// 	cmd = contents[*i];
+// 	if (!contents || !cmd)
+// 		return (*exit_status = 0, NULL);
+// 	if (cmd[0])
+//     {
+//         *i = *i + 1;
+// 		return (ft_check_path(contents, env, exit_status, i));
+//     }
+// 	fpath = check_cmd_access(cmd, exit_status);
+// 	if (!fpath)
+// 		return (NULL);
+// 	paths = ft_get_paths(env);
+// 	if (!paths || paths[0] == NULL)
+// 		return (NULL);
+// 	fpath = check_paths(paths, cmd, exit_status);
+// 	if (fpath != NULL)
+// 		return (fpath);
+// 	return (ft_free(paths), NULL);
+// }
+
 
 char	*ft_check_path(char *cmd, char **env, int *exit_status)
 {
@@ -80,11 +108,11 @@ char	*check_cmd_access(char *cmd, int *exit_status)
 	if (err == 0)
 	{
 		stat(cmd, &file_stat);
-		if (file_stat.st_mode == 16877)
+		if (S_ISDIR(file_stat.st_mode))
 			return (print_msh_error(IS_DIR_ERR, cmd), *exit_status = 126, NULL);
 	}
 	else if (err == -1 && errno == EACCES)
-		return (print_msh_error(PER_ERR, cmd), *exit_status = 126, NULL);
+		return (print_msh_error(PER_ERR, cmd), *exit_status = 127, NULL);
 	return (cmd);
 }
 

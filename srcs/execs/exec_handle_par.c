@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle_par.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:15:37 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/21 17:54:13 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/30 06:20:40 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,12 @@ int	build_run_sub_exec(t_token **par_lst)
 int	handle_par_exec(t_ast **current)
 {
 	t_token	*par_lst;
-	t_ast	*after_par_ast_lst;
+	// t_ast	*after_par_ast_lst;
 	t_token	*left_par;
-	int		par_exec_pid;
+	// int		par_exec_pid;
 
-	after_par_ast_lst = NULL;
-	par_exec_pid = -1;
+	// after_par_ast_lst = NULL;
+	// par_exec_pid = -1;
 	left_par = find_left_par_original_token(&ft_shell()->les_token,
 			find_original_token_lst(&ft_shell()->les_token,
 				(*current)->token_node));
