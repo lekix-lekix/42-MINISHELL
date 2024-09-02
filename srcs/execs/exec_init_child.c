@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_init_child.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/30 21:11:05 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/02 12:28:28 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	init_only_child_no_fork(t_token *node)
 	}
 	ft_shell()->exit_status = ft_check_redirections(node);
 	if (ft_shell()->exit_status != ENO_SUCCESS)
-        return (ft_reset_ports(false), -1);
+		return (ft_reset_ports(false), -1);
 	if (ft_is_builtin(node->contents[0]))
 	{
 		ft_shell()->exit_status = ft_exec_builtins(node->contents, ft_shell());
@@ -57,7 +57,7 @@ int	init_only_child_no_fork(t_token *node)
 	if (pid == 0)
 	{
 		// dprintf(2,
-			// "WE are finished from here docs but still didn't quite\n");
+		// "WE are finished from here docs but still didn't quite\n");
 		(ft_shell())->signint_child = true;
 		status = ft_exec_non_builtins(node);
 	}

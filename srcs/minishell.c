@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/30 22:39:18 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/02 13:52:43 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,30 +152,28 @@ void	more_tokenization(t_token **lst)
 {
 	t_token	*current;
 	t_token	*new_cmd;
-    t_token *prev;
+	t_token	*prev;
 	char	*new_content;
 
 	current = *lst;
 	while (current)
 	{
-        // printf("words = %d\n", content_count_words(current->content));
+		// printf("words = %d\n", content_count_words(current->content));
 		if (content_count_words(current->content) > 1)
 		{
-            // printf("yo\n");
-            new_content = get_next_word(&current->content);
+			// printf("yo\n");
+			new_content = get_next_word(&current->content);
 			new_cmd = create_cmd_node_no_sep(new_content);
-            new_cmd->next = current;
-            if (current == *lst)
-            {
-                *lst = new_cmd;
-            }
-            else
-                prev->next = new_cmd;
-            current = *lst;
-            continue ;
+			new_cmd->next = current;
+			if (current == *lst)
+				*lst = new_cmd;
+			else
+				prev->next = new_cmd;
+			current = *lst;
+			continue ;
 		}
-        prev = current;
-        current = current->next;
+		prev = current;
+		current = current->next;
 	}
 }
 
@@ -191,12 +189,12 @@ int	start_parsing(char *prompt)
 	if (check_quotes(prompt))
 		return (-1);
 	input = tokenize_input(prompt);
-    // printf("hey\n");
-    // printf("initial tokenization =======\n");
+	// printf("hey\n");
+	// printf("initial tokenization =======\n");
 	// print_lst(&input);
 	// printf("=======\n");
 	more_tokenization(&input);
-    // printf("after more tokenization =======\n");
+	// printf("after more tokenization =======\n");
 	// print_lst(&input);
 	// printf("=======\n");
 	clean_token_lst(&input);
@@ -212,8 +210,8 @@ int	start_parsing(char *prompt)
 	if (check_redir_syntax(&input) == -1 || check_par_syntax(&input) == -1)
 		return (-1);
 	// printf("==============\n");
-    join_cmd_args(&input);
-    // printf("=======\n");
+	join_cmd_args(&input);
+	// printf("=======\n");
 	// print_lst(&input);
 	// printf("=======\n");
 	// split_lst_contents(&input);
