@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_remove_quotes.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:36:19 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/02 14:34:50 by sabakar-         ###   ########.fr       */
+<<<<<<< Updated upstream
+/*   Updated: 2024/09/02 15:36:43 by kipouliq         ###   ########.fr       */
+=======
+/*   Updated: 2024/09/02 15:35:23 by kipouliq         ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,31 +44,11 @@ static size_t	ft_unquoted_strlen(char *str)
 
 static void	ft_unquote_filler(char *str, size_t *i, char *ret, size_t *j)
 {
-    char	quotes;
-	
-    quotes = str[(*i)++];
-    // printf("THE i LENGTH: %zu\n", *i);
-    // printf("THE J LENGTH: %zu\n", *j);
-    // printf("----------------------\n");
-    // printf("THE i str: %c\n", str[*i]);
-    // printf("THE j str: %c\n", ret[*j]);
-    // printf("----------------------\n");
-    // printf("THE i str: %s\n", str);
-    // printf("THE j str: %s\n", ret);
-    // printf("----------------------\n");
-    // printf("THE STE: %c\n", quotes);
-    if (!ft_strncmp_loco(str, "", ft_strlen("")))
-    {	
-        *ret = *msh_strdup(" ", PARSING);
-    }
-    while (str[*i] != quotes)
-    {
-        ret[(*j)++] = str[(*i)++];
-		// printf("THE RET CHAR: %s\n", ret);
-    }
-    // printf("TEH STE: %s\n", ret);
-    //    if (str[*i] == quotes)
-    (*i)++;
+	char	quotes;
+
+	quotes = str[(*i)++];
+	while (str[*i] != quotes)
+	(*i)++;
 }
 
 char	*ft_strip_quotes(char *str)
