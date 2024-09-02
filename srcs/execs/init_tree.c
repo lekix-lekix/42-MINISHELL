@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/28 14:33:57 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/01 18:01:24 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,29 +70,26 @@ char	**ft_concat_str_arr(char **arr, char **arr2)
 	len1 = get_arr_len(arr);
 	len2 = get_arr_len(arr2);
 	total_len = len1 + len2;
+	// printf("THE TOTAL LEN IS: %d\n", total_len);
 	res = (char **)malloc(sizeof(char *) * (total_len + 1));
 	if (!res || gbg_coll(res, PARSING, ADD))
-		return(gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	x = -1;
 	while (++x < len1)
 	{
-		// res[x] = ft_strdup(arr[x]);
+		// if (!arr[x] || !*arr[x])
+		// 	continue ;
 		res[x] = msh_strdup(arr[x], PARSING);
-		// free(arr[x]);
 	}
-	// free(arr);
 	y = -1;
 	while (++y < len2)
 	{
-		res[x++] = msh_strdup(arr2[y], PARSING);
-		// res[x++] = ft_strdup(arr2[y]);
-		// free(arr2[y]);
+		// if (!arr2[y] || !*arr2[y])
+		// 	continue ;
+		res[x] = msh_strdup(arr2[y], PARSING);
+		x++;
 	}
-	// free(arr2);
 	res[total_len] = NULL;
-	// int g = -1;
-	// while (res[++g])
-	// 	printf("THE CONTENTS IN cont: %s\n", res[g]);
 	return (res);
 }
 
@@ -108,16 +105,15 @@ static void	ft_init_leaf(t_ast *node)
 
 	idx = -1;
 	io = node->token_node;
-	// print_lst(&io);
 	temp_contents = NULL;
 	redirections = node->token_node->redirections;
 	while (io->contents[++idx])
 	{
 		la_args = ft_expand(io->contents[idx]);
+		// printf("THE RETURNED SH!T: %s\n", la_args[0]);
 		temp_contents = ft_concat_str_arr(temp_contents, la_args);
 	}
 	io->contents = temp_contents;
-	// ft_free(la_args);
 	while (redirections)
 	{
 		if (redirections->redir_type == REDIR_HEREDOC)
@@ -127,10 +123,7 @@ static void	ft_init_leaf(t_ast *node)
 			(ft_shell())->signint_child = true;
 			pid = fork();
 			if (pid == 0)
-			{
-				// printf("WE forked and inside heredoc\n");
 				ft_heredoc(io, p);
-			}
 			if (ft_leave_leaf(p, &pid))
 				return ;
 			redirections->heredoc = p[0];

@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:36:19 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/28 14:44:12 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/02 13:36:25 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,35 +38,111 @@ static size_t	ft_unquoted_strlen(char *str)
 	return (len);
 }
 
+// static void	ft_unquote_filler(char *str, size_t *i, char *ret, size_t *j)
+// {
+// 	char	quotes;
+
+// 	printf("THE i LENGTH: %zu\n", *i);
+// 	printf("THE J LENGTH: %zu\n", *j);
+// 	printf("----------------------\n");
+// 	printf("THE i str: %c\n", str[*i]);
+// 	printf("THE j str: %c\n", ret[*j]);
+// 	printf("----------------------\n");
+// 	printf("THE i str: %s\n", str);
+// 	printf("THE j str: %s\n", ret);
+// 	printf("----------------------\n");
+// 	quotes = str[(*i)++];
+// 	// (*j)++;
+// 	printf("THE STE: %c\n", quotes);
+// 	if (!ft_strncmp_loco(str, "", ft_strlen("")))
+// 	{	
+// 		*ret = *msh_strdup(" ", PARSING);
+// 		// *ret = *ft_strdup();
+// 		// ret = malloc(sizeof(char *) * 2);
+// 		// *ret = *msh_strdup(" ", PARSING);
+// 		// *ret = '\0';
+// 	}
+// 	// while (ret[j])
+// 	while (str[*i] != quotes)
+// 		ret[(*j)++] = str[(*i)++];
+// 	printf("TEH STE: %s\n", ret);
+// 	(*i)++;
+// 	(*j)++;
+// }
+
+// char	*ft_strip_quotes(char *str)
+// {
+// 	char	*ret;
+// 	size_t	i;
+// 	size_t	j;
+
+// 	i = 0;
+// 	j = 0;
+// 	ret = ft_calloc(1 + ft_unquoted_strlen(str), sizeof(char));
+// 	if (!ret || gbg_coll(ret, PARSING, ADD))
+// 						return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+// 	while (str[i])
+// 	{
+// 		if (str[i] == '"' || str[i] == '\'')
+// 		{	
+// 			printf("WE COMES HERE: %c\n", str[i]);
+// 			(ft_unquote_filler(str, &i, ret, &j));
+// 		}
+// 		else
+// 			ret[j++] = str[i++];
+// 	}
+// 	return (ret);
+// }
+
 static void	ft_unquote_filler(char *str, size_t *i, char *ret, size_t *j)
 {
-	char	quotes;
-
-	quotes = str[(*i)++];
-	while (str[*i] != quotes)
-		ret[(*j)++] = str[(*i)++];
-	(*i)++;
+    char	quotes;
+	
+    quotes = str[(*i)++];
+    printf("THE i LENGTH: %zu\n", *i);
+    printf("THE J LENGTH: %zu\n", *j);
+    printf("----------------------\n");
+    printf("THE i str: %c\n", str[*i]);
+    printf("THE j str: %c\n", ret[*j]);
+    printf("----------------------\n");
+    printf("THE i str: %s\n", str);
+    printf("THE j str: %s\n", ret);
+    printf("----------------------\n");
+    // printf("THE STE: %c\n", quotes);
+    if (!ft_strncmp_loco(str, "", ft_strlen("")))
+    {	
+        *ret = *msh_strdup(" ", PARSING);
+    }
+    while (str[*i] != quotes)
+    {
+        ret[(*j)++] = str[(*i)++];
+		// printf("THE RET CHAR: %s\n", ret);
+    }
+    printf("TEH STE: %s\n", ret);
+       if (str[*i] == quotes)
+        (*i)++;
 }
 
 char	*ft_strip_quotes(char *str)
 {
-	char	*ret;
-	size_t	i;
-	size_t	j;
+    char	*ret;
+    size_t	i;
+    size_t	j;
 
-	i = 0;
-	j = 0;
-	ret = ft_calloc(1 + ft_unquoted_strlen(str), sizeof(char));
-	if (!ret || gbg_coll(ret, PARSING, ADD))
-						return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-	while (str[i])
-	{
-		if (str[i] == '"' || str[i] == '\'')
-			(ft_unquote_filler(str, &i, ret, &j));
-		else
-			ret[j++] = str[i++];
-	}
-	return (ret);
+    i = 0;
+    j = 0;
+    ret = ft_calloc(1 + ft_unquoted_strlen(str), sizeof(char));
+    if (!ret || gbg_coll(ret, PARSING, ADD))
+        return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+    while (str[i])
+    {
+        if (str[i] == '\'' || str[i] == '"')
+            ft_unquote_filler(str, &i, ret, &j);
+        else
+            ret[j++] = str[i++];
+    }
+    ret[j] = '\0';
+    return (ret);
 }
 
 char	*ft_clean_empty_chars(char *sr)
@@ -93,8 +169,6 @@ char	*ft_clean_empty_chars(char *sr)
 		else
 			tmp[y++] = sr[x++];
 	}
-	// free(sr);
-	// gbg_coll(NULL, PARSING, FLUSH_ONE);
 	dstsize = ft_strlen(tmp) + 1;
 	ret = ft_calloc(dstsize, sizeof(char));
 	if (!ret || gbg_coll(ret, PARSING, ADD))

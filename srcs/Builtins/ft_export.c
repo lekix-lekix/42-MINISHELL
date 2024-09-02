@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:02:12 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/28 14:35:41 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/02 11:36:47 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,16 +92,13 @@ int	ft_exec_export(char **args)
 			exit_s = ft_export_err_msg(args[i]);
 		else
 		{
-			printf("THE ARGS IS: %s\n", args[i]);
 			key = ft_extract_val(args[i]);
 			if (ft_env_entry_exists(key))
 				ft_update_envlst(key, ft_extract_key(args[i]), false);
 			else
 				ft_update_envlst(key, ft_extract_key(args[i]), true);
-				// printf("WE WRE CRASHING HERE\n");
 		}
 		i++;
 	}
-	dprintf(2, "hello\n");
 	return (exit_s);
 }

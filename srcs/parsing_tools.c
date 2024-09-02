@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_tools.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:53:14 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/27 17:29:56 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/02 10:32:32 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ char	*find_operator(char *str)
 
 int	ft_is_space(char c)
 {
+	// printf("THE COMEING letter: %c\n", c);
 	return ((c >= 9 && c <= 13) || c == 32);
 }
 

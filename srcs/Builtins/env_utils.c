@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/28 14:41:06 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/28 16:35:39 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,6 @@ void	ft_update_envlst(char *key, char *value, bool create)
 		if (value)
 			lst_env_add_back(&le_env, ft_envlst_new(key, value));
 	}
-	// print_env(&le_env);
-	// print_env(&envlst);
 }
 
 char	*ft_extract_val(char *str)

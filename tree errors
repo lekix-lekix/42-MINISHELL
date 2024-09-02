@@ -22,3 +22,5 @@ to do :
 - test all mallocs
 
 valgrind flags :  valgrind --trace-children=yes --show-leak-kinds=all --leak-check=full --suppressions="./no_rl_leaks" ./minishell
+
+the shell exits with cmd: echo         --(*j);
