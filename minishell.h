@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/02 16:28:33 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/02 17:04:46 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # include <unistd.h>
 
 # define PER_ERR "Permission denied"
+# define NOT_FOUND_ERR "No such file or directory"
 # define CMD_ERR "command not found"
 # define OPEN_ERR "Error opening file"
 # define IS_DIR_ERR "Is a directory"
@@ -247,7 +248,7 @@ char				*get_next_word(char **input_str);
 // paths utils
 // char				*ft_check_path(char **contents, char **env,
 					// int *exit_status, int *i);
-char				*ft_check_path(char *cmd, char **env, int *exit_status);
+char				*ft_check_path(char **contents, char **env, int *exit_status, int *i);
 void				lst_env_add_back(t_env **lst, t_env *new);
 void				consume_node(t_token **lst, t_token *node);
 int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,

@@ -6,6 +6,7 @@ expand : $NO_VARIABLE_FOUND (should return enter)
 check history leaks !
 env -i ./minishell
 fix error printing ft export and others
+cd leaks if ctrl d
 
 leaks :
 

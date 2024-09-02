@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:44:43 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/30 09:17:59 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/02 17:44:49 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ static int	ft_change_cwd(void)
 	char	*cwd;
 
 	cwd = getcwd(NULL, 0);
-	if (!cwd)
-		return (1);
+	if (!cwd || gbg_coll(cwd, ENV, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
 	return (ft_update_envlst("PWD", cwd, false), 0);
 }
 

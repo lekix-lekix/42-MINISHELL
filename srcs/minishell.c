@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/02 16:17:06 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/02 17:51:17 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,12 +205,12 @@ int	start_parsing(char *prompt)
 	// print_lst(&input);
 	// printf("=======\n");
 	if (check_redirections(&input) == -1)
-		return (-1);
+		return (ft_shell()->exit_status = 2, -1);
 	// printf("after check redir =======\n");
 	// print_lst(&input);
 	// printf("=======\n");
 	if (check_redir_syntax(&input) == -1 || check_par_syntax(&input) == -1)
-		return (-1);
+		return (ft_shell()->exit_status = 2, -1);
 	// printf("==============\n");
 	join_cmd_args(&input);
 	// printf("=======\n");
