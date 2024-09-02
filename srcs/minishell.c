@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/02 14:19:10 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/02 16:17:06 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ char	*get_path(char **envp)
 int	init_data(t_minishell *data, char **envp)
 {
 	data->path = get_path(envp);
+    // printf("%s\n", data->path);[]
 	if (!data->path)
 		return (-1);
 	data->env_lst = get_env_lst(envp);
@@ -91,7 +92,7 @@ static void	ft_start_execution(t_ast **tree)
 	{
 		// If the program is quited during heredoc,
 		// we have clean the mess afterword I guess
-		printf("WE ARE HERE 98\n");
+		// printf("WE ARE HERE 98\n");
 		// gbg_coll(NULL, PARSING, FLUSH_ONE);
 		gbg_coll(NULL, ALL, FLUSH_ALL);
 		// gbg_coll(NULL, ENV, FLUSH_ALL);

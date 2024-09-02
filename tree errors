@@ -1,23 +1,17 @@
 regular failing tests :
 
-export=" sdjalkdj sasd "
 fd leaks (stdin stdout dup)
-infinite loop : unable to quit with ctrl-d
-empty quotes on the first cmd entered
 expand : $NO_VARIABLE_FOUND (should return enter)
-< outfile : prints a '\n' (and shouldnt) / crash
+< outfile 
 check history leaks !
 env -i ./minishell
-append operator
+fix error printing ft export and others
 
 leaks :
 
 to do :
-- fix export
-- fix quotes ----> FIXED !
-- include quotes in tokenizer for syntax check | keep quotes as a single block --> FIXED !
-- fix exit statuses
 - if exit(255) --> shut down whole minishell
 - test all mallocs
+- run tests from the excel
 
 valgrind flags :  valgrind --trace-children=yes --show-leak-kinds=all --leak-check=full --suppressions="./no_rl_leaks" ./minishell
