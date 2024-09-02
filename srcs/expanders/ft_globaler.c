@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 14:26:53 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/28 14:24:10 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/08/30 14:11:54 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	**ft_globaler(char *str)
 		if (!returned || gbg_coll(returned, PARSING, ADD))
 		    return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 		returned[0] = msh_strdup(str, PARSING);
-		returned[1] = NULL;
+		returned[1] = 0;
 		return (returned);
 	}
 	else
