@@ -6,11 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:36:19 by sabakar-          #+#    #+#             */
-<<<<<<< Updated upstream
-/*   Updated: 2024/09/02 15:36:43 by kipouliq         ###   ########.fr       */
-=======
-/*   Updated: 2024/09/02 15:35:23 by kipouliq         ###   ########.fr       */
->>>>>>> Stashed changes
+/*   Updated: 2024/09/02 15:43:26 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,29 +44,30 @@ static void	ft_unquote_filler(char *str, size_t *i, char *ret, size_t *j)
 
 	quotes = str[(*i)++];
 	while (str[*i] != quotes)
+		ret[(*j)++] = str[(*i)++];
 	(*i)++;
 }
 
 char	*ft_strip_quotes(char *str)
 {
-    char	*ret;
-    size_t	i;
-    size_t	j;
+	char	*ret;
+	size_t	i;
+	size_t	j;
 
-    i = 0;
-    j = 0;
-    ret = ft_calloc(1 + ft_unquoted_strlen(str), sizeof(char));
-    if (!ret || gbg_coll(ret, PARSING, ADD))
-        return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-    while (str[i])
-    {
-        if (str[i] == '\'' || str[i] == '"')
-            ft_unquote_filler(str, &i, ret, &j);
-        else
-            ret[j++] = str[i++];
-    }
-    ret[j] = '\0';
-    return (ret);
+	i = 0;
+	j = 0;
+	ret = ft_calloc(1 + ft_unquoted_strlen(str), sizeof(char));
+	if (!ret || gbg_coll(ret, PARSING, ADD))
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+	while (str[i])
+	{
+		if (str[i] == '\'' || str[i] == '"')
+			ft_unquote_filler(str, &i, ret, &j);
+		else
+			ret[j++] = str[i++];
+	}
+	ret[j] = '\0';
+	return (ret);
 }
 
 char	*ft_clean_empty_chars(char *sr)
