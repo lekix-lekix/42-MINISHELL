@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:34:34 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/02 18:40:45 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/03 12:30:17 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,14 @@ int	print_token_syntax_error(t_token *node)
 {
 	char	*err;
 
-	err = ft_join("minishell: syntax error near unexpected token `", node->content);
+	if (!node)
+		return (print_newline_syntax_error(), -1);
+	err = ft_join("minishell: syntax error near unexpected token `",
+			node->content);
 	err = ft_join(err, "'\n");
 	write(2, err, ft_strlen(err));
-	// printf("minishell: syntax error near unexpected token `%s'\n", node->content);
+	// printf("minishell: syntax error near unexpected token `%s'\n",
+		// node->content);
 	return (-1);
 }
 

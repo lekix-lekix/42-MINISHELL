@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 00:17:24 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/22 14:25:54 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/03 17:40:50 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void	ft_reset_ports(bool piped)
 {
 	if (piped)
 		return ;
-	dup2((ft_shell())->stdin, 0);
-	dup2((ft_shell())->stdout, 1);
+	dup2((ft_shell())->ft_stdin, 0);
+	dup2((ft_shell())->ft_stdout, 1);
 }
 
 int	ft_get_la_status(int la_status)

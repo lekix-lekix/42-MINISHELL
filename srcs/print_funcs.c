@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_funcs.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:55:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/30 09:53:47 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/03 18:33:20 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,9 @@ void	print_lst(t_token **lst)
 			while (root->contents[i])
 			{
 				printf("contents[%d] = %s\n", i, root->contents[i]);
+                int j = -1;
+                while (root->contents[i][++j])
+                    printf("char %d = %d\n", i, root->contents[i][j]);
 				i++;
 			}
 		}

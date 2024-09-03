@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/02 17:04:46 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/03 18:27:30 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,8 +153,8 @@ typedef struct s_minishell
 	int				end_exec;
 	int				exec_in_par;
 	int				pids_num;
-	int				stdin;
-	int				stdout;
+	int				ft_stdin;
+	int				ft_stdout;
 	t_ast			*full_exec_tree;
 	t_ast			*exec_tree;
 	t_ast			*node;
@@ -177,6 +177,7 @@ int					ft_strcpy_sep_ptr(char *dest, char *input, char *sep);
 // tokenization
 int					trim_token_fields(t_token **lst);
 t_token				*tokenize_input(char *input);
+char	*msh_strtrim_spaces(char const *s1);
 
 // Merge combined functions
 void				print_tree(t_ast **tree);

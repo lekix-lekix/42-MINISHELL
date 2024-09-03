@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/02 17:51:17 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/03 18:39:40 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*get_path(char **envp)
 int	init_data(t_minishell *data, char **envp)
 {
 	data->path = get_path(envp);
-    // printf("%s\n", data->path);[]
+	// printf("%s\n", data->path);[]
 	if (!data->path)
 		return (-1);
 	data->env_lst = get_env_lst(envp);
@@ -86,8 +86,8 @@ static void	ft_start_execution(t_ast **tree)
 	ft_shell()->end_exec = 0;
 	ft_shell()->exec_in_par = 0;
 	ft_shell()->full_exec_tree = *tree;
-	ft_shell()->stdin = dup(STDIN_FILENO);
-	ft_shell()->stdout = dup(STDOUT_FILENO);
+	ft_shell()->ft_stdin = dup(STDIN_FILENO);
+	ft_shell()->ft_stdout = dup(STDOUT_FILENO);
 	if ((ft_shell())->heredoc_sigint)
 	{
 		// If the program is quited during heredoc,
@@ -179,6 +179,19 @@ void	more_tokenization(t_token **lst)
 	}
 }
 
+void trim_contents(t_token **lst)
+{
+    t_token *current;
+
+    current = *lst;
+    while (current)
+    {
+        if (current->content)
+            current->content = msh_strtrim_spaces(current->content);
+        current = current->next;
+    }
+}
+
 int	start_parsing(char *prompt)
 {
 	t_token	*input;
@@ -196,21 +209,23 @@ int	start_parsing(char *prompt)
 	// print_lst(&input);
 	// printf("=======\n");
 	more_tokenization(&input);
+	clean_token_lst(&input);
 	// printf("after more tokenization =======\n");
 	// print_lst(&input);
 	// printf("=======\n");
-	clean_token_lst(&input);
+    trim_contents(&input);
 	set_redir_lst(&input);
 	// printf("after set redir lst  =======\n");
 	// print_lst(&input);
 	// printf("=======\n");
+	if (check_redir_syntax(&input) == -1 || check_par_syntax(&input) == -1)
+		return (ft_shell()->exit_status = 2, -1);
 	if (check_redirections(&input) == -1)
 		return (ft_shell()->exit_status = 2, -1);
+	// dprintf(2, "ddfsdf\n");
 	// printf("after check redir =======\n");
 	// print_lst(&input);
 	// printf("=======\n");
-	if (check_redir_syntax(&input) == -1 || check_par_syntax(&input) == -1)
-		return (ft_shell()->exit_status = 2, -1);
 	// printf("==============\n");
 	join_cmd_args(&input);
 	// printf("=======\n");
@@ -224,6 +239,7 @@ int	start_parsing(char *prompt)
 	// printf("=======\n");
 	// print_lst(&input);
 	// printf("=======\n");
+	clean_token_lst(&input);
 	tree = build_ast(&input, NULL);
 	// print_tree(&tree);
 	if (tree && check_tree_syntax(&tree) == -1)
@@ -236,19 +252,31 @@ int	start_parsing(char *prompt)
 int	main(int argc, char **argv, char **env)
 {
 	t_minishell	*data;
+	char		*line;
+	// int			fd;
 
+	// fd = open("./stderr_tmp", O_RDWR);
+	// if (dup2(fd, STDERR_FILENO) == -1)
+	// 	perror("duppp");
 	data = ft_shell();
 	((void)argc, (void)argv);
 	init_data(data, env);
 	while (1)
 	{
 		ft_init_signals();
-		data->prompt = readline("minishell$ ");
+		if (isatty(fileno(stdin)))
+			data->prompt = readline("minishell$ ");
+		else
+		{
+			line = get_next_line(fileno(stdin), 0);
+			data->prompt = ft_strtrim(line, "\n");
+			free(line);
+		}
 		if (!data->prompt)
 		{
 			// Also we need to clean here if I'm not mistaking!
 			gbg_coll(NULL, ALL, FLUSH_ALL);
-			(ft_putstr_fd("exit\n", 1));
+			// (ft_putstr_fd("exit\n", 1));
 			exit(ft_shell()->exit_status);
 		}
 		if (data->prompt || *data->prompt)
@@ -257,6 +285,8 @@ int	main(int argc, char **argv, char **env)
 				add_history(data->prompt);
 			start_parsing(data->prompt);
 			gbg_coll(NULL, PARSING, FLUSH_ONE);
+            close(ft_shell()->ft_stdin);
+            close(ft_shell()->ft_stdout);
 			// gbg_coll(NULL, PARSING, FLUSH_ALL);
 			free(data->prompt);
 		}

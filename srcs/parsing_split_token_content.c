@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:46:45 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/02 14:02:57 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/03 17:19:33 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*get_quotes_block(char *str, char **input_str, int i)
 	word = malloc(sizeof(char) * (ft_strlen_sep(str + i, sep) + 1));
 	if (!word || gbg_coll(word, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-	ft_strcpy_sep_ptr(word, str + i, sep);
+	ft_strcpy_sep(word, str + i, sep);
 	*input_str = sep + 1;
 	return (word);
 }
@@ -95,7 +95,7 @@ char	*get_next_word(char **input_str)
 	word = malloc(sizeof(char) * (ft_strlen_sep(str + i, str + j) + 1));
 	if (!word || gbg_coll(word, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-	ft_strcpy_sep(word, str + i, str + j);
+	ft_strcpy_sep_ptr(word, str + i, str + j);
 	*input_str = str + j + 1;
 	return (word);
 }
@@ -133,7 +133,7 @@ int	split_lst_contents(t_token **lst)
 			{
 				current->contents[i] = get_next_word(&content_cpy);
 				// dprintf(2, "current->contents[%d] = %s\n", i,
-					// current->contents[i]);
+				// current->contents[i]);
 			}
 			current->contents[words_count] = NULL;
 		}

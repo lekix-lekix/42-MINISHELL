@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:19:27 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/02 18:19:06 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/03 14:22:00 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ char	*ft_check_path(char **contents, char **env, int *exit_status, int *i)
 		return (ft_check_path(contents, env, exit_status, i));
 	}
 	fpath = check_cmd_access(cmd, exit_status);
-	if (!fpath)
-		return (NULL);
+	if (fpath != NULL)
+		return (cmd);
 	paths = ft_get_paths(env);
 	if (!paths || paths[0] == NULL)
 		return (NULL);
@@ -98,12 +98,14 @@ char	*check_cmd_access(char *cmd, int *exit_status)
 		stat(cmd, &file_stat);
 		if (S_ISDIR(file_stat.st_mode) && is_abs_path(cmd))
 			return (print_msh_error(IS_DIR_ERR, cmd), *exit_status = 126, NULL);
+		else
+			return (cmd);
 	}
 	else if (err == -1 && errno == EACCES && is_abs_path(cmd))
 		return (print_msh_error(PER_ERR, cmd), *exit_status = 126, NULL);
 	else if (err == -1 && is_abs_path(cmd))
 		return (print_msh_error(NOT_FOUND_ERR, cmd), *exit_status = 127, NULL);
-	return (cmd);
+	return (NULL);
 }
 
 char	*check_paths(char **paths, char *cmd, int *exit_status)

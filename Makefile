@@ -6,7 +6,7 @@
 #    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/08/27 17:47:56 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/09/03 18:28:53 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,6 +52,7 @@ SRCS = ./srcs/minishell.c \
 	./srcs/ast_tools_bis.c \
 	./srcs/msh_strtrim.c \
 	./srcs/msh_split.c \
+	./srcs/msh_strtrim_spaces.c \
 	./srcs/expanders/heredoc_expander.c \
 	./srcs/parsing_redir.c \
 	./srcs/parsing_redir_bis.c \

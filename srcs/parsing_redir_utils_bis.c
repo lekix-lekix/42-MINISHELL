@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 17:56:28 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/20 16:23:59 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/03 12:09:15 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	set_redir_lst(t_token **lst)
 		return ;
 	while (current)
 	{
-		if (is_a_redir_operator(current) && current->next)
+		if (is_a_redir_operator(current) && current->next && current->next->type == CMD)
 			current->next->type = OUTFILE;
 		current = current->next;
 	}

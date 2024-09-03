@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:27:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/02 18:39:25 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/03 12:26:12 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,22 +43,25 @@ int	check_quotes(char *str)
 int	check_redir_syntax(t_token **input)
 {
 	t_token	*current;
+    t_token *prev;
 
+    prev = NULL;
 	current = *input;
 	while (current)
 	{
 		if (is_a_redir_operator(current) && (!current->next
 				|| !current->next->content[0]))
-			return (print_newline_syntax_error());
+			return (/* dprintf(2, "1"),  */print_token_syntax_error(prev));
 		if (is_a_redir_operator(current) && is_a_token_operator(current->next))
-			return (print_token_syntax_error(current->next));
+			return (/* dprintf(2, "2"),  */print_token_syntax_error(prev));
 		if (is_a_redir_operator(current) && is_a_redir_operator(current->next))
-			return (print_token_syntax_error(current->next));
+			return (/* dprintf(2, "3"),  */print_token_syntax_error(current));
 		if (is_a_token_operator(current) && (!current->next
 				|| !current->next->content[0]))
-			return (print_token_syntax_error(current));
+			return (/* dprintf(2, "4"),  */print_token_syntax_error(current));
 		if (is_a_token_operator(current) && is_a_token_operator(current->next))
-			return (print_token_syntax_error(current));
+			return (/* dprintf(2, "5"),  */print_token_syntax_error(current));
+        prev = current;
 		current = current->next;
 	}
 	return (0);
