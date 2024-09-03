@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:20:35 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/26 16:46:05 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/02 14:57:34 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@ static int	ft_export_err_msg(char *identifier)
 	ft_putstr_fd("minishell: export: `", 2);
 	if (identifier[0] == '-')
 	{
-		ft_putchar_fd(identifier[0], 2);
-		ft_putchar_fd(identifier[1], 2);
+		// ft_putchar_fd(identifier[0], 2);
+		ft_putstr_fd(identifier, 2);
+		// printf("It's here\n");
 		ft_putstr_fd("': invalid option\n", 2);
 	}
 	return (1);

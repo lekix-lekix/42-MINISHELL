@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_globaler.c                                      :+:      :+:    :+:   */
+/*   ft_globaler_old.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 14:26:53 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/28 12:44:34 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/03 13:39:57 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ char	**ft_globaler(char *str)
 	// printf("THE COUNT MATCH NUM %zu\n", match_count);
 	if (!ft_is_contains_asterisk(str) || !match_count)
 	{
-		// returned = (char **)ft_calloc(2, sizeof(char *));
 		returned = malloc(sizeof(char *) * 2);
 		returned[0] = ft_strdup(str);
 		returned[1] = NULL;
