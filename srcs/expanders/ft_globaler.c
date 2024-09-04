@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 14:26:53 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/02 15:43:44 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:47:49 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	**ft_globaler(char *str)
 		while (ft_set_direntry(&entry, dir) && entry)
 			if (ft_match_star(str, entry->d_name) && ft_matches_visibility(str,
 					entry->d_name))
-				returned[match_count++] = ft_strdup(entry->d_name);
+				returned[match_count++] = msh_strdup(entry->d_name, PARSING);
 		closedir(dir);
 	}
 	return (returned);

@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 17:33:34 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/03 18:43:02 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/04 12:15:47 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ char	*msh_strtrim_spaces(char const *s1)
 {
 	int		i;
     int     j;
+    int     k;
 	int		str_size;
 	char	*final_str;
 
@@ -59,12 +60,15 @@ char	*msh_strtrim_spaces(char const *s1)
     j = 0;
     while (s1[i] && ft_is_space(s1[i]))
         i++;
-    while (s1[i] && !ft_is_space(s1[i]))
+    k = ft_strlen(s1) - 1;
+    while (s1[k] && ft_is_space(s1[k]))
+        k--;
+    while (i <= k)
     {
         final_str[j] = s1[i];
         i++;
         j++;
-    }
+    }    
 	final_str[j] = '\0';
 	return (final_str);
 }

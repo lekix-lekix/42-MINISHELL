@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_expands.c                                       :+:      :+:    :+:   */
+/*   ft_expands_old.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/28 12:40:23 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:53:36 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*ft_handle_dollar(char *str, size_t *i)
 	while (ft_is_valid_var_char(str[*i]))
 		(*i)++;
 	var = ft_substr(str, start, *i - start);
-	printf("THE VAR IS: %s\n", var);
+	// printf("THE VAR IS: %s\n", var);
 	env_val = ft_get_envlst_content(var, (ft_shell()));
 	if (!env_val)
 		return (free(var), ft_strdup(str));

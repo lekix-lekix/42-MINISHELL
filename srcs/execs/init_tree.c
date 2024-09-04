@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_tree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/02 14:49:03 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:36:19 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,9 @@ void	ft_heredoc(t_token *io, int p[2])
 		}
 		free(line);
 	}
+    close(p[0]);
+    close(p[1]);
+    gbg_coll(NULL, ALL, FLUSH_ALL);
 	exit(0);
 }
 

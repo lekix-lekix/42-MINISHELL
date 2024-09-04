@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:14:54 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/23 15:53:40 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/04 14:39:17 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,10 @@ bool	ft_env_entry_exists(char *content)
 	while (envlst)
 	{
 		if (!ft_strcmp(content, envlst->content))
+        {
+            dprintf(2, "content = %s, true\n", envlst->content);
 			return (true);
+        }
 		envlst = envlst->next;
 	}
 	return (false);

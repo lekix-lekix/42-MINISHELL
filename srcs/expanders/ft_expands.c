@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/03 16:33:47 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:53:39 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ char	*ft_handle_dollar(char *str, size_t *i)
 			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 		return (free(var), res);
 	}
+    // dprintf(2, "var = %s\n", var);
 	res = msh_strdup(env_val, PARSING);
 	return (free(var), res);
 }

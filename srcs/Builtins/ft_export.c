@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:02:12 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/02 14:20:28 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:50:51 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,32 +27,34 @@ static int	ft_export_err_msg(char *identifier)
 	return (1);
 }
 
-static void ft_export_list(t_env **envlst) {
-	t_env *list;
-	size_t i;
-	
-    list = *envlst;
-    while (list)
+static void	ft_export_list(t_env **envlst)
+{
+	t_env	*list;
+	// size_t	i;
+
+	list = *envlst;
+	while (list)
 	{
-        // printf("Current list element: %p, Field: %s\n", (void*)list, list->field ? list->field : "NULL");
-		// printf("Current list element: %p, Content: %s\n", (void*)list, list->content ? list->content : "NULL");
-		
-		if (list->field != NULL)
+		// printf("Current list element: %p, Field: %s\n", (void*)list,
+			// list->field ? list->field : "NULL");
+		// printf("Current list element: %p, Content: %s\n", (void*)list,
+			// list->content ? list->content : "NULL");
+		if (list->field)
 		{
-			printf("export %s\"", list->field ? list->field : " ");
-			i = 0;
-			while ((list->content) && (list->content)[i])
-			{
-				if ((list->content)[i] == '$' || (list->content)[i] == '"')
-					printf("\\%c", (list->content)[i++]);
-				else
-					printf("%c", (list->content)[i++]);
-			}
-			printf("\"\n");
+            printf("export %s=\"%s\"\n", list->field, list->content);
+			// printf("export %s\"", list->field);
+			// i = 0;
+			// while ((list->content) && (list->content)[i])
+			// {
+			// 	if ((list->content)[i] == '$' || (list->content)[i] == '"')
+			// 		printf("\\%c=", (list->content)[i++]);
+			// 	else
+			// 		printf("%c=", (list->content)[i++]);
+			// }
 		}
-		else if (list->field == NULL)
+		else
 			printf("export %s\n", list->content);
-        list = list->next;
+		list = list->next;
 	}
 }
 
@@ -78,14 +80,14 @@ int	ft_exec_export(char **args)
 	int		exit_s;
 	char	*key;
 	t_env	*envlst;
-	// t_env	*le_env;
 
+	// t_env	*le_env;
 	exit_s = 0;
 	i = 1;
 	envlst = ft_shell()->expanded_env;
 	// le_env = ft_shell()->env_lst;
 	if (!args[1] || args[1][0] == '$')
-		return ( ft_export_list(&envlst), 0);
+		return (ft_export_list(&envlst), 0);
 	while (args[i])
 	{
 		if (ft_check_key(args[i]) == 0)

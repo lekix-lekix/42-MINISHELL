@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 21:33:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/15 14:30:28 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/04 14:06:04 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	ft_sigint_handler(int num)
 void	ft_sigquit_handler(int num)
 {
 	(void)num;
-	ft_putstr_fd("Quit: 3\n", 1);
+    write(2, "Quit (core dumped)\n", 20);
 }
 
 void	ft_init_signals(void)

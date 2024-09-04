@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/02 14:20:05 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:51:22 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ char	*ft_get_envlst_content(char *key, t_minishell *data)
 
         // that is something you shouldnt use indeed
 		// if (!ft_strncmp_loco(key, envlst->field, ft_strlen(key)))
+        // dprintf(2, "key = %s, envlstfield = %s\n", key, envlst->field);
         if (!ft_strcmp(key, envlst->field))
 			return (envlst->content);
 		envlst = envlst->next;
@@ -57,7 +58,7 @@ static int	ft_loop_and_update(t_env **to_update_lst, char *value, char *key)
 	key_len = ft_strlen(key);
 	while (envlst)
 	{
-		if (envlst->field && !ft_strncmp(envlst->field, key, key_len))
+		if (envlst->field && !ft_strcmp(envlst->field, key))
 		{
 			if (value)
 				envlst->content = msh_strdup(value, ENV);
@@ -97,9 +98,11 @@ char	*ft_extract_val(char *str)
 	{
 		if (str[i] == '=')
 		{
-			final_str = ft_substr(str, 0, i + 1);
+			// final_str = ft_substr(str, 0, i + 1);
+			final_str = ft_substr(str, 0, i);
 			if (!final_str || gbg_coll(final_str, ENV, ADD))
 				return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+            // dprintf(2, "final str = %s\n", final_str);
 			return (final_str);
 		}
 		i++;
@@ -122,6 +125,7 @@ char	*ft_extract_key(char *str)
 			final_str = ft_substr(str, i, ft_strlen(str) - i);
 			if (!final_str || gbg_coll(final_str, ENV, ADD))
 				return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+            // dprintf(2, "key = %s\n", final_str);
 			return (final_str);
 		}
 		i++;
