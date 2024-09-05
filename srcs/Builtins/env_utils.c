@@ -3,28 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/04 16:51:22 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:30:52 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static t_env	*ft_envlst_new(char *content, char *field)
+static t_env	*ft_envlst_new(char *field, char *content)
 {
 	t_env	*new;
 
 	new = (t_env *)ft_calloc(1, sizeof(t_env));
 	if (!new || gbg_coll(new, ENV, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-	new->content = msh_strdup(content, ENV);
-	if (field)
-	{
-		new->content = msh_strdup(field, ENV);
-		new->field = msh_strdup(content, ENV);
-	}
+	new->field = msh_strdup(field, ENV);
+	if (content && content[0])
+		new->content = msh_strdup(content, ENV);
+	else
+		new->content = NULL;
 	new->next = NULL;
 	return (new);
 }
@@ -38,30 +37,28 @@ char	*ft_get_envlst_content(char *key, t_minishell *data)
 	{
 		// I'm using a function that I shuldn't use here,
 		// don't delete this comment unless you change this function
-
-        // that is something you shouldnt use indeed
+		// that is something you shouldnt use indeed
 		// if (!ft_strncmp_loco(key, envlst->field, ft_strlen(key)))
-        // dprintf(2, "key = %s, envlstfield = %s\n", key, envlst->field);
-        if (!ft_strcmp(key, envlst->field))
+		// dprintf(2, "key = %s, envlstfield = %s\n", key, envlst->field);
+		if (!ft_strcmp(key, envlst->field))
 			return (envlst->content);
 		envlst = envlst->next;
 	}
 	return (NULL);
 }
 
-static int	ft_loop_and_update(t_env **to_update_lst, char *value, char *key)
+static int	ft_loop_and_update(t_env **to_update_lst, char *content,
+		char *field)
 {
 	t_env	*envlst;
-	int		key_len;
 
 	envlst = *to_update_lst;
-	key_len = ft_strlen(key);
 	while (envlst)
 	{
-		if (envlst->field && !ft_strcmp(envlst->field, key))
+		if (envlst->field && !ft_strcmp(envlst->field, field))
 		{
-			if (value)
-				envlst->content = msh_strdup(value, ENV);
+			if (content)
+				envlst->content = msh_strdup(content, ENV);
 			return (1);
 		}
 		envlst = envlst->next;
@@ -69,31 +66,31 @@ static int	ft_loop_and_update(t_env **to_update_lst, char *value, char *key)
 	return (0);
 }
 
-void	ft_update_envlst(char *key, char *value, bool create)
+void	ft_update_envlst(char *field, char *content, bool create)
 {
 	t_env	*le_env;
 	t_env	*envlst;
 
 	envlst = ft_shell()->expanded_env;
 	le_env = ft_shell()->env_lst;
-	if (ft_loop_and_update(&le_env, value, key) && ft_loop_and_update(&envlst,
-			value, key))
+	if (ft_loop_and_update(&le_env, content, field)
+		&& ft_loop_and_update(&envlst, content, field))
 		return ;
 	if (create)
 	{
-		lst_env_add_back(&envlst, ft_envlst_new(key, value));
-		if (value)
-			lst_env_add_back(&le_env, ft_envlst_new(key, value));
+		lst_env_add_back(&envlst, ft_envlst_new(field, content));
+		if (content)
+			lst_env_add_back(&le_env, ft_envlst_new(field, content));
 	}
 }
 
-char	*ft_extract_val(char *str)
+char	*ft_extract_field(char *str)
 {
 	size_t	i;
 	char	*final_str;
 
 	i = 0;
-    final_str = NULL;
+	final_str = NULL;
 	while (str[i])
 	{
 		if (str[i] == '=')
@@ -102,7 +99,7 @@ char	*ft_extract_val(char *str)
 			final_str = ft_substr(str, 0, i);
 			if (!final_str || gbg_coll(final_str, ENV, ADD))
 				return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-            // dprintf(2, "final str = %s\n", final_str);
+			// dprintf(2, "final str = %s\n", final_str);
 			return (final_str);
 		}
 		i++;
@@ -111,12 +108,20 @@ char	*ft_extract_val(char *str)
 	return (final_str);
 }
 
-char	*ft_extract_key(char *str)
+char	*ft_extract_content(char *str)
 {
 	size_t	i;
 	char	*final_str;
 
 	i = 0;
+    // if (!str[0])
+    // {
+    //     final_str = malloc(sizeof(char));
+    //     if (!final_str || gbg_coll(final_str, ENV, ADD))
+    //         return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+    //     final_str[0] = 0;
+    //     return (final_str);
+    // }
 	while (str[i])
 	{
 		if (str[i] == '=')
@@ -125,7 +130,7 @@ char	*ft_extract_key(char *str)
 			final_str = ft_substr(str, i, ft_strlen(str) - i);
 			if (!final_str || gbg_coll(final_str, ENV, ADD))
 				return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-            // dprintf(2, "key = %s\n", final_str);
+			// dprintf(2, "key = %s\n", final_str);
 			return (final_str);
 		}
 		i++;

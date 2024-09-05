@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:44:43 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/02 17:44:49 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/05 11:22:58 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ static int	ft_cdhome(t_minishell *data)
 
 int	ft_do_cd(char **path, t_minishell *data)
 {
+    char *err;
+    
 	if (!path[1])
 		return (ft_cdhome(data));
     if (get_arr_len(path) > 2)
@@ -58,7 +60,8 @@ int	ft_do_cd(char **path, t_minishell *data)
     }
 	if (chdir(path[1]) != ENO_SUCCESS)
     {
-        perror("minishell: cd");
+        err = ft_join("minishell: cd: ", path[1]);
+        perror(err);
 		return (1);
     }
 	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD", data), false);

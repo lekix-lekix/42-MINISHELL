@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_tree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/04 16:36:19 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/05 11:04:06 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	ft_heredoc(t_token *io, int p[2])
 {
 	char	*line;
 	char	*quotes;
+    char    *input;
 
 	signal(SIGINT, ft_heredoc_sigint_handler);
 	quotes = io->content;
@@ -39,8 +40,8 @@ void	ft_heredoc(t_token *io, int p[2])
 			ft_heredoc_expander(line, p[1]);
 		else
 		{
-			ft_putstr_fd(line, p[1]);
-			ft_putstr_fd("\n", p[1]);
+            input = ft_join(line, "\n");
+            write(2, input, ft_strlen(line));
 		}
 		free(line);
 	}

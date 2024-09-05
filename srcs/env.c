@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 17:31:49 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/26 10:22:20 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:44:05 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,22 +32,14 @@ void	lst_env_add_back(t_env **lst, t_env *new)
 	t_env	*list;
 
 	if (!*lst)
-	{
-		// printf("IT'S EMPTY\n");
-		*lst = new; // Handling an empty f*ing list
-	}
+		*lst = new;
 	else
 	{
-		// printf("IT'S not EMPTY\n");
 		list = *lst;
 		while (list->next)
 			list = list->next;
 		list->next = new;
 	}
-	// printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-	// printf("PRINTING THE ENV AFTER APPENDING\n");
-	// print_env(lst);
-	// printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 }
 
 char	**env_lst_to_arr(t_env **lst)
@@ -62,8 +54,11 @@ char	**env_lst_to_arr(t_env **lst)
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 	i = 0;
 	while (node)
-	{
-		env_arr[i] = ft_strjoin(node->field, node->content);
+    {
+        if (node->content)
+		    env_arr[i] = ft_strjoin(node->field, node->content);
+        else
+            env_arr[i] = node->field;
 		if (!env_arr[i] || gbg_coll(env_arr[i], ENV, ADD) == -1)
 			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 		node = node->next;

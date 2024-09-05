@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:14:54 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/04 14:39:17 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:00:11 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,18 +74,15 @@ char	*ft_join(char *s1, char *s2)
 	return (new_arr);
 }
 
-bool	ft_env_entry_exists(char *content)
+bool	ft_env_entry_exists(char *field)
 {
 	t_env	*envlst;
 
 	envlst = (ft_shell())->expanded_env;
 	while (envlst)
 	{
-		if (!ft_strcmp(content, envlst->content))
-        {
-            dprintf(2, "content = %s, true\n", envlst->content);
+		if (!ft_strcmp(field, envlst->field))
 			return (true);
-        }
 		envlst = envlst->next;
 	}
 	return (false);
