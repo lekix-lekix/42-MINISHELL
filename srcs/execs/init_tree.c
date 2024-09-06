@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 15:32:32 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/06 16:13:48 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	ft_heredoc_sigint_handler(int signum)
 {
 	(void)signum;
-	printf("WE are here 15\n");
+	// printf("WE are here 15\n");
 	close(ft_shell()->ft_stdin);
 	close(ft_shell()->ft_stdout);
 	gbg_coll(NULL, ALL, FLUSH_ALL);
@@ -30,7 +30,7 @@ void	ft_heredoc(t_token *io, int p[2])
 
 	signal(SIGINT, ft_heredoc_sigint_handler);
 	quotes = io->content;
-	printf("WE are here 17\n");
+	// printf("WE are here 17\n");
 	while (*quotes && *quotes != '"' && *quotes != '\'')
 		quotes++;
 	while (1)
@@ -64,7 +64,7 @@ static bool	ft_leave_leaf(int p[2], int *pid)
 	close(p[0]);
 	// close(ft_shell()->stdin);
 	// close(ft_shell()->stdout);
-	printf("WE ARE HERE 28\n");
+	// printf("WE ARE HERE 28\n");
 	if (WIFEXITED(*pid) && WEXITSTATUS(*pid) == SIGINT)
 		return (true);
 	return (false);

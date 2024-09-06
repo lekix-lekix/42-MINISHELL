@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/06 15:30:00 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/06 16:13:38 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ char	*get_path(char **envp)
 		{
 			str = ft_strtrim(envp[i], "PATH=");
 			if (!str || gbg_coll(str, ENV, ADD) == -1)
-				return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
+				return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(),
+					exit(255), NULL);
 		}
 	}
 	return (str);
@@ -92,7 +93,7 @@ static void	ft_start_execution(t_ast **tree)
 	{
 		// If the program is quited during heredoc,
 		// we have clean the mess afterword I guess
-		printf("WE ARE HERE 98\n");
+		printf(" HERE 98\n");
 		// gbg_coll(NULL, PARSING, FLUSH_ONE);
 		ft_close_fds();
 		gbg_coll(NULL, ALL, FLUSH_ALL);
@@ -135,10 +136,12 @@ t_token	*create_cmd_node_no_sep(char *input)
 
 	node = malloc(sizeof(t_token));
 	if (!node || gbg_coll(node, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
+			NULL);
 	node->content = malloc(sizeof(char) * (ft_strlen(input) + 1));
 	if (!node->content || gbg_coll(node->content, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
+			NULL);
 	ft_strlcpy(node->content, input, ft_strlen(input) + 1);
 	node->redirections = NULL;
 	node->pipe_redir[0] = -1;
@@ -180,17 +183,17 @@ void	more_tokenization(t_token **lst)
 	}
 }
 
-void trim_contents(t_token **lst)
+void	trim_contents(t_token **lst)
 {
-    t_token *current;
+	t_token	*current;
 
-    current = *lst;
-    while (current)
-    {
-        if (current->content)
-            current->content = msh_strtrim_spaces(current->content);
-        current = current->next;
-    }
+	current = *lst;
+	while (current)
+	{
+		if (current->content)
+			current->content = msh_strtrim_spaces(current->content);
+		current = current->next;
+	}
 }
 
 int	start_parsing(char *prompt)
@@ -208,7 +211,7 @@ int	start_parsing(char *prompt)
 	// printf("after more tokenization =======\n");
 	// print_lst(&input);
 	// printf("=======\n");
-    trim_contents(&input);
+	trim_contents(&input);
 	set_redir_lst(&input);
 	// printf("after set redir lst  =======\n");
 	// print_lst(&input);
@@ -238,10 +241,10 @@ int	start_parsing(char *prompt)
 
 int	main(int argc, char **argv, char **env)
 {
-    t_minishell	*data;
+	t_minishell	*data;
 	char		*line;
-	// int			fd;
 
+	// int			fd;
 	// fd = open("./stderr_tmp", O_RDWR);
 	// if (dup2(fd, STDERR_FILENO) == -1)
 	// 	perror("duppp");
@@ -272,8 +275,8 @@ int	main(int argc, char **argv, char **env)
 				add_history(data->prompt);
 			start_parsing(data->prompt);
 			gbg_coll(NULL, PARSING, FLUSH_ONE);
-            close(ft_shell()->ft_stdin);
-            close(ft_shell()->ft_stdout);
+			close(ft_shell()->ft_stdin);
+			close(ft_shell()->ft_stdout);
 			// gbg_coll(NULL, PARSING, FLUSH_ALL);
 			free(data->prompt);
 		}
