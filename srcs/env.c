@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 17:31:49 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/03 14:49:53 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/05 13:08:23 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,13 @@ char	**env_lst_to_arr(t_env **lst)
 	node = *lst;
 	env_arr = malloc(sizeof(char *) * (env_lst_size(lst) + 1));
 	if (!env_arr || gbg_coll(env_arr, ENV, ADD) == -1)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 	i = 0;
 	while (node)
 	{
 		env_arr[i] = ft_strjoin(node->field, node->content);
 		if (!env_arr[i] || gbg_coll(env_arr[i], ENV, ADD) == -1)
-			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+			return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 		node = node->next;
 		i++;
 	}
@@ -79,14 +79,14 @@ t_env	*create_env_node(char *str, char *sep)
 
 	new_node = malloc(sizeof(t_env));
 	if (!new_node || gbg_coll(new_node, ENV, ADD) == -1)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 	new_node->field = malloc(sizeof(char) * (ft_strlen_sep(str, sep) + 1));
 	if (!new_node->field || gbg_coll(new_node->field, ENV, ADD) == -1)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 	ft_strlcpy(new_node->field, str, ft_strlen_sep(str, sep) + 1);
 	new_node->content = malloc(sizeof(char) * (ft_strlen(sep + 1) + 1));
 	if (!new_node->content || gbg_coll(new_node->content, ENV, ADD) == -1)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 	ft_strlcpy(new_node->content, sep + 1, ft_strlen(sep));
 	new_node->next = NULL;
 	return (new_node);

@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 05:35:30 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/05 21:24:54 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/05 11:53:43 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	ft_heredoc_expand_writer(char *str, size_t i, int fd)
 	if (i != start)
 	{
 		tmp = ft_substr(str, start, i);
-		tmp = ft_get_envlst_content(tmp, (ft_shell()));
+		tmp = ft_get_envlst_content(tmp, (&ft_shell()->env_lst));
 		if (tmp)
 			ft_putstr_fd(tmp, fd);
 	}

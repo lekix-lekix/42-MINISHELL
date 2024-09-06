@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/02 16:28:33 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/06 14:19:45 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,9 @@ t_env				*get_env_lst(char **envp);
 int					ft_strlen_sep(char *str, char *sep);
 int					ft_strcpy_sep_ptr(char *dest, char *input, char *sep);
 
+//
+void				ft_close_fds(void);
+
 // tokenization
 int					trim_token_fields(t_token **lst);
 t_token				*tokenize_input(char *input);
@@ -211,11 +214,11 @@ char				*msh_strdup(const char *s, int mlc_lst);
 // The builtins
 int					ft_exec_echo(char **args);
 int					ft_exec_pwd(char **args);
-int					ft_do_cd(char **path, t_minishell *data);
+int					ft_do_cd(char **path);
 void				ft_update_envlst(char *field, char *content, bool create);
 int					print_env(t_env **lst);
 int					ft_exec_export(char **args);
-int					ft_exec_builtins(char **args, t_minishell *data);
+int					ft_exec_builtins(char **args);
 char				*ft_extract_val(char *str);
 char				*ft_extract_key(char *str);
 int					ft_strcmp(const char *s1, const char *s2);
@@ -224,7 +227,7 @@ bool				ft_env_entry_exists(char *content);
 int					ft_exec_unset(char **args);
 void				*ft_unset_cleaner(void *ptr, bool clean);
 int					ft_check_key(char *str);
-char				*ft_get_envlst_content(char *content, t_minishell *data);
+char				*ft_get_envlst_content(char *content, t_env **env_lst);
 
 // The non-builtins
 int					ft_exec_non_builtins(t_token *node);
@@ -246,7 +249,7 @@ char				*get_next_word(char **input_str);
 
 // paths utils
 // char				*ft_check_path(char **contents, char **env,
-					// int *exit_status, int *i);
+// int *exit_status, int *i);
 char				*ft_check_path(char *cmd, char **env, int *exit_status);
 void				lst_env_add_back(t_env **lst, t_env *new);
 void				consume_node(t_token **lst, t_token *node);

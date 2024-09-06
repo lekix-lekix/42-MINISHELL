@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/02 14:20:05 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/06 13:02:08 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static t_env	*ft_envlst_new(char *content, char *field)
 
 	new = (t_env *)ft_calloc(1, sizeof(t_env));
 	if (!new || gbg_coll(new, ENV, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 	new->content = msh_strdup(content, ENV);
 	if (field)
 	{
@@ -29,18 +29,13 @@ static t_env	*ft_envlst_new(char *content, char *field)
 	return (new);
 }
 
-char	*ft_get_envlst_content(char *key, t_minishell *data)
+char	*ft_get_envlst_content(char *key, t_env **env_lst)
 {
 	t_env	*envlst;
 
-	envlst = data->env_lst;
+	envlst = *env_lst;
 	while (envlst)
 	{
-		// I'm using a function that I shuldn't use here,
-		// don't delete this comment unless you change this function
-
-        // that is something you shouldnt use indeed
-		// if (!ft_strncmp_loco(key, envlst->field, ft_strlen(key)))
         if (!ft_strcmp(key, envlst->field))
 			return (envlst->content);
 		envlst = envlst->next;
@@ -99,7 +94,7 @@ char	*ft_extract_val(char *str)
 		{
 			final_str = ft_substr(str, 0, i + 1);
 			if (!final_str || gbg_coll(final_str, ENV, ADD))
-				return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+				return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 			return (final_str);
 		}
 		i++;
@@ -121,7 +116,7 @@ char	*ft_extract_key(char *str)
 			i++;
 			final_str = ft_substr(str, i, ft_strlen(str) - i);
 			if (!final_str || gbg_coll(final_str, ENV, ADD))
-				return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+				return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 			return (final_str);
 		}
 		i++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_remove_quotes.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:36:19 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/02 15:43:26 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:07:04 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*ft_strip_quotes(char *str)
 	j = 0;
 	ret = ft_calloc(1 + ft_unquoted_strlen(str), sizeof(char));
 	if (!ret || gbg_coll(ret, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 	while (str[i])
 	{
 		if (str[i] == '\'' || str[i] == '"')
@@ -77,19 +77,23 @@ char	*ft_clean_empty_chars(char *sr)
 	char	*tmp;
 	char	*ret;
 	size_t	dstsize;
-
-	if ((sr[0] == '\'' && sr[1] == '\'' && !sr[2]) || (sr[0] == '"'
-			&& sr[1] == '"' && !sr[2]))
+	char	rm_qoute;
+	
+	rm_qoute = '\0';
+	if (sr[0] == '\'' || sr[0] == '"')
+		rm_qoute = sr[0];
+	if ((sr[0] == rm_qoute && sr[1] == rm_qoute && !sr[2]) || (sr[0] == rm_qoute
+			&& sr[1] == rm_qoute && !sr[2]))
 		return (sr);
 	tmp = ft_calloc(ft_strlen(sr) + 1, sizeof(char));
 	if (!tmp || gbg_coll(tmp, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 	x = 0;
 	y = 0;
 	while (sr[x])
 	{
-		if ((sr[x] == '\'' && sr[x + 1] == '\'') || (sr[x] == '"' && sr[x
-				+ 1] == '"'))
+		if ((sr[x] == rm_qoute && sr[x + 1] == rm_qoute) || (sr[x] == rm_qoute && sr[x
+				+ 1] == rm_qoute))
 			x += 2;
 		else
 			tmp[y++] = sr[x++];
@@ -97,6 +101,6 @@ char	*ft_clean_empty_chars(char *sr)
 	dstsize = ft_strlen(tmp) + 1;
 	ret = ft_calloc(dstsize, sizeof(char));
 	if (!ret || gbg_coll(ret, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 	return (ft_strlcpy(ret, tmp, dstsize), ret);
 }

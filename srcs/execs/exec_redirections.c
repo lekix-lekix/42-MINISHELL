@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/30 22:00:16 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/04 16:15:21 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	ft_append(t_redir *redirections, int *le_status)
         return (1);
 	}   
 	if (dup2(fd, STDOUT_FILENO) == -1)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), -1);
 	close(fd);
 	*le_status = 0;
 	return (0);
@@ -64,7 +64,7 @@ int	ft_in(t_redir *redirections, int *le_status)
         return (1);
 	}
 	if (dup2(fd, STDIN_FILENO) == -1)
-        return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
+        return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), -1);
 	close(fd);
 	*le_status = 0;
 	return (*le_status);
@@ -89,7 +89,7 @@ int	ft_out(t_redir *redirections, int *status)
         return (1);
 	}
 	if (dup2(fd, STDOUT_FILENO) == -1)
-        return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
+        return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), -1);
 	close(fd);
 	*status = 0;
 	return (*status);

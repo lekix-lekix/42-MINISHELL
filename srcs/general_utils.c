@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:14:54 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/03 12:52:56 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/05 13:17:52 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ char	*ft_join(char *s1, char *s2)
 	total_len = (ft_strlen(s1) + ft_strlen(s2));
 	new_arr = (char *)malloc(sizeof(char) * (total_len + 1));
 	if (!new_arr || gbg_coll(new_arr, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
+			NULL);
 	i = -1;
 	while (s1[++i])
 		new_arr[i] = s1[i];
@@ -74,16 +75,25 @@ char	*ft_join(char *s1, char *s2)
 	return (new_arr);
 }
 
-bool	ft_env_entry_exists(char *content)
+bool	ft_env_entry_exists(char *field)
 {
 	t_env	*envlst;
 
 	envlst = (ft_shell())->expanded_env;
 	while (envlst)
 	{
-		if (!ft_strcmp(content, envlst->content))
+		if (!ft_strcmp(field, envlst->field))
+		{
+			printf("THE SE: %s\n", envlst->field);
 			return (true);
+		}
 		envlst = envlst->next;
 	}
 	return (false);
+}
+
+void	ft_close_fds(void)
+{
+	close(ft_shell()->stdin);
+	close(ft_shell()->stdout);
 }

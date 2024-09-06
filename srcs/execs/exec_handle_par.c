@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle_par.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:15:37 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/30 06:20:40 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/04 16:27:39 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 int	set_pipe_stdout(int *after_par_pipe)
 {
 	if (dup2(after_par_pipe[1], STDOUT_FILENO) == -1)
-		return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL), exit(255),
+		return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
 			-1);
 	close(after_par_pipe[1]);
+	ft_close_fds();
 	return (0);
 }
 
@@ -29,7 +30,7 @@ int	prep_exec_par(t_ast *sub_tree, int *after_par_pipe)
 	{
 		pid = fork();
 		if (pid == -1)
-			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
+			return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), -1);
 		if (pid == 0)
 		{
 			(ft_shell())->signint_child = true;

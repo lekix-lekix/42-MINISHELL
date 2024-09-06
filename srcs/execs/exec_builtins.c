@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:31:03 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/02 14:05:05 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/05 12:11:01 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,20 +29,20 @@ int	ft_strncmp_loco(const char *s1, const char *s2, size_t n)
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
-int	ft_exec_builtins(char **args, t_minishell *data)
+int	ft_exec_builtins(char **args)
 {
 	if (ft_strcmp(args[0], "echo") == 0)
 		return (ft_exec_echo(args));
 	if (ft_strcmp(args[0], "pwd") == 0)
 		return (ft_exec_pwd(args));
 	if (ft_strcmp(args[0], "env") == 0)
-		return (print_env(&data->env_lst));
+		return (print_env(&ft_shell()->env_lst));
 	if (ft_strcmp(args[0], "export") == 0)
 		return (ft_exec_export(args));
 	if (ft_strcmp(args[0], "unset") == 0)
 		return (ft_exec_unset(args));
 	if (ft_strcmp(args[0], "cd") == 0)
-		return (ft_do_cd(args, data));
+		return (ft_do_cd(args));
 	ft_exit(args);
 	return (ENO_GENERAL);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:07:00 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/20 17:19:47 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/05 12:31:21 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	ft_check_option(char *sr)
 	x++;
 	while (sr[x])
 	{
-		if (sr[x] == 'n')
+		if (sr[1] == 'n' && ft_is_space(sr[1 + 1]))
 			return (1);
 		x++;
 	}

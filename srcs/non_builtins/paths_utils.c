@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   paths_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:19:27 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/02 16:28:20 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:11:59 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	print_msh_error(char *err, char *cmd)
 	str = ft_join(str, err);
 	str = ft_join(str, "\n");
 	if (!str)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), -1);
 	write(2, str, ft_strlen(str));
 	return (0);
 }
@@ -91,7 +91,7 @@ char	**ft_get_paths(char **env)
 		{
 			path = ft_split(env[x] + 5, ':');
 			if (!path)
-				return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+				return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 			return (path);
 		}
 		x++;

@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/03 13:32:30 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/06 14:31:21 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 static void	ft_heredoc_sigint_handler(int signum)
 {
 	(void)signum;
-	gbg_coll(NULL, ENV, FREE);
+	printf("WE are here 15\n");
+	close(ft_shell()->stdin);
+	close(ft_shell()->stdout);
+	gbg_coll(NULL, ALL, FLUSH_ALL);
 	exit(SIGINT);
 }
 
@@ -26,6 +29,7 @@ void	ft_heredoc(t_token *io, int p[2])
 
 	signal(SIGINT, ft_heredoc_sigint_handler);
 	quotes = io->content;
+	printf("WE are here 17\n");
 	while (*quotes && *quotes != '"' && *quotes != '\'')
 		quotes++;
 	while (1)
@@ -44,6 +48,8 @@ void	ft_heredoc(t_token *io, int p[2])
 		}
 		free(line);
 	}
+	close(p[0]);
+	close(p[1]);
 	exit(0);
 }
 
@@ -53,6 +59,10 @@ static bool	ft_leave_leaf(int p[2], int *pid)
 	signal(SIGQUIT, ft_sigquit_handler);
 	(ft_shell())->signint_child = false;
 	close(p[1]);
+	close(p[0]);
+	// close(ft_shell()->stdin);
+	// close(ft_shell()->stdout);
+	printf("WE ARE HERE 28\n");
 	if (WIFEXITED(*pid) && WEXITSTATUS(*pid) == SIGINT)
 		return (true);
 	return (false);
@@ -72,7 +82,8 @@ char	**ft_concat_str_arr(char **arr, char **arr2)
 	total_len = len1 + len2;
 	res = (char **)malloc(sizeof(char *) * (total_len + 1));
 	if (!res || gbg_coll(res, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
+			NULL);
 	x = -1;
 	while (++x < len1)
 		res[x] = msh_strdup(arr[x], PARSING);

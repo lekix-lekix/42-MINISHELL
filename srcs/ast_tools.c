@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:27:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/03 12:45:13 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:09:17 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_token	*lst_dup(t_token **lst, t_token *node)
 	{
 		current_cpy = malloc(sizeof(t_token));
 		if (!current_cpy || gbg_coll(current_cpy, PARSING, ADD))
-			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+			return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 		copy_token_attributes(current, current_cpy);
 		insert_node_lst(&lst_cpy, current_cpy);
 		current = current->next;
@@ -90,7 +90,7 @@ t_ast	*create_ast_node(t_token *node)
 
 	new_node = malloc(sizeof(t_ast));
 	if (!new_node || gbg_coll(new_node, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 	new_node->token_node = node;
 	new_node->left = NULL;
 	new_node->right = NULL;

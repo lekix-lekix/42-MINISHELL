@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:02:12 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/02 14:20:28 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/06 13:01:29 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@ static int	ft_export_err_msg(char *identifier)
 	ft_putstr_fd("minishell: export: `", 2);
 	if (identifier[0] == '-')
 	{
-		ft_putchar_fd(identifier[0], 2);
-		ft_putchar_fd(identifier[1], 2);
+		ft_print_err(identifier);
 		ft_putstr_fd("': invalid option\n", 2);
 		return (1);
 	}
@@ -34,12 +33,9 @@ static void ft_export_list(t_env **envlst) {
     list = *envlst;
     while (list)
 	{
-        // printf("Current list element: %p, Field: %s\n", (void*)list, list->field ? list->field : "NULL");
-		// printf("Current list element: %p, Content: %s\n", (void*)list, list->content ? list->content : "NULL");
-		
 		if (list->field != NULL)
 		{
-			printf("export %s\"", list->field ? list->field : " ");
+			printf("export %s\"", list->field);
 			i = 0;
 			while ((list->content) && (list->content)[i])
 			{
@@ -78,12 +74,10 @@ int	ft_exec_export(char **args)
 	int		exit_s;
 	char	*key;
 	t_env	*envlst;
-	// t_env	*le_env;
 
 	exit_s = 0;
 	i = 1;
-	envlst = ft_shell()->expanded_env;
-	// le_env = ft_shell()->env_lst;
+	envlst = ft_shell()->env_lst;
 	if (!args[1] || args[1][0] == '$')
 		return ( ft_export_list(&envlst), 0);
 	while (args[i])
