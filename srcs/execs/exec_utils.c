@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 00:17:24 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/04 15:16:22 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/06 15:36:13 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void	ft_reset_ports(bool piped)
 {
 	if (piped)
 		return ;
-	dup2((ft_shell())->stdin, 0);
-	dup2((ft_shell())->stdout, 1);
+	dup2((ft_shell())->ft_stdin, 0);
+	dup2((ft_shell())->ft_stdout, 1);
 }
 
 int	ft_get_la_status(int la_status)

@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 17:18:16 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/30 09:42:41 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/05 11:11:25 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ void	ft_exit(char **args)
 		else
 			exit_s = ft_exittoi(args[1]);
 	}
+    close(ft_shell()->ft_stdin);
+    close(ft_shell()->ft_stdout);
     gbg_coll(NULL, ALL, FLUSH_ALL);
 	exit(exit_s);
 }

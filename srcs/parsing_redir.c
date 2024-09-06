@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_redir.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:13:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/03 14:51:51 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/06 15:30:25 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ int	check_redirections(t_token **lst)
 		else if (is_a_redir_operator(current))
 		{
 			if (handle_redirection(lst, &current) == -1)
-				return (print_newline_syntax_error());
+				return (print_token_syntax_error(prev));
 			continue ;
 		}
 		prev = current;

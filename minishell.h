@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/06 14:19:45 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/06 15:43:26 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # include <unistd.h>
 
 # define PER_ERR "Permission denied"
+# define NOT_FOUND_ERR "No such file or directory"
 # define CMD_ERR "command not found"
 # define OPEN_ERR "Error opening file"
 # define IS_DIR_ERR "Is a directory"
@@ -152,8 +153,8 @@ typedef struct s_minishell
 	int				end_exec;
 	int				exec_in_par;
 	int				pids_num;
-	int				stdin;
-	int				stdout;
+	int				ft_stdin;
+	int				ft_stdout;
 	t_ast			*full_exec_tree;
 	t_ast			*exec_tree;
 	t_ast			*node;
@@ -179,6 +180,7 @@ void				ft_close_fds(void);
 // tokenization
 int					trim_token_fields(t_token **lst);
 t_token				*tokenize_input(char *input);
+char				*msh_strtrim_spaces(char const *s1);
 
 // Merge combined functions
 void				print_tree(t_ast **tree);
@@ -219,8 +221,8 @@ void				ft_update_envlst(char *field, char *content, bool create);
 int					print_env(t_env **lst);
 int					ft_exec_export(char **args);
 int					ft_exec_builtins(char **args);
-char				*ft_extract_val(char *str);
-char				*ft_extract_key(char *str);
+char				*ft_extract_field(char *str);
+char				*ft_extract_content(char *str);
 int					ft_strcmp(const char *s1, const char *s2);
 bool				ft_is_builtin(char *arg);
 bool				ft_env_entry_exists(char *content);
@@ -250,7 +252,8 @@ char				*get_next_word(char **input_str);
 // paths utils
 // char				*ft_check_path(char **contents, char **env,
 // int *exit_status, int *i);
-char				*ft_check_path(char *cmd, char **env, int *exit_status);
+char				*ft_check_path(char **contents, char **env,
+						int *exit_status, int *i);
 void				lst_env_add_back(t_env **lst, t_env *new);
 void				consume_node(t_token **lst, t_token *node);
 int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
