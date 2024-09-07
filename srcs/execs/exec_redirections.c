@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/04 16:15:21 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/06 16:32:29 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ int	ft_errmsg(void)
 
 int	ft_append(t_redir *redirections, int *le_status)
 {
-	int	fd;
-    char *err;
+	int		fd;
+	char	*err;
 
 	if (!redirections->filename)
 	{
@@ -31,11 +31,11 @@ int	ft_append(t_redir *redirections, int *le_status)
 	fd = open(redirections->filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (fd == -1)
 	{
-        err = ft_join("bash: ", redirections->filename);
-        perror(err);
+		err = ft_join("bash: ", redirections->filename);
+		perror(err);
 		*le_status = 1;
-        return (1);
-	}   
+		return (1);
+	}
 	if (dup2(fd, STDOUT_FILENO) == -1)
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), -1);
 	close(fd);
@@ -45,26 +45,26 @@ int	ft_append(t_redir *redirections, int *le_status)
 
 int	ft_in(t_redir *redirections, int *le_status)
 {
-	int	fd;
-    char *err;
+	int		fd;
+	char	*err;
 
 	if (!redirections->filename)
 	{
 		// printf("There wasn't a filename\n");
-        // dprintf(2, "filename pb\n");
+		// dprintf(2, "filename pb\n");
 		*le_status = ft_errmsg();
 		return (*le_status);
 	}
 	fd = open(redirections->filename, O_RDONLY);
 	if (fd == -1)
 	{
-        err = ft_join("bash: ", redirections->filename);
-        perror(err);
+		err = ft_join("bash: ", redirections->filename);
+		perror(err);
 		*le_status = 1;
-        return (1);
+		return (1);
 	}
 	if (dup2(fd, STDIN_FILENO) == -1)
-        return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), -1);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), -1);
 	close(fd);
 	*le_status = 0;
 	return (*le_status);
@@ -72,8 +72,8 @@ int	ft_in(t_redir *redirections, int *le_status)
 
 int	ft_out(t_redir *redirections, int *status)
 {
-	int	fd;
-    char *err;
+	int		fd;
+	char	*err;
 
 	if (!redirections->filename)
 	{
@@ -83,13 +83,13 @@ int	ft_out(t_redir *redirections, int *status)
 	fd = open(redirections->filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd == -1)
 	{
-        err = ft_join("bash: ", redirections->filename);
-        perror(err);
+		err = ft_join("bash: ", redirections->filename);
+		perror(err);
 		*status = 1;
-        return (1);
+		return (1);
 	}
 	if (dup2(fd, STDOUT_FILENO) == -1)
-        return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), -1);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), -1);
 	close(fd);
 	*status = 0;
 	return (*status);
@@ -101,8 +101,8 @@ int	ft_check_redirections(t_token *node)
 	int		le_status;
 
 	redirections = node->redirections;
-    expand_redirections(&redirections);
-    // print_redir_lst(&redirections);
+	expand_redirections(&redirections);
+	// print_redir_lst(&redirections);
 	while (redirections)
 	{
 		if (ft_strcmp(redirections->filename, "pipe") == 0)
@@ -117,7 +117,7 @@ int	ft_check_redirections(t_token *node)
 			&& ft_append(redirections, &le_status) != ENO_SUCCESS)
 			return (le_status);
 		else if (redirections->redir_type == REDIR_HEREDOC)
-			(dup2(redirections->heredoc, 0), close(redirections->heredoc));
+			dup2(redirections->heredoc, 0), close(redirections->heredoc);
 		redirections = redirections->next;
 	}
 	return (ENO_SUCCESS);

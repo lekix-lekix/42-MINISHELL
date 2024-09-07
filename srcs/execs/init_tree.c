@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 16:13:48 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/06 16:30:53 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static bool	ft_leave_leaf(int p[2], int *pid)
 	signal(SIGQUIT, ft_sigquit_handler);
 	(ft_shell())->signint_child = false;
 	close(p[1]);
-	close(p[0]);
+	// close(p[0]);
 	// close(ft_shell()->stdin);
 	// close(ft_shell()->stdout);
 	// printf("WE ARE HERE 28\n");
