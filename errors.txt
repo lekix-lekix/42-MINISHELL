@@ -1,0 +1,53 @@
+minishell$       // Remove trailing quotes
+THE TMP: //
+After cleaning: //
+THE TMP: Remove
+After cleaning: Remove
+THE TMP: trailing
+After cleaning: trailing
+THE TMP: quotes
+After cleaning: quotes
+minishell: //: Is a directory
+bash: execve: : Permission denied
+==240001== 
+==240001== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==240001== 
+==240001== HEAP SUMMARY:
+==240001==     in use at exit: 208,743 bytes in 240 blocks
+==240001==   total heap usage: 1,431 allocs, 1,191 frees, 383,634 bytes allocated
+==240001== 
+==240001== 117 bytes in 10 blocks are indirectly lost in loss record 26 of 72
+==240001==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==240001==    by 0x40F057: ft_malloc_cpy (in /home/sabakar-/Documents/forSchool/minishell/minishell)
+==240001==    by 0x40EE98: ft_fill_arr (in /home/sabakar-/Documents/forSchool/minishell/minishell)
+==240001==    by 0x40EC42: ft_split (in /home/sabakar-/Documents/forSchool/minishell/minishell)
+==240001==    by 0x406C68: ft_get_paths (paths_utils.c:71)
+==240001==    by 0x406A13: ft_check_path (paths_utils.c:52)
+==240001==    by 0x403A2C: ft_exec_non_builtins (exec_non_builtins.c:24)
+==240001==    by 0x404719: init_only_child_no_fork (exec_init_child.c:62)
+==240001==    by 0x403C40: ft_start_exec (start_exec.c:52)
+==240001==    by 0x401BB0: ft_start_execution (minishell.c:105)
+==240001==    by 0x401A93: start_parsing (minishell.c:234)
+==240001==    by 0x401CA4: main (minishell.c:312)
+==240001== 
+==240001== 205 (88 direct, 117 indirect) bytes in 1 blocks are definitely lost in loss record 30 of 72
+==240001==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==240001==    by 0x40EBE9: ft_split (in /home/sabakar-/Documents/forSchool/minishell/minishell)
+==240001==    by 0x406C68: ft_get_paths (paths_utils.c:71)
+==240001==    by 0x406A13: ft_check_path (paths_utils.c:52)
+==240001==    by 0x403A2C: ft_exec_non_builtins (exec_non_builtins.c:24)
+==240001==    by 0x404719: init_only_child_no_fork (exec_init_child.c:62)
+==240001==    by 0x403C40: ft_start_exec (start_exec.c:52)
+==240001==    by 0x401BB0: ft_start_execution (minishell.c:105)
+==240001==    by 0x401A93: start_parsing (minishell.c:234)
+==240001==    by 0x401CA4: main (minishell.c:312)
+==240001== 
+==240001== LEAK SUMMARY:
+==240001==    definitely lost: 88 bytes in 1 blocks
+==240001==    indirectly lost: 117 bytes in 10 blocks
+==240001==      possibly lost: 0 bytes in 0 blocks
+==240001==    still reachable: 0 bytes in 0 blocks
+==240001==         suppressed: 208,538 bytes in 229 blocks
+==240001== 
+==240001== For lists of detected and suppressed errors, rerun with: -s
+==240001== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
