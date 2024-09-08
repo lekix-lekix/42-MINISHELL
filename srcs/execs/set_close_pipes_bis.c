@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set_close_pipes_bis.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:23:03 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/04 16:13:51 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/06 15:44:37 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ int	close_pipes_lst(t_lst **pipe_lst)
 		}
 		current = current->next;
 	}
-	close(ft_shell()->stdin);
-	close(ft_shell()->stdout);
+	close(ft_shell()->ft_stdin);
+	close(ft_shell()->ft_stdout);
 	return (0);
 }
 

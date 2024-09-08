@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_check_syntax.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:48:38 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/15 11:32:58 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/02 18:34:30 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,13 +88,22 @@ int	check_tree_syntax(t_ast **tree)
 	error_node = NULL;
 	error_node = get_first_node_tree(root);
 	if (error_node->node_type != CMD)
+    {
+        ft_shell()->exit_status = 2;
 		return (print_ast_syntax_error(error_node));
+    }
 	check_tree_syntax_recursive(root, &error_node, &syntax_flag, &node_nb);
 	error_node = NULL;
 	if (error_node && !error_node->is_in_par)
+    {
+        ft_shell()->exit_status = 2;
 		return (print_ast_syntax_error(error_node));
+    }
 	get_last_node_tree(root, &error_node);
 	if (error_node->node_type != CMD && !error_node->is_in_par)
+    {
+        ft_shell()->exit_status = 2;
 		return (print_ast_syntax_error(error_node));
+    }
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:14:54 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/05 13:17:52 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/06 15:24:52 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,7 @@ bool	ft_env_entry_exists(char *field)
 	while (envlst)
 	{
 		if (!ft_strcmp(field, envlst->field))
-		{
-			printf("THE SE: %s\n", envlst->field);
 			return (true);
-		}
 		envlst = envlst->next;
 	}
 	return (false);
@@ -94,6 +91,6 @@ bool	ft_env_entry_exists(char *field)
 
 void	ft_close_fds(void)
 {
-	close(ft_shell()->stdin);
-	close(ft_shell()->stdout);
+	close(ft_shell()->ft_stdin);
+	close(ft_shell()->ft_stdout);
 }

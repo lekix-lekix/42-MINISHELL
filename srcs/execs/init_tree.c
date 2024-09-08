@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_tree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 14:31:21 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/06 16:13:48 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 static void	ft_heredoc_sigint_handler(int signum)
 {
 	(void)signum;
-	printf("WE are here 15\n");
-	close(ft_shell()->stdin);
-	close(ft_shell()->stdout);
+	// printf("WE are here 15\n");
+	close(ft_shell()->ft_stdin);
+	close(ft_shell()->ft_stdout);
 	gbg_coll(NULL, ALL, FLUSH_ALL);
 	exit(SIGINT);
 }
@@ -26,10 +26,11 @@ void	ft_heredoc(t_token *io, int p[2])
 {
 	char	*line;
 	char	*quotes;
+    char    *input;
 
 	signal(SIGINT, ft_heredoc_sigint_handler);
 	quotes = io->content;
-	printf("WE are here 17\n");
+	// printf("WE are here 17\n");
 	while (*quotes && *quotes != '"' && *quotes != '\'')
 		quotes++;
 	while (1)
@@ -43,13 +44,14 @@ void	ft_heredoc(t_token *io, int p[2])
 			ft_heredoc_expander(line, p[1]);
 		else
 		{
-			ft_putstr_fd(line, p[1]);
-			ft_putstr_fd("\n", p[1]);
+            input = ft_join(line, "\n");
+            write(2, input, ft_strlen(line));
 		}
 		free(line);
 	}
-	close(p[0]);
-	close(p[1]);
+    close(p[0]);
+    close(p[1]);
+    gbg_coll(NULL, ALL, FLUSH_ALL);
 	exit(0);
 }
 
@@ -62,7 +64,7 @@ static bool	ft_leave_leaf(int p[2], int *pid)
 	close(p[0]);
 	// close(ft_shell()->stdin);
 	// close(ft_shell()->stdout);
-	printf("WE ARE HERE 28\n");
+	// printf("WE ARE HERE 28\n");
 	if (WIFEXITED(*pid) && WEXITSTATUS(*pid) == SIGINT)
 		return (true);
 	return (false);

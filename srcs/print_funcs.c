@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_funcs.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:55:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/05 13:12:44 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/06 15:30:48 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ int	print_env(t_env **lst)
 	while (node)
 	{
 		printf("%s=", node->field);
-		printf("%s\n", node->content);
+		if (node->content)
+            printf("%s\n", node->content);
+        else
+            printf("\n");
 		node = node->next;
 	}
 	return (0);
@@ -67,6 +70,9 @@ void	print_lst(t_token **lst)
 			while (root->contents[i])
 			{
 				printf("contents[%d] = %s\n", i, root->contents[i]);
+                int j = -1;
+                while (root->contents[i][++j])
+                    printf("char %d = %d\n", i, root->contents[i][j]);
 				i++;
 			}
 		}

@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:27:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/23 17:06:32 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/03 12:26:12 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	check_quotes(char *str)
 {
 	int		i;
 	char	c;
+	char    *err;
 
 	i = -1;
 	while (str[++i])
@@ -26,7 +27,10 @@ int	check_quotes(char *str)
 			str = ft_strchr(str + i + 1, c);
 			if (!str)
 			{
-				printf("bash: syntax error near unexpected token `%c'\n", c);
+				err = ft_join("bash: syntax error near unexpected token `",
+						&c);
+				err = ft_join(err, "'\n");
+				write(2, err, ft_strlen(err));
 				return (-1);
 			}
 			i = 0;
@@ -39,22 +43,25 @@ int	check_quotes(char *str)
 int	check_redir_syntax(t_token **input)
 {
 	t_token	*current;
+    t_token *prev;
 
+    prev = NULL;
 	current = *input;
 	while (current)
 	{
 		if (is_a_redir_operator(current) && (!current->next
 				|| !current->next->content[0]))
-			return (print_newline_syntax_error());
+			return (/* dprintf(2, "1"),  */print_token_syntax_error(prev));
 		if (is_a_redir_operator(current) && is_a_token_operator(current->next))
-			return (print_token_syntax_error(current->next));
+			return (/* dprintf(2, "2"),  */print_token_syntax_error(prev));
 		if (is_a_redir_operator(current) && is_a_redir_operator(current->next))
-			return (print_token_syntax_error(current->next));
+			return (/* dprintf(2, "3"),  */print_token_syntax_error(current));
 		if (is_a_token_operator(current) && (!current->next
 				|| !current->next->content[0]))
-			return (print_token_syntax_error(current));
+			return (/* dprintf(2, "4"),  */print_token_syntax_error(current));
 		if (is_a_token_operator(current) && is_a_token_operator(current->next))
-			return (print_token_syntax_error(current));
+			return (/* dprintf(2, "5"),  */print_token_syntax_error(current));
+        prev = current;
 		current = current->next;
 	}
 	return (0);

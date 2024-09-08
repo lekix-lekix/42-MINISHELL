@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expands.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/05 12:37:50 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/06 15:49:23 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,19 @@ char	*ft_handle_dollar(char *str, size_t *i)
 	while (ft_is_valid_var_char(str[*i]))
 		(*i)++;
 	var = ft_substr(str, start, *i - start);
-	printf("THE FAR IS HERE: %s\n", var);
+	// printf("THE FAR IS HERE: %s\n", var);
 	if (!var)
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 	env_val = ft_get_envlst_content(var, &ft_shell()->env_lst);
 	if (!env_val)
 	{
-		printf("WE DIDN'T find env val\n");
+		// printf("WE DIDN'T find env val\n");
 		res = ft_strdup("");
 		if (!res || gbg_coll(res, PARSING, ADD))
 			return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 		return (free(var), res);
 	}
+    // dprintf(2, "var = %s\n", var);
 	res = msh_strdup(env_val, PARSING);
 	return (free(var), res);
 }

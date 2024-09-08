@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_init_child.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/05 12:11:40 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/06 15:43:49 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	ft_check_cmds(t_token *token_node)
 	if (ft_is_builtin(token_node->contents[0]))
 	{
 		la_status = ft_exec_builtins(token_node->contents);
+		close(ft_shell()->ft_stdin);
+		close(ft_shell()->ft_stdout);
 		gbg_coll(NULL, ALL, FLUSH_ALL);
 		exit(la_status);
 	}
@@ -35,6 +37,7 @@ int	init_only_child_no_fork(t_token *node)
 {
 	pid_t	pid;
 	int		status;
+
 
 	if (!node->contents || !node->contents[0])
 	{

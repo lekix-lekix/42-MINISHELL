@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 09:06:23 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/23 17:25:31 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/05 14:27:40 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	ft_exec_unset(char **args)
 			err = true;
 		}
 		else
-			ft_unset_helper(ft_extract_val(args[i]));
+			ft_unset_helper(ft_extract_field(args[i]));
 		i++;
 	}
 	return (err);

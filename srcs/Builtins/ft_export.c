@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:02:12 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 13:01:29 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/06 15:22:45 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,36 +19,90 @@ static int	ft_export_err_msg(char *identifier)
 	{
 		ft_print_err(identifier);
 		ft_putstr_fd("': invalid option\n", 2);
-		return (1);
+		return (2);
 	}
 	ft_putstr_fd(identifier, 2);
 	ft_putstr_fd("': not a valid identifier\n", 2);
 	return (1);
 }
 
-static void ft_export_list(t_env **envlst) {
-	t_env *list;
-	size_t i;
-	
-    list = *envlst;
-    while (list)
+void	env_lst_add_back(t_env **envlst, t_env *new_node)
+{
+	t_env	*current;
+
+	current = *envlst;
+	if (!current)
 	{
-		if (list->field != NULL)
+		*envlst = new_node;
+		return ;
+	}
+	while (current->next)
+		current = current->next;
+	current->next = new_node;
+}
+
+t_env	*env_cpy_lst(t_env **envlst)
+{
+	t_env	*current;
+	t_env	*envlst_cpy;
+	t_env	*new_node;
+
+	envlst_cpy = NULL;
+	current = *envlst;
+	while (current)
+	{
+		new_node = malloc(sizeof(t_env));
+		if (!new_node || gbg_coll(new_node, PARSING, ADD))
+			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		new_node->field = current->field;
+        new_node->content = current->content;
+		new_node->next = NULL;
+		env_lst_add_back(&envlst_cpy, new_node);
+		current = current->next;
+	}
+	return (envlst_cpy);
+}
+
+t_env	*sort_envlst(t_env **envlst)
+{
+	t_env	*sorted_lst;
+	t_env	*current;
+	t_env	tmp;
+
+	sorted_lst = env_cpy_lst(envlst);
+	current = sorted_lst;
+	while (current)
+	{
+		if (current->next && current->field && current->next->field
+			&& ft_strcmp(current->field, current->next->field) > 0)
 		{
-			printf("export %s\"", list->field);
-			i = 0;
-			while ((list->content) && (list->content)[i])
-			{
-				if ((list->content)[i] == '$' || (list->content)[i] == '"')
-					printf("\\%c", (list->content)[i++]);
-				else
-					printf("%c", (list->content)[i++]);
-			}
-			printf("\"\n");
+			tmp.field = current->next->field;
+			tmp.content = current->next->content;
+			current->next->field = current->field;
+			current->next->content = current->content;
+			current->field = tmp.field;
+			current->content = tmp.content;
+			current = sorted_lst;
+			continue ;
 		}
-		else if (list->field == NULL)
-			printf("export %s\n", list->content);
-        list = list->next;
+		current = current->next;
+	}
+	return (sorted_lst);
+}
+
+static void	ft_export_list(t_env **envlst)
+{
+	t_env	*list;
+
+	// size_t	i;
+	list = sort_envlst(envlst);
+	while (list)
+	{
+		if (list->content)
+			printf("export %s=\"%s\"\n", list->field, list->content);
+		else
+			printf("export %s\n", list->field);
+		list = list->next;
 	}
 }
 
@@ -72,25 +126,25 @@ int	ft_exec_export(char **args)
 {
 	int		i;
 	int		exit_s;
-	char	*key;
-	t_env	*envlst;
+	char	*field;
+	t_env	*envlst;    
 
 	exit_s = 0;
 	i = 1;
 	envlst = ft_shell()->env_lst;
 	if (!args[1] || args[1][0] == '$')
-		return ( ft_export_list(&envlst), 0);
+		return (ft_export_list(&envlst), 0);
 	while (args[i])
 	{
 		if (ft_check_key(args[i]) == 0)
 			exit_s = ft_export_err_msg(args[i]);
 		else
 		{
-			key = ft_extract_val(args[i]);
-			if (ft_env_entry_exists(key))
-				ft_update_envlst(key, ft_extract_key(args[i]), false);
+			field = ft_extract_field(args[i]);
+			if (ft_env_entry_exists(field))
+				ft_update_envlst(field, ft_extract_content(args[i]), false);
 			else
-				ft_update_envlst(key, ft_extract_key(args[i]), true);
+				ft_update_envlst(field, ft_extract_content(args[i]), true);
 		}
 		i++;
 	}
