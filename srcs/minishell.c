@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/06 16:13:38 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/09 23:05:32 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,10 +221,6 @@ int	start_parsing(char *prompt)
 	if (check_redirections(&input) == -1)
 		return (ft_shell()->exit_status = 2, -1);
 	// dprintf(2, "ddfsdf\n");
-	// printf("after check redir =======\n");
-	// print_lst(&input);
-	// printf("=======\n");
-	// printf("==============\n");
 	join_cmd_args(&input);
 	clean_token_lst(&input);
 	check_delete_global_par(&input);
@@ -233,6 +229,7 @@ int	start_parsing(char *prompt)
 	tree = build_ast(&input, NULL);
 	if (tree && check_tree_syntax(&tree) == -1)
 		return (-1);
+    // print_tree(&tree);
 	ft_shell()->exec_tree = tree;
 	ft_start_execution(&tree);
 	ft_close_fds();
@@ -259,6 +256,7 @@ int	main(int argc, char **argv, char **env)
 		else
 		{
 			line = get_next_line(fileno(stdin), 0);
+            // dprintf(2, "line = '%s'\n", line);
 			data->prompt = ft_strtrim(line, "\n");
 			free(line);
 		}

@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:19:27 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 15:23:37 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/09 23:05:50 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 char	**ft_get_paths(char **env);
 char	*ft_join(char *s1, char *s2);
-char	*check_cmd_access(char *cmd, int *exit_status);
-char	*check_paths(char **paths, char *cmd, int *exit_status);
+char	*check_cmd_access(char *cmd);
+char	*check_paths(char **paths, char *cmd);
 char	*check_cmd_path(char *cmd);
 
 int	print_msh_error(char *err, char *cmd)
@@ -46,13 +46,13 @@ char	*ft_check_path(char **contents, char **env, int *exit_status, int *i)
 		*i = *i + 1;
 		return (ft_check_path(contents, env, exit_status, i));
 	}
-	fpath = check_cmd_access(cmd, exit_status);
+	fpath = check_cmd_access(cmd);
 	if (fpath != NULL)
 		return (cmd);
 	paths = ft_get_paths(env);
 	if (!paths || paths[0] == NULL)
 		return (NULL);
-	fpath = check_paths(paths, cmd, exit_status);
+	fpath = check_paths(paths, cmd);
 	if (fpath != NULL)
 		return (fpath);
 	return (ft_free(paths), NULL);
@@ -87,28 +87,29 @@ int	is_abs_path(char *str)
 	return (0);
 }
 
-char	*check_cmd_access(char *cmd, int *exit_status)
+char	*check_cmd_access(char *cmd)
 {
 	struct stat	file_stat;
 	int			err;
 
 	err = access(cmd, F_OK | R_OK | X_OK);
+    // dprintf(2, "err = %d\n", err);
 	if (err == 0)
 	{
 		stat(cmd, &file_stat);
 		if (S_ISDIR(file_stat.st_mode) && is_abs_path(cmd))
-			return (print_msh_error(IS_DIR_ERR, cmd), *exit_status = 126, NULL);
+			return (print_msh_error(IS_DIR_ERR, cmd), ft_exit_close(126), NULL);
 		else
 			return (cmd);
 	}
 	else if (err == -1 && errno == EACCES && is_abs_path(cmd))
-		return (print_msh_error(PER_ERR, cmd), *exit_status = 126, NULL);
+		return (print_msh_error(PER_ERR, cmd), ft_exit_close(126), NULL);
 	else if (err == -1 && is_abs_path(cmd))
-		return (print_msh_error(NOT_FOUND_ERR, cmd), *exit_status = 127, NULL);
+		return (print_msh_error(NOT_FOUND_ERR, cmd), ft_exit_close(127), NULL);
 	return (NULL);
 }
 
-char	*check_paths(char **paths, char *cmd, int *exit_status)
+char	*check_paths(char **paths, char *cmd)
 {
 	char	*fpath;
 	char	*tmp;
@@ -122,5 +123,5 @@ char	*check_paths(char **paths, char *cmd, int *exit_status)
 		if (access(fpath, F_OK | R_OK | X_OK) == 0)
 			return (fpath);
 	}
-	return (print_msh_error(CMD_ERR, cmd), *exit_status = 127, NULL);
+	return (print_msh_error(CMD_ERR, cmd), ft_exit_close(127), NULL);
 }

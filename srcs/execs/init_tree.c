@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 16:30:53 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/09 23:06:22 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	ft_heredoc_sigint_handler(int signum)
 {
 	(void)signum;
-	// printf("WE are here 15\n");
+	// dprintf(2, "WE are here 15\n");
 	close(ft_shell()->ft_stdin);
 	close(ft_shell()->ft_stdout);
 	gbg_coll(NULL, ALL, FLUSH_ALL);
@@ -117,6 +117,7 @@ static void	ft_init_leaf(t_ast *node)
 	{
 		la_args = ft_expand(io->contents[idx]);
 		temp_contents = ft_concat_str_arr(temp_contents, la_args);
+        // dprintf(2, "temp_contents = %s\n", temp_contents[0]);
 	}
 	io->contents = temp_contents;
 	while (redirections)

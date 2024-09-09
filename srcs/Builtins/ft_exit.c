@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 17:18:16 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/05 11:11:25 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/09 19:56:34 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static int	ft_exittoi(char *sr)
 	i = 0;
 	sign = 1;
 	ft_skip_spaces_and_get_sign(sr, &i, &sign);
-	if (!ft_isnumber(sr + i))
+	if (!ft_isnumber(sr + i) || !sr[i])
 		return (ft_err(sr), 2);
 	result = 0;
 	while (sr[i])
@@ -79,7 +79,6 @@ void	ft_exit(char **args)
 		{
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
             return ;
-			// exit(ENO_GENERAL);
 		}
 		else
 			exit_s = ft_exittoi(args[1]);

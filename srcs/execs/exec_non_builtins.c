@@ -6,11 +6,18 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 16:20:20 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/09 23:05:57 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+
+int    ft_exit_close(int exit_status)
+{
+    close(ft_shell()->ft_stdin);
+    close(ft_shell()->ft_stdout);
+    return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(exit_status), -1);
+}
 
 int    ft_exec_non_builtins(t_token *node)
 {
@@ -22,12 +29,7 @@ int    ft_exec_non_builtins(t_token *node)
 	i = 0;
 	env_args = env_lst_to_arr(&ft_shell()->env_lst);
 	la_path = ft_check_path(node->contents, env_args, &exit_status, &i);
-	if (!la_path)
-    {
-        close(ft_shell()->ft_stdin);
-        close(ft_shell()->ft_stdout);
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(exit_status), -1);
-    }
+    // dprintf(2, "la path = %s\n", la_path);
 	// dprintf(2, "launching cmd %s\n", node->contents[0]);
 	close(ft_shell()->ft_stdin);
 	close(ft_shell()->ft_stdout);

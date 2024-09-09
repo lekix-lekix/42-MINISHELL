@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:02:12 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 15:22:45 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/09 19:34:50 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ t_env	*env_cpy_lst(t_env **envlst)
 		if (!new_node || gbg_coll(new_node, PARSING, ADD))
 			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
 		new_node->field = current->field;
-        new_node->content = current->content;
+		new_node->content = current->content;
 		new_node->next = NULL;
 		env_lst_add_back(&envlst_cpy, new_node);
 		current = current->next;
@@ -94,7 +94,6 @@ static void	ft_export_list(t_env **envlst)
 {
 	t_env	*list;
 
-	// size_t	i;
 	list = sort_envlst(envlst);
 	while (list)
 	{
@@ -115,6 +114,8 @@ int	ft_check_key(char *str)
 		return (0);
 	while (str[i] && str[i] != '=')
 	{
+		if (str[i] == '+' && str[i + 1] == '=')
+			return (1);
 		if (!ft_isalnum(str[i]) && str[i] != '_')
 			return (0);
 		i++;
@@ -122,31 +123,56 @@ int	ft_check_key(char *str)
 	return (1);
 }
 
+int	check_export_concat(char *field, char **args)
+{
+	int		field_length;
+	char	*content_args;
+	char	*new_content;
+
+	field_length = ft_strlen(field);
+	if (field[field_length - 1] == '+' && (ft_isalnum(field[field_length - 2])
+			|| field[field_length - 2] == '_'))
+	{
+		content_args = ft_extract_content(args[1]);
+		field[field_length - 1] = '\0';
+		if (!ft_env_entry_exists(field))
+			ft_update_envlst(field, content_args, true);
+		else
+		{
+			new_content = ft_join(get_env_content(field), content_args);
+			ft_update_envlst(field, new_content, false);
+		}
+		return (1);
+	}
+	return (0);
+}
+
 int	ft_exec_export(char **args)
 {
-	int		i;
 	int		exit_s;
 	char	*field;
-	t_env	*envlst;    
+	t_env	*envlst;
+	int		i;
 
+	i = 0;
 	exit_s = 0;
-	i = 1;
 	envlst = ft_shell()->env_lst;
 	if (!args[1] || args[1][0] == '$')
 		return (ft_export_list(&envlst), 0);
-	while (args[i])
+	while (args[++i])
 	{
 		if (ft_check_key(args[i]) == 0)
 			exit_s = ft_export_err_msg(args[i]);
 		else
 		{
 			field = ft_extract_field(args[i]);
+			if (check_export_concat(field, args))
+				return (exit_s);
 			if (ft_env_entry_exists(field))
 				ft_update_envlst(field, ft_extract_content(args[i]), false);
 			else
 				ft_update_envlst(field, ft_extract_content(args[i]), true);
 		}
-		i++;
 	}
 	return (exit_s);
 }

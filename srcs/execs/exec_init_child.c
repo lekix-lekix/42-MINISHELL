@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/06 15:43:49 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/09 22:34:18 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	init_only_child_no_fork(t_token *node)
 	pid_t	pid;
 	int		status;
 
-
+    ft_update_envlst("_", node->contents[get_arr_len(node->contents) - 1], false);
 	if (!node->contents || !node->contents[0])
 	{
 		ft_shell()->exit_status = ft_check_redirections(node);

@@ -6,13 +6,13 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 09:06:23 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/05 14:27:40 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/09 19:53:11 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static void	ft_unset_helper(char *key)
+static void	ft_unset_helper(char *field)
 {
 	t_env	*current;
 	t_env	*prev;
@@ -21,7 +21,7 @@ static void	ft_unset_helper(char *key)
 	current = ft_shell()->env_lst;
 	while (current)
 	{
-		if (!ft_strncmp(key, current->field, ft_strlen(key)))
+		if (!ft_strcmp(field, current->field))
 		{
 			if (prev)
 				prev->next = current->next;
@@ -55,22 +55,11 @@ int	ft_exec_unset(char **args)
 	int		i;
 	bool	err;
 
-	i = 1;
+	i = 0;
 	if (!args[1])
 		return (0);
 	err = false;
-	while (args[i])
-	{
-		if (!ft_check_key_unset(args[i]))
-		{
-			ft_putstr_fd("minishell: unset: `", 2);
-			ft_putstr_fd(args[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-			err = true;
-		}
-		else
-			ft_unset_helper(ft_extract_field(args[i]));
-		i++;
-	}
+	while (args[++i])
+		ft_unset_helper(ft_extract_field(args[i]));
 	return (err);
 }
