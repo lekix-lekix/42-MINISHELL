@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_init_child.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/06 15:43:49 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/10 12:20:34 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,19 +38,18 @@ int	init_only_child_no_fork(t_token *node)
 	pid_t	pid;
 	int		status;
 
-
 	if (!node->contents || !node->contents[0])
 	{
 		ft_shell()->exit_status = ft_check_redirections(node);
-		return (ft_reset_ports(false), 0);
+		return (ft_reset_ports(false), ft_close_fds(), 0);
 	}
 	ft_shell()->exit_status = ft_check_redirections(node);
 	if (ft_shell()->exit_status != ENO_SUCCESS)
-		return (ft_reset_ports(false), -1);
+		return (ft_reset_ports(false), ft_close_fds(), -1);
 	if (ft_is_builtin(node->contents[0]))
 	{
 		ft_shell()->exit_status = ft_exec_builtins(node->contents);
-		return (ft_reset_ports(false), 0);
+		return (ft_reset_ports(false), ft_close_fds(), 0);
 	}
 	pid = fork();
 	if (pid == -1)
@@ -60,8 +59,9 @@ int	init_only_child_no_fork(t_token *node)
 	{
 		(ft_shell())->signint_child = true;
 		status = ft_exec_non_builtins(node);
+		dprintf(2, "WE arrives here 13\n");
 	}
-	(ft_reset_ports(false), waitpid(pid, &status, WUNTRACED));
+	(ft_reset_ports(false), ft_close_fds(), waitpid(pid, &status, WUNTRACED));
 	if (WIFEXITED(status))
 		ft_shell()->exit_status = WEXITSTATUS(status);
 	return (0);

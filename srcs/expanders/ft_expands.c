@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expands.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 15:49:23 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/10 12:14:31 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*ft_handle_dollar(char *str, size_t *i)
 	(*i)++;
 	if (ft_isdigit(str[*i]) || str[*i] == '@')
 	{
-		res = ft_strdup("");
+		res = msh_strdup("", PARSING);
 		if (!res || gbg_coll(res, PARSING, ADD))
 			return (gbg_coll(res, PARSING, ADD), ft_close_fds(), exit(255), NULL);
 		return ((*i)++, res);
@@ -37,7 +37,7 @@ char	*ft_handle_dollar(char *str, size_t *i)
 	}
 	else if (!ft_is_valid_var_char(str[*i]))
 	{
-		res = ft_strdup("");
+		res = msh_strdup("", PARSING);
 		if (!res || gbg_coll(res, PARSING, ADD))
 			return (gbg_coll(res, PARSING, ADD), ft_close_fds(), exit(255), NULL);
 		return (res);
@@ -53,7 +53,7 @@ char	*ft_handle_dollar(char *str, size_t *i)
 	if (!env_val)
 	{
 		// printf("WE DIDN'T find env val\n");
-		res = ft_strdup("");
+		res = msh_strdup("", PARSING);
 		if (!res || gbg_coll(res, PARSING, ADD))
 			return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 		return (free(var), res);
@@ -185,6 +185,7 @@ char	**ft_expand(char *sr)
 	if (!sr)
 		return (NULL);
 	sr = ft_clean_empty_chars(sr);
+	// printf("THE CLEANED STR: %s\n", sr);
 	globaled = ft_globaler(sr);
 	expanded = malloc(sizeof(char *) * (get_arr_len(globaled) + 1));
 	if (!expanded || gbg_coll(expanded, PARSING, ADD))

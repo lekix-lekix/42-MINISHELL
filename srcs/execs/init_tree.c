@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_tree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 16:13:48 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/09 21:18:50 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	ft_heredoc_sigint_handler(int signum)
 {
 	(void)signum;
-	// printf("WE are here 15\n");
+	printf("WE are here 15\n");
 	close(ft_shell()->ft_stdin);
 	close(ft_shell()->ft_stdout);
 	gbg_coll(NULL, ALL, FLUSH_ALL);
@@ -30,7 +30,7 @@ void	ft_heredoc(t_token *io, int p[2])
 
 	signal(SIGINT, ft_heredoc_sigint_handler);
 	quotes = io->content;
-	// printf("WE are here 17\n");
+	printf("WE are here 17\n");
 	while (*quotes && *quotes != '"' && *quotes != '\'')
 		quotes++;
 	while (1)
@@ -61,10 +61,10 @@ static bool	ft_leave_leaf(int p[2], int *pid)
 	signal(SIGQUIT, ft_sigquit_handler);
 	(ft_shell())->signint_child = false;
 	close(p[1]);
-	close(p[0]);
-	// close(ft_shell()->stdin);
-	// close(ft_shell()->stdout);
-	// printf("WE ARE HERE 28\n");
+	// close(p[0]);
+	// close(ft_shell()->ft_stdin);
+	// close(ft_shell()->ft_stdout);
+	printf("WE ARE HERE 28\n");
 	if (WIFEXITED(*pid) && WEXITSTATUS(*pid) == SIGINT)
 		return (true);
 	return (false);
@@ -128,13 +128,19 @@ static void	ft_init_leaf(t_ast *node)
 			(ft_shell())->signint_child = true;
 			pid = fork();
 			if (pid == 0)
+			{	
 				ft_heredoc(io, p);
+				// close(ft_shell()->ft_stdin);
+				// close(ft_shell()->ft_stdout);
+			}
 			if (ft_leave_leaf(p, &pid))
 				return ;
 			redirections->heredoc = p[0];
 		}
 		redirections = redirections->next;
 	}
+	// close(p[1]);
+	// close(p[0]);
 }
 
 void	ft_init_tree(t_ast *node)

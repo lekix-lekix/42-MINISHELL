@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:34:26 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/04 16:14:10 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/09 21:23:01 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ int	exec_child(t_ast *node)
 	{
 		(ft_shell())->signint_child = true;
 		ft_check_cmds(node->token_node);
+		// close(ft_shell()->ft_stdin);
+		// close(ft_shell()->ft_stdout);
 	};
 	pid_node = create_lst_node(pid);
 	ft_lstadd_back(&ft_shell()->pids, pid_node);

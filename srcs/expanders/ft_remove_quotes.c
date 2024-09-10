@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:36:19 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/04 16:07:04 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:00:34 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,26 +77,35 @@ char	*ft_clean_empty_chars(char *sr)
 	char	*tmp;
 	char	*ret;
 	size_t	dstsize;
-	char	rm_qoute;
+	// char	rm_qoute;
+    int		is_diff;
 	
-	rm_qoute = '\0';
-	if (sr[0] == '\'' || sr[0] == '"')
-		rm_qoute = sr[0];
-	if ((sr[0] == rm_qoute && sr[1] == rm_qoute && !sr[2]) || (sr[0] == rm_qoute
-			&& sr[1] == rm_qoute && !sr[2]))
+	// rm_qoute = '\0';
+    is_diff = 23;
+	// if (sr[0] == '\'' || sr[0] == '"')
+	// 	rm_qoute = sr[0];
+	 if ((sr[0] == '\'' && sr[1] == '\'' && !sr[2]) || (sr[0] == '"'
+            && sr[1] == '"' && !sr[2]))
 		return (sr);
 	tmp = ft_calloc(ft_strlen(sr) + 1, sizeof(char));
 	if (!tmp || gbg_coll(tmp, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 	x = 0;
 	y = 0;
+    // printf("THE rm_qoutes: %c\n", rm_qoute);
 	while (sr[x])
 	{
-		if ((sr[x] == rm_qoute && sr[x + 1] == rm_qoute) || (sr[x] == rm_qoute && sr[x
-				+ 1] == rm_qoute))
-			x += 2;
+		if (((sr[x] == '\'' && sr[x + 1] == '\'') || (sr[x] == '"' && sr[x
+				+ 1] == '"')) && is_diff)
+		{	
+            // printf("WE are in here\n");
+            x += 2;
+        }
 		else
-			tmp[y++] = sr[x++];
+		{	
+            is_diff = 0;
+            tmp[y++] = sr[x++];
+        }
 	}
 	dstsize = ft_strlen(tmp) + 1;
 	ret = ft_calloc(dstsize, sizeof(char));
