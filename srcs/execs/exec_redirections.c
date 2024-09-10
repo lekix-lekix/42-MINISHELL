@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 16:32:29 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/10 15:41:32 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,24 @@ int	ft_out(t_redir *redirections, int *status)
 	return (*status);
 }
 
+int	ft_redir_heredoc(t_redir *redirection, t_token *node, int *le_status)
+{
+	int	heredoc_fd;
+
+	heredoc_fd = open(redirection->filename, O_RDONLY);
+	if (heredoc_fd == -1)
+    {
+        perror("bash: open");
+        ft_exit_close(255);
+    }
+    if (dup2(heredoc_fd, STDIN_FILENO) == -1)
+        return (ft_exit_close(255), -1);
+    close(heredoc_fd);
+    unlink(redirection->filename);
+    *le_status = 0;
+    return (*le_status);
+}
+
 int	ft_check_redirections(t_token *node)
 {
 	t_redir	*redirections;
@@ -117,7 +135,7 @@ int	ft_check_redirections(t_token *node)
 			&& ft_append(redirections, &le_status) != ENO_SUCCESS)
 			return (le_status);
 		else if (redirections->redir_type == REDIR_HEREDOC)
-			dup2(redirections->heredoc, 0), close(redirections->heredoc);
+			return (ft_redir_heredoc(redirections, node, &le_status));
 		redirections = redirections->next;
 	}
 	return (ENO_SUCCESS);

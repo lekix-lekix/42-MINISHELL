@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_remove_quotes.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:36:19 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/09 19:08:14 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/10 15:36:10 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,12 @@ char	*ft_clean_empty_chars(char *sr)
 	size_t	dstsize;
 	char	rm_qoute;
 
+	if (!sr || !sr[0])
+		return (sr);
 	rm_qoute = '\0';
 	if (sr[0] == '\'' || sr[0] == '"')
 		rm_qoute = sr[0];
-	if ((sr[0] == rm_qoute && sr[1] == rm_qoute && !sr[2]) || (sr[0] == rm_qoute
-			&& sr[1] == rm_qoute && !sr[2]))
+	if (sr[0] == rm_qoute && sr[1] == rm_qoute && !sr[2])
 		return (sr);
 	tmp = ft_calloc(ft_strlen(sr) + 1, sizeof(char));
 	if (!tmp || gbg_coll(tmp, PARSING, ADD))
@@ -94,8 +95,7 @@ char	*ft_clean_empty_chars(char *sr)
 	y = 0;
 	while (sr[x])
 	{
-		if ((sr[x] == rm_qoute && sr[x + 1] == rm_qoute) || (sr[x] == rm_qoute
-				&& sr[x + 1] == rm_qoute))
+		if (sr[x] == rm_qoute && sr[x + 1] == rm_qoute)
 			x += 2;
 		else
 			tmp[y++] = sr[x++];

@@ -16,5 +16,6 @@ to do :
 - heredoc : tmp files ? fd leak 
 - signal inside fork, handle sigpipe
 - "
+- << eof
 
 valgrind flags :  valgrind --trace-children=yes --show-leak-kinds=all --leak-check=full --suppressions="./no_rl_leaks" ./minishell

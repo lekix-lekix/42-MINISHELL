@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expands.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/09 23:17:40 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/10 15:33:06 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char	*ft_check_squotes(char *sr, size_t *x)
 
 	start = *x;
 	(*x)++;
-	while (sr[*x] != '\'')
+	while (sr[*x] && sr[*x] != '\'')
 		(*x)++;
 	(*x)++;
 	res = ft_substr(sr, start, *x - start);
@@ -178,7 +178,7 @@ char	**ft_expand(char *sr)
 {
 	char	**expanded;
 	char	**globaled;
-    char    **tmp;
+    // char    **tmp;
 	size_t	x;
 
 	x = 0;
@@ -193,7 +193,6 @@ char	**ft_expand(char *sr)
 	while (globaled[x])
 	{
 		expanded[x] = ft_strip_quotes(globaled[x]);
-        tmp =
         // expanded[x] = msh_strtrim_spaces(expanded[x]);
 		x++;
 	}
