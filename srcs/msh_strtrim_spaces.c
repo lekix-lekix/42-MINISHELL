@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 17:33:34 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/04 12:15:47 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/10 21:54:12 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,6 @@ static int	ft_total_to_trim(char const *str)
 	while (ft_is_space(str[--i]))
 		count++;
 	return (count);
-}
-
-static char	*empty_str(void)
-{
-	char	*empty_str;
-
-	empty_str = malloc(1);
-	if (!empty_str || gbg_coll(empty_str, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-	empty_str[0] = '\0';
-	return (empty_str);
 }
 
 char	*msh_strtrim_spaces(char const *s1)

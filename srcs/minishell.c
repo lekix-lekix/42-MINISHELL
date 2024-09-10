@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/10 16:12:50 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/10 22:17:53 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ static void	ft_start_execution(t_ast **tree)
 	ft_shell()->pipes = NULL;
 	ft_shell()->end_exec = 0;
 	ft_shell()->exec_in_par = 0;
+    ft_shell()->expand_chars_trimmed = 0;
 	ft_shell()->full_exec_tree = *tree;
 	ft_shell()->ft_stdin = dup(STDIN_FILENO);
 	ft_shell()->ft_stdout = dup(STDOUT_FILENO);
@@ -196,6 +197,68 @@ void	trim_contents(t_token **lst)
 	}
 }
 
+// int fill_contents_arr(t_token *node, char **expand, int idx)
+// {
+//     int i;
+
+//     i = 0;
+//     node->contents = malloc(sizeof(char *) * (get_arr_len(expand) + 1));
+//     if (!node->contents || gbg_coll(node->contents, PARSING, ADD))
+//         return (ft_exit_close(255), -1);
+//     while (expand[i])
+//     {
+//         node->contents[idx] = expand[i];
+//         printf("node->contents[i] = %s\n", node->contents[i]);
+//         i++;
+//         idx++;
+//     }
+//     return (0);
+// }
+
+int	expand_token_lst(t_token **lst)
+{
+	t_token	*io;
+	char	**la_args;
+	char	**temp_contents;
+	int		idx;
+    
+	idx = -1;
+	temp_contents = NULL;
+	io = *lst;
+	while (io)
+	{
+		while (io->type == CMD && io->contents[++idx])
+		{
+            // printf("idx = %d\n", idx);
+			la_args = ft_expand(io->contents[idx]);
+            if (!la_args)
+            {
+                io->contents[idx] = empty_str();
+                break ;
+            }
+            // int i = 0;
+            // while (la_args[i])
+            // {
+            //     printf("node %s la args[%d] = %s\n", io->content, i, la_args[i]);
+            //     i++;
+            // }
+            if (get_arr_len(la_args) == 1)
+                io->contents[idx] = la_args[0];
+            else
+            {
+                io->contents[idx] = NULL;
+                io->contents = ft_concat_str_arr(io->contents, la_args);
+            }
+			// temp_contents = ft_concat_str_arr(temp_contents, la_args);
+			// dprintf(2, "temp_contents = %s\n", temp_contents[idx]);
+		}
+        // printf("====\n");
+		idx = 0;
+		io = io->next;
+	}
+	return (0);
+}
+
 int	start_parsing(char *prompt)
 {
 	t_token	*input;
@@ -226,10 +289,18 @@ int	start_parsing(char *prompt)
 	check_delete_global_par(&input);
 	set_par_lst(&input);
 	ft_shell()->les_token = lst_dup(&input, NULL);
+    // printf("before expand  =======\n");
+	// print_lst(&input);
+	// printf("=======\n");
+	expand_token_lst(&input);
+	// more_tokenization(&input);
+	// printf("after expand  =======\n");
+	// print_lst(&input);
+	// printf("=======\n");
 	tree = build_ast(&input, NULL);
 	if (tree && check_tree_syntax(&tree) == -1)
 		return (-1);
-    // print_tree(&tree);
+	// print_tree(&tree);
 	ft_shell()->exec_tree = tree;
 	ft_start_execution(&tree);
 	ft_close_fds();
@@ -256,7 +327,7 @@ int	main(int argc, char **argv, char **env)
 		else
 		{
 			line = get_next_line(fileno(stdin), 0);
-            // dprintf(2, "line = '%s'\n", line);
+			// dprintf(2, "line = '%s'\n", line);
 			data->prompt = ft_strtrim(line, "\n");
 			free(line);
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/09 19:22:03 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/10 22:01:29 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ static t_env	*ft_envlst_new(char *field, char *content)
 
 	new = (t_env *)ft_calloc(1, sizeof(t_env));
 	if (!new || gbg_coll(new, ENV, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
+			NULL);
 	new->field = msh_strdup(field, ENV);
 	if (content && content[0])
 		new->content = msh_strdup(content, ENV);
@@ -33,12 +34,21 @@ char	*ft_get_envlst_content(char *key, t_env **env_lst)
 	t_env	*envlst;
 
 	envlst = *env_lst;
-	while (envlst)
+	while (1)
 	{
-        if (!ft_strcmp(key, envlst->field))
-			return (envlst->content);
-		envlst = envlst->next;
+		while (envlst)
+		{
+			if (!ft_strcmp(key, envlst->field))
+				return (envlst->content);
+			envlst = envlst->next;
+		}
+		envlst = *env_lst;
+		if (!key[0] || ft_strlen(key) == 1)
+			break ;
+		key = msh_strtrim(key, &key[ft_strlen(key) - 1]);
+        ft_shell()->expand_chars_trimmed += 1;
 	}
+    ft_shell()->expand_chars_trimmed = 0;
 	return (NULL);
 }
 
@@ -61,18 +71,19 @@ static int	ft_loop_and_update(t_env **to_update_lst, char *content,
 	return (0);
 }
 
-char *get_env_content(char *field)
+char	*get_env_content(char *field)
 {
-    t_env   *envlst;
-    
-    envlst = ft_shell()->env_lst;
-    while (envlst)
-    {
-        if (envlst->field && !ft_strcmp(envlst->field, field) && envlst->content)
-            return (envlst->content);
-        envlst = envlst->next;
-    }
-    return (NULL);
+	t_env	*envlst;
+
+	envlst = ft_shell()->env_lst;
+	while (envlst)
+	{
+		if (envlst->field && !ft_strcmp(envlst->field, field)
+			&& envlst->content)
+			return (envlst->content);
+		envlst = envlst->next;
+	}
+	return (NULL);
 }
 
 void	ft_update_envlst(char *field, char *content, bool create)
@@ -104,10 +115,10 @@ char	*ft_extract_field(char *str)
 	{
 		if (str[i] == '=')
 		{
-			// final_str = ft_substr(str, 0, i + 1);
 			final_str = ft_substr(str, 0, i);
 			if (!final_str || gbg_coll(final_str, ENV, ADD))
-				return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
+				return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(),
+					exit(255), NULL);
 			return (final_str);
 		}
 		i++;
@@ -122,14 +133,6 @@ char	*ft_extract_content(char *str)
 	char	*final_str;
 
 	i = 0;
-    // if (!str[0])
-    // {
-    //     final_str = malloc(sizeof(char));
-    //     if (!final_str || gbg_coll(final_str, ENV, ADD))
-    //         return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-    //     final_str[0] = 0;
-    //     return (final_str);
-    // }
 	while (str[i])
 	{
 		if (str[i] == '=')
@@ -137,7 +140,8 @@ char	*ft_extract_content(char *str)
 			i++;
 			final_str = ft_substr(str, i, ft_strlen(str) - i);
 			if (!final_str || gbg_coll(final_str, ENV, ADD))
-				return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
+				return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(),
+					exit(255), NULL);
 			return (final_str);
 		}
 		i++;
