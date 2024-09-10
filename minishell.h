@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/10 15:38:38 by sabakar-         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/09/10 15:59:57 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -230,6 +231,7 @@ int					ft_exec_unset(char **args);
 void				*ft_unset_cleaner(void *ptr, bool clean);
 int					ft_check_key(char *str);
 char				*ft_get_envlst_content(char *content, t_env **env_lst);
+char				*get_env_content(char *field);
 
 // The non-builtins
 int					ft_exec_non_builtins(t_token *node);
@@ -248,6 +250,7 @@ int					print_env(t_env **lst);
 char				*msh_strdup(const char *s, int mlc_lst);
 int					content_count_words(char *str);
 char				*get_next_word(char **input_str);
+char				**msh_split_spaces(char const *s, int mlc_list);
 
 // paths utils
 // char				*ft_check_path(char **contents, char **env,
@@ -327,6 +330,7 @@ bool				ft_match_star(char *pattern, char *str);
 char				**ft_globaler(char *str);
 size_t				get_arr_len(char **expanded);
 void				expand_redirections(t_redir **redirections);
+char				*ft_pre_expand(char *sr);
 
 // Exec AST tools
 void				set_is_in_par(t_ast *root, int flag);
@@ -359,6 +363,7 @@ int					close_wait(int par_pid);
 void				ft_start_exec_tree(t_ast *root, t_ast **exec_lst,
 						t_ast **last_op);
 int					iterate_exec_ast_lst(t_ast **lst);
+int					ft_exit_close(int exit_status);
 
 // Exec parenthesis
 int					prep_exec_par(t_ast *sub_tree, int *after_par_pipe);

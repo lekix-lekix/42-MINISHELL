@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 15:40:14 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/09 23:14:11 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,7 @@ char	**ft_expand(char *sr)
 	while (globaled[x])
 	{
 		expanded[x] = ft_strip_quotes(globaled[x]);
+        expanded[x] = msh_strtrim_spaces(expanded[x]);
 		x++;
 	}
 	free(globaled);

@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:36:19 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/09 14:00:34 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:10:03 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ char	*ft_strip_quotes(char *str)
 	j = 0;
 	ret = ft_calloc(1 + ft_unquoted_strlen(str), sizeof(char));
 	if (!ret || gbg_coll(ret, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
+			NULL);
 	while (str[i])
 	{
 		if (str[i] == '\'' || str[i] == '"')
@@ -81,6 +82,8 @@ char	*ft_clean_empty_chars(char *sr)
     int		is_diff;
 	
 	// rm_qoute = '\0';
+	if (!sr || !sr[0])
+		return (sr);
     is_diff = 23;
 	// if (sr[0] == '\'' || sr[0] == '"')
 	// 	rm_qoute = sr[0];
@@ -89,7 +92,8 @@ char	*ft_clean_empty_chars(char *sr)
 		return (sr);
 	tmp = ft_calloc(ft_strlen(sr) + 1, sizeof(char));
 	if (!tmp || gbg_coll(tmp, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
+			NULL);
 	x = 0;
 	y = 0;
     // printf("THE rm_qoutes: %c\n", rm_qoute);
@@ -110,6 +114,7 @@ char	*ft_clean_empty_chars(char *sr)
 	dstsize = ft_strlen(tmp) + 1;
 	ret = ft_calloc(dstsize, sizeof(char));
 	if (!ret || gbg_coll(ret, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
+			NULL);
 	return (ft_strlcpy(ret, tmp, dstsize), ret);
 }

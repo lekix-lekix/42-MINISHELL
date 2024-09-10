@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 15:20:54 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/09 19:22:03 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,20 @@ static int	ft_loop_and_update(t_env **to_update_lst, char *content,
 		envlst = envlst->next;
 	}
 	return (0);
+}
+
+char *get_env_content(char *field)
+{
+    t_env   *envlst;
+    
+    envlst = ft_shell()->env_lst;
+    while (envlst)
+    {
+        if (envlst->field && !ft_strcmp(envlst->field, field) && envlst->content)
+            return (envlst->content);
+        envlst = envlst->next;
+    }
+    return (NULL);
 }
 
 void	ft_update_envlst(char *field, char *content, bool create)

@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/10 12:14:31 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:07:28 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char	*ft_check_squotes(char *sr, size_t *x)
 
 	start = *x;
 	(*x)++;
-	while (sr[*x] != '\'')
+	while (sr[*x] && sr[*x] != '\'')
 		(*x)++;
 	(*x)++;
 	res = ft_substr(sr, start, *x - start);
@@ -178,6 +178,7 @@ char	**ft_expand(char *sr)
 {
 	char	**expanded;
 	char	**globaled;
+    // char    **tmp;
 	size_t	x;
 
 	x = 0;
@@ -193,6 +194,7 @@ char	**ft_expand(char *sr)
 	while (globaled[x])
 	{
 		expanded[x] = ft_strip_quotes(globaled[x]);
+        // expanded[x] = msh_strtrim_spaces(expanded[x]);
 		x++;
 	}
 	expanded[x] = 0;

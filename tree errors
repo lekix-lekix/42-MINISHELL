@@ -15,7 +15,9 @@ leaks :
 
 to do :
 - if exit(255) --> shut down whole minishell
-- test all mallocs
-- run tests from the excel
+- heredoc : tmp files ? fd leak 
+- signal inside fork, handle sigpipe
+- "
+- << eof
 
 valgrind flags :  valgrind --trace-children=yes --show-leak-kinds=all --leak-check=full --suppressions="./no_rl_leaks" ./minishell
