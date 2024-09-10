@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 21:33:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/10 16:10:35 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:04:41 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,13 @@ static void	ft_sigint_handler(int num)
 	}
 	else
 	{
-		ft_putstr_fd("\n", 1);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
+		if (waitpid(-1, NULL, WNOHANG) == -1 && errno == ECHILD)
+		{
+			ft_putstr_fd("\n", 1);
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			rl_redisplay();
+		}
 	}
 }
 
