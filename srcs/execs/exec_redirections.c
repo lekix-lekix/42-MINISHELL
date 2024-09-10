@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/10 16:03:29 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:21:06 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int	ft_out(t_redir *redirections, int *status)
 	return (*status);
 }
 
-int	ft_redir_heredoc(t_redir *redirection, t_token *node, int *le_status)
+int	ft_redir_heredoc(t_redir *redirection, int *le_status)
 {
 	int	heredoc_fd;
 
@@ -135,7 +135,7 @@ int	ft_check_redirections(t_token *node)
 			&& ft_append(redirections, &le_status) != ENO_SUCCESS)
 			return (le_status);
 		else if (redirections->redir_type == REDIR_HEREDOC)
-			return (ft_redir_heredoc(redirections, node, &le_status));
+			return (ft_redir_heredoc(redirections, &le_status));
 		redirections = redirections->next;
 	}
 	return (ENO_SUCCESS);

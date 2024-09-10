@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/10 16:07:11 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:23:42 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,10 @@
 // 	exit(SIGINT);
 // }
 
-void	ft_heredoc(t_redir *redirection, t_token *node, char *tmp_file_path)
+void	ft_heredoc(t_redir *redirection, char *tmp_file_path)
 {
 	char	*line;
+	char	*input;
 	int		tmp_file_fd;
 
 	// signal(SIGINT, ft_heredoc_sigint_handler);
@@ -43,15 +44,15 @@ void	ft_heredoc(t_redir *redirection, t_token *node, char *tmp_file_path)
 			break ;
 		else
         {
-            line = ft_pre_expand(line);
-            line = ft_join(line, "\n");
+            input = ft_pre_expand(line);
+            line = ft_join(input, "\n");
             write(tmp_file_fd, line, ft_strlen(line));
 			// ft_heredoc_expander(line, tmp_file_fd);
         }
 		// free(line);
 	}
 	close(tmp_file_fd);
-	node->filename = tmp_file_path;
+	redirection->filename = tmp_file_path;
 }
 
 // void	ft_heredoc(t_token *io, int p[2])
@@ -205,7 +206,7 @@ static void	ft_init_leaf(t_ast *node)
 		if (redirections->redir_type == REDIR_HEREDOC)
 		{
 			tmp_file_path = create_random_filename();
-			ft_heredoc(redirections, node->token_node, tmp_file_path);
+			ft_heredoc(redirections, tmp_file_path);
 			// pipe(p);
 			// (signal(SIGQUIT, SIG_IGN));
 			// (ft_shell())->signint_child = true;
