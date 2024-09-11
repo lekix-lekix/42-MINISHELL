@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 13:33:04 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:36:15 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,8 +229,9 @@ int	expand_token_lst(t_token **lst)
 	{
 		while (io->type == CMD && io->contents[++idx])
 		{
-            // printf("idx = %d\n", idx);
+            // printf("io->contents %d = %s\n", idx, io->contents[idx]);
 			la_args = ft_expand(io->contents[idx]);
+            // printf("io expand = %s\n", la_args[0]);
             if (!la_args)
             {
                 io->contents[idx] = empty_str();
@@ -239,8 +240,8 @@ int	expand_token_lst(t_token **lst)
             // int i = 0;
             // while (la_args[i])
             // {
-            //     printf("node %s la args[%d] = %s\n", io->content, i, la_args[i]);
-            //     i++;
+                // printf("node %s la args[%d] = %s\n", io->content, i, la_args[i]);
+                // i++;
             // }
             if (get_arr_len(la_args) == 1)
                 io->contents[idx] = la_args[0];
