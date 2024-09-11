@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 17:43:37 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 19:17:27 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ char	*get_path(char **envp)
 int	init_data(t_minishell *data, char **envp)
 {
 	data->path = get_path(envp);
-	// printf("%s\n", data->path);[]
 	if (!data->path)
 		return (-1);
 	data->env_lst = get_env_lst(envp);
@@ -80,7 +79,6 @@ static void	ft_start_execution(t_ast **tree)
 
 	signal(SIGQUIT, ft_sigquit_handler);
 	nodes = *tree;
-	// print_tree(&nodes);
 	ft_init_tree(nodes);
 	ft_shell()->pids = NULL;
 	ft_shell()->pipes = NULL;
@@ -92,14 +90,8 @@ static void	ft_start_execution(t_ast **tree)
 	ft_shell()->ft_stdout = dup(STDOUT_FILENO);
 	if ((ft_shell())->heredoc_sigint)
 	{
-		// If the program is quited during heredoc,
-		// we have clean the mess afterword I guess
-		printf(" HERE 98\n");
-		// gbg_coll(NULL, PARSING, FLUSH_ONE);
 		ft_close_fds();
 		gbg_coll(NULL, ALL, FLUSH_ALL);
-		// gbg_coll(NULL, ENV, FLUSH_ALL);
-		// clean_token_lst(&nodes->token_node);
 		(ft_shell())->heredoc_sigint = false;
 		return ;
 	}
@@ -165,10 +157,8 @@ void	more_tokenization(t_token **lst)
 	current = *lst;
 	while (current)
 	{
-		// printf("words = %d\n", content_count_words(current->content));
 		if (content_count_words(current->content) > 1)
 		{
-			// printf("yo\n");
 			new_content = get_next_word(&current->content);
 			new_cmd = create_cmd_node_no_sep(new_content);
 			new_cmd->next = current;
@@ -197,24 +187,6 @@ void	trim_contents(t_token **lst)
 	}
 }
 
-// int fill_contents_arr(t_token *node, char **expand, int idx)
-// {
-//     int i;
-
-//     i = 0;
-//     node->contents = malloc(sizeof(char *) * (get_arr_len(expand) + 1));
-//     if (!node->contents || gbg_coll(node->contents, PARSING, ADD))
-//         return (ft_exit_close(255), -1);
-//     while (expand[i])
-//     {
-//         node->contents[idx] = expand[i];
-//         printf("node->contents[i] = %s\n", node->contents[i]);
-//         i++;
-//         idx++;
-//     }
-//     return (0);
-// }
-
 int	expand_token_lst(t_token **lst)
 {
 	t_token	*io;
@@ -229,20 +201,12 @@ int	expand_token_lst(t_token **lst)
 	{
 		while (io->type == CMD && io->contents[++idx])
 		{
-            // printf("io->contents %d = %s\n", idx, io->contents[idx]);
 			la_args = ft_expand(io->contents[idx]);
-            // printf("io expand = %s\n", la_args[0]);
             if (!la_args)
             {
                 io->contents[idx] = empty_str();
                 break ;
             }
-            // int i = 0;
-            // while (la_args[i])
-            // {
-                // printf("node %s la args[%d] = %s\n", io->content, i, la_args[i]);
-                // i++;
-            // }
             if (get_arr_len(la_args) == 1)
                 io->contents[idx] = la_args[0];
             else
@@ -250,10 +214,7 @@ int	expand_token_lst(t_token **lst)
                 io->contents[idx] = NULL;
                 io->contents = ft_concat_str_arr(io->contents, la_args);
             }
-			// temp_contents = ft_concat_str_arr(temp_contents, la_args);
-			// dprintf(2, "temp_contents = %s\n", temp_contents[idx]);
 		}
-        // printf("====\n");
 		idx = 0;
 		io = io->next;
 	}
@@ -272,100 +233,31 @@ int	start_parsing(char *prompt)
 	input = tokenize_input(prompt);
 	more_tokenization(&input);
 	clean_token_lst(&input);
-	// printf("after more tokenization =======\n");
-	// print_lst(&input);
-	// printf("=======\n");
 	trim_contents(&input);
 	set_redir_lst(&input);
-	// printf("after set redir lst  =======\n");
-	// print_lst(&input);
-	// printf("=======\n");
 	if (check_redir_syntax(&input) == -1 || check_par_syntax(&input) == -1)
 		return (ft_shell()->exit_status = 2, -1);
 	if (check_redirections(&input) == -1)
 		return (ft_shell()->exit_status = 2, -1);
-	// dprintf(2, "ddfsdf\n");
 	join_cmd_args(&input);
 	clean_token_lst(&input);
 	check_delete_global_par(&input);
 	set_par_lst(&input);
 	ft_shell()->les_token = lst_dup(&input, NULL);
-    // printf("before expand  =======\n");
-	// print_lst(&input);
-	// printf("=======\n");
 	expand_token_lst(&input);
-	// more_tokenization(&input);
-	// printf("after expand  =======\n");
-	// print_lst(&input);
-	// printf("=======\n");
 	tree = build_ast(&input, NULL);
 	if (tree && check_tree_syntax(&tree) == -1)
 		return (-1);
-	// print_tree(&tree);
 	ft_shell()->exec_tree = tree;
-	ft_start_execution(&tree);
-	ft_close_fds();
+	(ft_start_execution(&tree), ft_close_fds());
 	return (0);
 }
-
-// int	main(int argc, char **argv, char **env)
-// {
-// 	t_minishell	*data;
-// 	char		*line;
-
-// 	// int			fd;
-// 	// fd = open("./stderr_tmp", O_RDWR);
-// 	// if (dup2(fd, STDERR_FILENO) == -1)
-// 	// 	perror("duppp");
-// 	data = ft_shell();
-// 	((void)argc, (void)argv);
-// 	init_data(data, env);
-// 	while (1)
-// 	{
-// 		ft_init_signals();
-// 		if (isatty(fileno(stdin)))
-// 			data->prompt = readline("minishellOOO$ ");
-// 		else
-// 		{
-// 			line = get_next_line(fileno(stdin), 0);
-//             // dprintf(2, "line = '%s'\n", line);
-// 			data->prompt = ft_strtrim(line, "\n");
-// 			free(line);
-// 		}
-// 		if (!data->prompt)
-// 		{
-// 			// Also we need to clean here if I'm not mistaking!
-// 			gbg_coll(NULL, ALL, FLUSH_ALL);
-// 			// (ft_putstr_fd("exit\n", 1));
-// 			exit(ft_shell()->exit_status);
-// 		}
-// 		if (data->prompt || *data->prompt)
-// 		{
-// 			if (data->prompt[0])
-// 				add_history(data->prompt);
-// 			start_parsing(data->prompt);
-// 			gbg_coll(NULL, PARSING, FLUSH_ONE);
-// 			close(ft_shell()->ft_stdin);
-// 			close(ft_shell()->ft_stdout);
-// 			printf("\n");
-// 			// gbg_coll(NULL, PARSING, FLUSH_ALL);
-// 			free(data->prompt);
-// 		}
-// 	}
-// 	free(data->prompt);
-// 	gbg_coll(NULL, ENV, FLUSH_ALL);
-// 	gbg_coll(NULL, PARSING, FLUSH_ALL);
-// 	gbg_coll(NULL, ENV, FREE);
-// }
 
 int	main(int argc, char **argv, char **env)
 {
     t_minishell	*data;
+	char *line;
 
-	// int			fd;
-	// fd = open("./stderr_tmp", O_RDWR);
-	// if (dup2(fd, STDERR_FILENO) == -1)
-	// 	perror("duppp");
 	data = ft_shell();
 	((void)argc, (void)argv);
 	init_data(data, env);
@@ -377,15 +269,12 @@ int	main(int argc, char **argv, char **env)
 		else
 		{
 			line = get_next_line(fileno(stdin), 0);
-			// dprintf(2, "line = '%s'\n", line);
 			data->prompt = ft_strtrim(line, "\n");
 			free(line);
 		}
 		if (!data->prompt)
 		{
-			// Also we need to clean here if I'm not mistaking!
 			gbg_coll(NULL, ALL, FLUSH_ALL);
-			// (ft_putstr_fd("exit\n", 1));
 			exit(ft_shell()->exit_status);
 		}
 		if (data->prompt || *data->prompt)
@@ -396,7 +285,6 @@ int	main(int argc, char **argv, char **env)
 			gbg_coll(NULL, PARSING, FLUSH_ONE);
 			close(ft_shell()->ft_stdin);
 			close(ft_shell()->ft_stdout);
-			// gbg_coll(NULL, PARSING, FLUSH_ALL);
 			free(data->prompt);
 		}
 	}

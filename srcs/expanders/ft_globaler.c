@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_globaler.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 14:26:53 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 15:42:17 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/11 19:22:28 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,9 @@ char    **ft_globaler(char *str)
     struct dirent    *entry;
     size_t            match_count;
 
+    // str = ft_strip_quotes(str);
     match_count = ft_count_match(str);
+    // printf("THE DIR: %s\n", str);
     // printf("THE COUNT MATCH NUM %zu\n", match_count);
     if (!ft_is_contains_asterisk(str) || !match_count)
     {
@@ -59,5 +61,8 @@ char    **ft_globaler(char *str)
                 returned[match_count++] = msh_strdup(entry->d_name, PARSING);
         closedir(dir);
     }
+    // int x = -1;
+    // while (returned[++x])
+    //     printf("THE RETUNED: %s\n", returned[x]);
     return (returned);
 }
