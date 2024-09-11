@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh_split_spaces.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 14:00:08 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/04 16:10:14 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 18:41:04 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ static char	*ft_malloc_cpy_spaces(char const *src, int n, int mlc_list)
 	i = -1;
 	final_str = malloc(sizeof(char) * (n + 1));
 	if (!final_str || gbg_coll(final_str, mlc_list, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
+			NULL);
 	while (src[++i] && i < n)
 		final_str[i] = src[i];
 	final_str[i] = '\0';

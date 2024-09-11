@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 17:43:37 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:45:16 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -361,6 +361,7 @@ int	start_parsing(char *prompt)
 int	main(int argc, char **argv, char **env)
 {
     t_minishell	*data;
+    char *line;
 
 	// int			fd;
 	// fd = open("./stderr_tmp", O_RDWR);

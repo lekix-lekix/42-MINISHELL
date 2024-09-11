@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/11 13:32:47 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 18:02:51 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,28 @@ int	ft_check_cmds(t_token *token_node)
 	return (la_status);
 }
 
-int	init_only_child_no_fork(t_token *node)
+int	exec_non_builtin_solo(t_token *node)
 {
 	pid_t	pid;
 	int		status;
 
+	pid = fork();
+	if (pid == -1)
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(),
+			perror("bash: fork"), exit(255), -1);
+	if (pid == 0)
+	{
+		(ft_shell())->signint_child = true;
+		status = ft_exec_non_builtins(node);
+	}
+	(ft_reset_ports(false), ft_close_fds(), waitpid(pid, &status, WUNTRACED));
+	if (WIFEXITED(status))
+		ft_shell()->exit_status = WEXITSTATUS(status);
+	return (0);
+}
+
+int	init_only_child_no_fork(t_token *node)
+{
 	ft_update_envlst("_", node->contents[get_arr_len(node->contents) - 1],
 		false);
 	if (!node->contents || !node->contents[0] || !node->contents[0][0])
@@ -53,18 +70,5 @@ int	init_only_child_no_fork(t_token *node)
 		ft_shell()->exit_status = ft_exec_builtins(node->contents);
 		return (ft_reset_ports(false), ft_close_fds(), 0);
 	}
-	pid = fork();
-	if (pid == -1)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(),
-			perror("bash: fork"), exit(255), -1);
-	if (pid == 0)
-	{
-		(ft_shell())->signint_child = true;
-		status = ft_exec_non_builtins(node);
-		// dprintf(2, "WE arrives here 13\n");
-	}
-	(ft_reset_ports(false), ft_close_fds(), waitpid(pid, &status, WUNTRACED));
-	if (WIFEXITED(status))
-		ft_shell()->exit_status = WEXITSTATUS(status);
-	return (0);
+	return (exec_non_builtin_solo(node));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle_par.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:15:37 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/04 16:27:39 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:59:24 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 int	set_pipe_stdout(int *after_par_pipe)
 {
 	if (dup2(after_par_pipe[1], STDOUT_FILENO) == -1)
-		return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
-			-1);
+		return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
+			ft_close_fds(), exit(255), -1);
 	close(after_par_pipe[1]);
 	ft_close_fds();
 	return (0);
@@ -30,7 +30,8 @@ int	prep_exec_par(t_ast *sub_tree, int *after_par_pipe)
 	{
 		pid = fork();
 		if (pid == -1)
-			return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), -1);
+			return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
+				-1);
 		if (pid == 0)
 		{
 			(ft_shell())->signint_child = true;
@@ -91,12 +92,8 @@ int	build_run_sub_exec(t_token **par_lst)
 int	handle_par_exec(t_ast **current)
 {
 	t_token	*par_lst;
-	// t_ast	*after_par_ast_lst;
 	t_token	*left_par;
-	// int		par_exec_pid;
 
-	// after_par_ast_lst = NULL;
-	// par_exec_pid = -1;
 	left_par = find_left_par_original_token(&ft_shell()->les_token,
 			find_original_token_lst(&ft_shell()->les_token,
 				(*current)->token_node));

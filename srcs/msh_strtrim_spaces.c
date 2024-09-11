@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 17:33:34 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/10 21:54:12 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 19:14:26 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,30 @@ static int	ft_total_to_trim(char const *str)
 	return (count);
 }
 
+void	trim_spaces(char const *s1, char *final_str)
+{
+	int	i;
+	int	j;
+	int	k;
+
+	i = 0;
+	j = 0;
+	while (s1[i] && ft_is_space(s1[i]))
+		i++;
+	k = ft_strlen(s1) - 1;
+	while (s1[k] && ft_is_space(s1[k]))
+		k--;
+	while (i <= k)
+	{
+		final_str[j] = s1[i];
+		i++;
+		j++;
+	}
+	final_str[j] = '\0';
+}
+
 char	*msh_strtrim_spaces(char const *s1)
 {
-	int		i;
-    int     j;
-    int     k;
 	int		str_size;
 	char	*final_str;
 
@@ -45,19 +64,6 @@ char	*msh_strtrim_spaces(char const *s1)
 	final_str = malloc(sizeof(char) * str_size);
 	if (!final_str || gbg_coll(final_str, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-	i = 0;
-    j = 0;
-    while (s1[i] && ft_is_space(s1[i]))
-        i++;
-    k = ft_strlen(s1) - 1;
-    while (s1[k] && ft_is_space(s1[k]))
-        k--;
-    while (i <= k)
-    {
-        final_str[j] = s1[i];
-        i++;
-        j++;
-    }    
-	final_str[j] = '\0';
+	trim_spaces(s1, final_str);
 	return (final_str);
 }

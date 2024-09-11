@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lekix <lekix@student.42.fr>                +#+  +:+       +#+         #
+#    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/09/05 11:54:15 by lekix            ###   ########.fr        #
+#    Updated: 2024/09/11 18:35:57 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,9 +28,11 @@ SRCS = ./srcs/minishell.c \
 	./srcs/execs/exec_ast_tools_bis.c \
 	./srcs/execs/exec_handle_par.c \
 	./srcs/execs/exec_init_child.c \
-	./srcs/execs/init_tree.c \
+	./srcs/execs/init_tree_heredoc.c \
+	./srcs/execs/heredoc_filename.c \
 	./srcs/execs/exec_redirections.c \
 	./srcs/execs/exec_utils.c \
+	./srcs/execs/exec_utils_bis.c \
 	./srcs/execs/exec_pipe_redirections.c \
 	./srcs/execs/exec_traverse_tree.c \
 	./srcs/execs/prep_exec_child.c \
@@ -39,7 +41,8 @@ SRCS = ./srcs/minishell.c \
 	./srcs/execs/exec_handle_par_utils.c \
 	./srcs/execs/exec_handle_par_utils_bis.c \
 	./srcs/general_utils.c \
-	./srcs/non_builtins/paths_utils.c \
+	./srcs/non_builtins/paths_checking.c \
+	./srcs/non_builtins/path_errors.c \
 	./srcs/tokenizer.c \
 	./srcs/token_lst_tools.c \
 	./srcs/parsing_tools.c \

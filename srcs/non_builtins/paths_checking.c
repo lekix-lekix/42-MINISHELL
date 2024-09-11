@@ -1,70 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   paths_utils.c                                      :+:      :+:    :+:   */
+/*   paths_checking.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:19:27 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/10 22:47:07 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 18:35:13 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
-
-char	**ft_get_paths(char **env);
-char	*ft_join(char *s1, char *s2);
-char	*check_cmd_access(char *cmd);
-char	*check_paths(char **paths, char *cmd);
-char	*check_cmd_path(char *cmd);
-
-int	print_msh_error(char *err, char *cmd)
-{
-	char	*str;
-
-	str = ft_join("minishell: ", cmd);
-	str = ft_join(str, ": ");
-	str = ft_join(str, err);
-	str = ft_join(str, "\n"); // to protect
-	if (!str)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), -1);
-	write(2, str, ft_strlen(str));
-	return (0);
-}
-
-char	*ft_check_path(char **contents, char **env, int *exit_status, int *i)
-{
-	char	**paths;
-	char	*fpath;
-	char	*cmd;
-
-	cmd = contents[*i];
-	if (!contents || !cmd)
-		return (*exit_status = 0, NULL);
-	if (!cmd[0])
-	{
-		*i = *i + 1;
-		return (ft_check_path(contents, env, exit_status, i));
-	}
-    if (cmd[0] == '.' && ft_strlen(cmd) == 1)
-    {
-        write(2, "bash: .: filename argument required\n", 37);
-        write(2, ".: usage: . filename [arguments]\n", 34);
-        return (ft_exit_close(127), NULL);
-    }
-	fpath = check_cmd_access(cmd);
-    // printf("fpath = %s\n", fpath);
-	if (fpath != NULL)
-		return (cmd);
-    // dprintf(2, "yooo\n");
-	paths = ft_get_paths(env);
-	if (!paths || paths[0] == NULL)
-		return (NULL);
-	fpath = check_paths(paths, cmd);
-	if (fpath != NULL)
-		return (fpath);
-	return (ft_free(paths), NULL);
-}
+#include "../minishell.h"
 
 char	**ft_get_paths(char **env)
 {
@@ -99,7 +45,6 @@ char	*check_cmd_access(char *cmd)
 	int			err;
 
 	err = access(cmd, F_OK | R_OK | X_OK);
-    // dprintf(2, "err = %d\n", err);
 	if (err == 0)
 	{
 		stat(cmd, &file_stat);
@@ -130,4 +75,32 @@ char	*check_paths(char **paths, char *cmd)
 			return (fpath);
 	}
 	return (print_msh_error(CMD_ERR, cmd), ft_exit_close(127), NULL);
+}
+
+char	*ft_check_path(char **contents, char **env, int *exit_status, int *i)
+{
+	char	**paths;
+	char	*fpath;
+	char	*cmd;
+
+	cmd = contents[*i];
+	if (!contents || !cmd)
+		return (*exit_status = 0, NULL);
+	if (!cmd[0])
+	{
+		*i = *i + 1;
+		return (ft_check_path(contents, env, exit_status, i));
+	}
+	if (cmd[0] == '.' && ft_strlen(cmd) == 1)
+		return (dot_error());
+	fpath = check_cmd_access(cmd);
+	if (fpath != NULL)
+		return (cmd);
+	paths = ft_get_paths(env);
+	if (!paths || paths[0] == NULL)
+		return (NULL);
+	fpath = check_paths(paths, cmd);
+	if (fpath != NULL)
+		return (fpath);
+	return (ft_free(paths), NULL);
 }
