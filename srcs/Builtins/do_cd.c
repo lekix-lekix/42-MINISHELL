@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:44:43 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 15:46:19 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/11 22:03:30 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static int	ft_cdhome();
 static int	ft_change_cwd(void);
-// static int	ft_cderr_msg(char *err_msg);
 
 static int	ft_change_cwd(void)
 {
@@ -38,14 +37,6 @@ static int	ft_cdhome()
 		return (ft_update_envlst("PWD", home, false), 0);
 	return (1);
 }
-
-// static int	ft_cderr_msg(char *err_msg)
-// {
-// 	ft_putstr_fd("minishell: cd: `", 2);
-// 	ft_putstr_fd(err_msg, 2);
-// 	ft_putstr_fd("' can't cd!\n", 2);
-// 	return (1);
-// }
 
 int	ft_do_cd(char **path)
 {
@@ -75,7 +66,6 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);
-	// printf("THINGS TO COMPARE: \n%s \n %s\n\n", s1, s2);
 	if (s1_len > s2_len)
 		return (ft_strncmp(s1, s2, s1_len));
 	else
