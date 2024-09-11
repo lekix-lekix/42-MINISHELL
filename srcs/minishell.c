@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 19:17:27 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 19:27:43 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,7 +256,7 @@ int	start_parsing(char *prompt)
 int	main(int argc, char **argv, char **env)
 {
     t_minishell	*data;
-	char *line;
+    char *line;
 
 	data = ft_shell();
 	((void)argc, (void)argv);
