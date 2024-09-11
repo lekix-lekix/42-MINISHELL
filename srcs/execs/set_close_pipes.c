@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 16:11:49 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/22 14:06:32 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 18:30:04 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	close_pipe_redir_in(t_ast *node)
 void	close_pipe_redir_out(t_ast *node)
 {
 	t_redir	*redirection;
-	
+
 	redirection = node->token_node->redirections;
 	if (!redirection)
 		return ;
@@ -48,7 +48,7 @@ void	close_pipe_redir_out(t_ast *node)
 void	set_pipe_redir_in_par(t_ast **in_par_lst, int pipe_fd)
 {
 	t_ast	*current;
-	
+
 	current = *in_par_lst;
 	while (current && current->is_in_par)
 	{
@@ -60,7 +60,7 @@ void	set_pipe_redir_in_par(t_ast **in_par_lst, int pipe_fd)
 void	set_pipe_redir_out(t_ast *node, int pipe_fd)
 {
 	t_redir	*output_redir;
-	
+
 	output_redir = create_redir_node(REDIR_OUTPUT, "pipe");
 	add_front_redir_node(&node->token_node->redirections, output_redir);
 	node->token_node->pipe_redir[1] = pipe_fd;
@@ -69,9 +69,8 @@ void	set_pipe_redir_out(t_ast *node, int pipe_fd)
 void	set_pipe_redir_in(t_ast *node, int pipe_fd)
 {
 	t_redir	*input_redir;
-	
+
 	input_redir = create_redir_node(REDIR_INPUT, "pipe");
 	add_front_redir_node(&node->token_node->redirections, input_redir);
 	node->token_node->pipe_redir[0] = pipe_fd;
 }
- 

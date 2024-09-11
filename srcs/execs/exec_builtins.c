@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:31:03 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/09 20:21:03 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/11 17:58:59 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,19 @@ int	ft_strncmp_loco(const char *s1, const char *s2, size_t n)
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
-int ft_env(char **args)
+int	ft_env(char **args)
 {
-    char *err;
-    
-    if (get_arr_len(args) > 1)
-    {
-        err = ft_join("env: ‘", args[1]);
-        err = ft_join(err, "’: No such file or directory\n");
-        write(2, err, ft_strlen(err));
-        return (127);
-    }
-    print_env(&ft_shell()->env_lst);
-    return (0);
+	char	*err;
+
+	if (get_arr_len(args) > 1)
+	{
+		err = ft_join("env: ‘", args[1]);
+		err = ft_join(err, "’: No such file or directory\n");
+		write(2, err, ft_strlen(err));
+		return (127);
+	}
+	print_env(&ft_shell()->env_lst);
+	return (0);
 }
 
 int	ft_exec_builtins(char **args)

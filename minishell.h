@@ -6,7 +6,11 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/09/11 20:08:59 by sabakar-         ###   ########.fr       */
+=======
+/*   Updated: 2024/09/11 18:35:36 by kipouliq         ###   ########.fr       */
+>>>>>>> 79d67fd7e26b47762fa015f727ca42b384bdeabd
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,16 +258,18 @@ char				**msh_split_spaces(char const *s, int mlc_list);
 char				**ft_concat_str_arr(char **arr, char **arr2);
 char				*empty_str(void);
 int					ft_count_words(char const *s, char sep);
+char				*create_random_filename(void);
 
 // paths utils
-// char				*ft_check_path(char **contents, char **env,
-// int *exit_status, int *i);
 char				*ft_check_path(char **contents, char **env,
 						int *exit_status, int *i);
 void				lst_env_add_back(t_env **lst, t_env *new);
 void				consume_node(t_token **lst, t_token *node);
 int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
 						int level);
+int					print_msh_error(char *err, char *cmd);
+char				*dot_error(void);
+
 // print syntax errors
 int					print_newline_syntax_error(void);
 int					print_char_syntax_error(char *str);
@@ -321,8 +327,6 @@ void				ft_reset_ports(bool piped);
 
 // Expanders
 void				ft_heredoc_expander(char *str, int fd);
-// int					ft_exec_non_builtins_single_cmd(char **args,
-// 						t_redir *redirections);
 bool				ft_is_valid_var_char(char c);
 char				**ft_expand(char *sr);
 char				*ft_strip_quotes(char *str);
