@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/10 16:23:42 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 14:10:42 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,6 +201,7 @@ static void	ft_init_leaf(t_ast *node)
 		// dprintf(2, "temp_contents = %s\n", temp_contents[0]);
 	}
 	io->contents = temp_contents;
+	// printf("io->contents: %s\n", io->contents[1]);
 	while (redirections)
 	{
 		if (redirections->redir_type == REDIR_HEREDOC)

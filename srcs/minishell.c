@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/10 17:03:50 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 14:08:56 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ static void	ft_start_execution(t_ast **tree)
 	{
 		// If the program is quited during heredoc,
 		// we have clean the mess afterword I guess
-		printf(" HERE 98\n");
+		// printf(" HERE 98\n");
 		// gbg_coll(NULL, PARSING, FLUSH_ONE);
 		ft_close_fds();
 		gbg_coll(NULL, ALL, FLUSH_ALL);
@@ -103,7 +103,10 @@ static void	ft_start_execution(t_ast **tree)
 		return ;
 	}
 	tcsetattr(STDIN_FILENO, TCSANOW, &(ft_shell())->original_term);
+	// printf("yo\n");
 	ft_start_exec(&nodes);
+	// printf("yo2\n");
+
 }
 
 void	gbg_delete_node(t_token *node, int mlc_lst)
@@ -252,7 +255,7 @@ int	start_parsing(char *prompt)
 // 	{
 // 		ft_init_signals();
 // 		if (isatty(fileno(stdin)))
-// 			data->prompt = readline("minishellOOO$ ");
+// 			data->prompt = readline("minishell$ ");
 // 		else
 // 		{
 // 			line = get_next_line(fileno(stdin), 0);
@@ -260,25 +263,27 @@ int	start_parsing(char *prompt)
 // 			data->prompt = ft_strtrim(line, "\n");
 // 			free(line);
 // 		}
-// 		if (!data->prompt)
-// 		{
-// 			// Also we need to clean here if I'm not mistaking!
-// 			gbg_coll(NULL, ALL, FLUSH_ALL);
-// 			// (ft_putstr_fd("exit\n", 1));
-// 			exit(ft_shell()->exit_status);
-// 		}
-// 		if (data->prompt || *data->prompt)
-// 		{
-// 			if (data->prompt[0])
-// 				add_history(data->prompt);
-// 			start_parsing(data->prompt);
-// 			gbg_coll(NULL, PARSING, FLUSH_ONE);
-// 			close(ft_shell()->ft_stdin);
-// 			close(ft_shell()->ft_stdout);
-// 			printf("\n");
-// 			// gbg_coll(NULL, PARSING, FLUSH_ALL);
-// 			free(data->prompt);
-// 		}
+// 	  if (data->prompt == NULL)
+//         {
+//             // Also we need to clean here if I'm not mistaking!
+//             // printf("WE ARE HERE IN MAIN\n");
+//             gbg_coll(NULL, ALL, FLUSH_ALL);
+//             close(ft_shell()->ft_stdin);
+//             close(ft_shell()->ft_stdout);
+//             ft_putstr_fd("exit\n", 1);
+//             exit(ft_shell()->exit_status);
+//         }
+//         if (data->prompt && *data->prompt)
+//         {
+//             if (data->prompt[0])
+//                 add_history(data->prompt);
+//             start_parsing(data->prompt);
+//             gbg_coll(NULL, PARSING, FLUSH_ONE);
+//             close(ft_shell()->ft_stdin);
+//             close(ft_shell()->ft_stdout);
+//             // gbg_coll(NULL, PARSING, FLUSH_ALL);
+//             free(data->prompt);
+//         }
 // 	}
 // 	free(data->prompt);
 // 	gbg_coll(NULL, ENV, FLUSH_ALL);

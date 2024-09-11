@@ -8,8 +8,6 @@ env -i ./minishell
 fix error printing ft export and others
 cd leaks if ctrl d
 enter at beginning ?
-heredoc and ctrl + d gives an invalid read 
-"" empty command doesn't work!
 
 leaks :
 

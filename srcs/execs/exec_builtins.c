@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:31:03 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/09 20:21:03 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/11 14:10:03 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ int ft_env(char **args)
 int	ft_exec_builtins(char **args)
 {
 	if (ft_strcmp(args[0], "echo") == 0)
+	{	
+		// printf("It's %s\n", args[0]);
 		return (ft_exec_echo(args));
+	}
 	if (ft_strcmp(args[0], "pwd") == 0)
 		return (ft_exec_pwd(args));
 	if (ft_strcmp(args[0], "env") == 0)
@@ -58,6 +61,7 @@ int	ft_exec_builtins(char **args)
 		return (ft_exec_unset(args));
 	if (ft_strcmp(args[0], "cd") == 0)
 		return (ft_do_cd(args));
+	printf("uooo\n");
 	ft_exit(args);
 	return (ENO_GENERAL);
 }

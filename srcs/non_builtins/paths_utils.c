@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:19:27 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/10 16:10:18 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 10:33:40 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ char	**ft_get_paths(char **env)
 	{
 		if (ft_strncmp("PATH", env[x], 4) == 0)
 		{
-			path = ft_split(env[x] + 5, ':');
+			path = msh_split(env[x] + 5, ':', PARSING);
 			if (!path)
 				return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 			return (path);

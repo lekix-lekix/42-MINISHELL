@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/10 16:07:28 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 14:09:15 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ char	*ft_handle_dollar(char *str, size_t *i)
 	char	*res;
 
 	(*i)++;
+	// printf("THE STR: %s\n", str);
 	if (ft_isdigit(str[*i]) || str[*i] == '@')
 	{
 		res = msh_strdup("", PARSING);
@@ -48,14 +49,15 @@ char	*ft_handle_dollar(char *str, size_t *i)
 	var = ft_substr(str, start, *i - start);
 	// printf("THE FAR IS HERE: %s\n", var);
 	if (!var)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), NULL);
 	env_val = ft_get_envlst_content(var, &ft_shell()->env_lst);
 	if (!env_val)
 	{
+		// printf("It doesn't exist: %s\n", env_val);
 		// printf("WE DIDN'T find env val\n");
 		res = msh_strdup("", PARSING);
-		if (!res || gbg_coll(res, PARSING, ADD))
-			return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
+		// if (!res || gbg_coll(res, PARSING, ADD))
+		// 	return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 		return (free(var), res);
 	}
     // dprintf(2, "var = %s\n", var);
@@ -183,6 +185,7 @@ char	**ft_expand(char *sr)
 
 	x = 0;
 	sr = ft_pre_expand(sr);
+	// printf("THE SR: %s\n", sr);
 	if (!sr)
 		return (NULL);
 	sr = ft_clean_empty_chars(sr);
@@ -193,6 +196,7 @@ char	**ft_expand(char *sr)
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
 	while (globaled[x])
 	{
+		// printf("THE GLOBBALED: %s\n", globaled[x]);
 		expanded[x] = ft_strip_quotes(globaled[x]);
         // expanded[x] = msh_strtrim_spaces(expanded[x]);
 		x++;
