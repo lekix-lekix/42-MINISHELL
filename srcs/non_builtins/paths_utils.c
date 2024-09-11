@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   paths_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:19:27 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/10 16:10:18 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/10 22:47:07 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,17 @@ char	*ft_check_path(char **contents, char **env, int *exit_status, int *i)
 		*i = *i + 1;
 		return (ft_check_path(contents, env, exit_status, i));
 	}
+    if (cmd[0] == '.' && ft_strlen(cmd) == 1)
+    {
+        write(2, "bash: .: filename argument required\n", 37);
+        write(2, ".: usage: . filename [arguments]\n", 34);
+        return (ft_exit_close(127), NULL);
+    }
 	fpath = check_cmd_access(cmd);
+    // printf("fpath = %s\n", fpath);
 	if (fpath != NULL)
 		return (cmd);
+    // dprintf(2, "yooo\n");
 	paths = ft_get_paths(env);
 	if (!paths || paths[0] == NULL)
 		return (NULL);
@@ -68,9 +76,7 @@ char	**ft_get_paths(char **env)
 	{
 		if (ft_strncmp("PATH", env[x], 4) == 0)
 		{
-			path = ft_split(env[x] + 5, ':');
-			if (!path)
-				return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), NULL);
+			path = msh_split(env[x] + 5, ':', PARSING);
 			return (path);
 		}
 		x++;

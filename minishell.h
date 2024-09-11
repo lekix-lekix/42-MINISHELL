@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/09/10 15:59:57 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 15:23:56 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -164,6 +163,7 @@ typedef struct s_minishell
 	char			**env_args;
 	t_env			*expanded_env;
 	char			**expanded_args;
+	int				expand_chars_trimmed;
 	struct termios	original_term;
 }					t_minishell;
 
@@ -251,6 +251,9 @@ char				*msh_strdup(const char *s, int mlc_lst);
 int					content_count_words(char *str);
 char				*get_next_word(char **input_str);
 char				**msh_split_spaces(char const *s, int mlc_list);
+char				**ft_concat_str_arr(char **arr, char **arr2);
+char				*empty_str(void);
+int					ft_count_words(char const *s, char sep);
 
 // paths utils
 // char				*ft_check_path(char **contents, char **env,

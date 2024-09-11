@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_init_child.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/10 16:00:51 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 13:32:47 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,9 @@ int	init_only_child_no_fork(t_token *node)
 	pid_t	pid;
 	int		status;
 
-    ft_update_envlst("_", node->contents[get_arr_len(node->contents) - 1], false);
-	if (!node->contents || !node->contents[0])
+	ft_update_envlst("_", node->contents[get_arr_len(node->contents) - 1],
+		false);
+	if (!node->contents || !node->contents[0] || !node->contents[0][0])
 	{
 		ft_shell()->exit_status = ft_check_redirections(node);
 		return (ft_reset_ports(false), ft_close_fds(), 0);
@@ -54,13 +55,13 @@ int	init_only_child_no_fork(t_token *node)
 	}
 	pid = fork();
 	if (pid == -1)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), perror("bash: fork"), exit(255),
-			-1);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(),
+			perror("bash: fork"), exit(255), -1);
 	if (pid == 0)
 	{
 		(ft_shell())->signint_child = true;
 		status = ft_exec_non_builtins(node);
-		dprintf(2, "WE arrives here 13\n");
+		// dprintf(2, "WE arrives here 13\n");
 	}
 	(ft_reset_ports(false), ft_close_fds(), waitpid(pid, &status, WUNTRACED));
 	if (WIFEXITED(status))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:07:00 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/05 12:31:21 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 15:44:21 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,39 +16,39 @@ static int	ft_check_option(char *sr)
 {
 	int	x;
 
-	x = 0;
+	x = 1;
 	if (sr[0] != '-')
 		return (0);
-	x++;
-	while (sr[x])
-	{
-		if (sr[1] == 'n' && ft_is_space(sr[1 + 1]))
-			return (1);
+	while (sr[x] == 'n')
 		x++;
-	}
+	if (ft_is_space(sr[x]) || !sr[x])
+		return (1);
 	return (0);
 }
 
 int	ft_exec_echo(char **args)
 {
-	int	x;
+	int	i;
 	int	opt;
+	int	arr_len;
 
-	x = 1;
 	opt = 0;
-	while (args[x] && ft_check_option(args[x]))
-	{
+	arr_len = get_arr_len(args);
+	if (arr_len == 1)
+		return (printf("\n"), 0);
+	if (arr_len == 2 && ft_check_option(args[1]))
+		return (0);
+	i = 0;
+	while(ft_check_option(args[++i]))
 		opt = 1;
-		x++;
-	}
-	while (args[x])
+	while (args[i] && i < arr_len - 1)
 	{
-		ft_putstr_fd(args[x], 1);
-		if (args[x + 1])
-			write(1, " ", 1);
-		x++;
+		printf("%s ", args[i]);
+		i++;
 	}
-	if (opt == 0)
-		ft_putstr_fd("\n", 1);
+	if (!opt)
+		printf("%s\n", args[i]);
+	else
+		printf("%s", args[i]);
 	return (0);
 }

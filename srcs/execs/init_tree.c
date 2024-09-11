@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_tree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/10 16:23:42 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:29:01 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	ft_heredoc(t_redir *redirection, char *tmp_file_path)
 	int		tmp_file_fd;
 
 	// signal(SIGINT, ft_heredoc_sigint_handler);
+    // input = NULL;
 	tmp_file_fd = open(tmp_file_path, O_RDWR | O_CREAT, 0644);
 	if (tmp_file_fd == -1)
 	{
@@ -43,12 +44,12 @@ void	ft_heredoc(t_redir *redirection, char *tmp_file_path)
 		if (ft_is_delimiter(redirection->filename, line))
 			break ;
 		else
-        {
-            input = ft_pre_expand(line);
-            line = ft_join(input, "\n");
-            write(tmp_file_fd, line, ft_strlen(line));
+		{
+			input = ft_pre_expand(line);
+			line = ft_join(input, "\n");
+			write(tmp_file_fd, line, ft_strlen(line));
 			// ft_heredoc_expander(line, tmp_file_fd);
-        }
+		}
 		// free(line);
 	}
 	close(tmp_file_fd);
@@ -115,10 +116,9 @@ char	**ft_concat_str_arr(char **arr, char **arr2)
 	len1 = get_arr_len(arr);
 	len2 = get_arr_len(arr2);
 	total_len = len1 + len2;
-	res = (char **)malloc(sizeof(char *) * (total_len + 1));
+	res = (char **)malloc(sizeof(char *) * (total_len + 2));
 	if (!res || gbg_coll(res, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
-			NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_exit_close(255), NULL);
 	x = -1;
 	while (++x < len1)
 		res[x] = msh_strdup(arr[x], PARSING);
@@ -128,7 +128,7 @@ char	**ft_concat_str_arr(char **arr, char **arr2)
 		res[x] = msh_strdup(arr2[y], PARSING);
 		x++;
 	}
-	res[total_len] = NULL;
+	res[x] = NULL;
 	return (res);
 }
 
@@ -181,26 +181,26 @@ char	*create_random_filename(void)
 
 static void	ft_init_leaf(t_ast *node)
 {
-	t_token	*io;
+	// t_token	*io;
 	t_redir	*redirections;
-	int		idx;
-	char	**temp_contents;
-	char	**la_args;
 	char	*tmp_file_path;
 
+	// int		idx;
+	// char	**temp_contents;
+	// char	**la_args;
 	// int		p[2];
 	// int		pid;
-	idx = -1;
-	io = node->token_node;
-	temp_contents = NULL;
+	// idx = -1;
+	// io = node->token_node;
+	// temp_contents = NULL;
 	redirections = node->token_node->redirections;
-	while (io->contents[++idx])
-	{
-		la_args = ft_expand(io->contents[idx]);
-		temp_contents = ft_concat_str_arr(temp_contents, la_args);
-		// dprintf(2, "temp_contents = %s\n", temp_contents[0]);
-	}
-	io->contents = temp_contents;
+	// while (io->contents[++idx])
+	// {
+	// 	la_args = ft_expand(io->contents[idx]);
+	// 	temp_contents = ft_concat_str_arr(temp_contents, la_args);
+	// 	// dprintf(2, "temp_contents = %s\n", temp_contents[0]);
+	// }
+	// io->contents = temp_contents;
 	while (redirections)
 	{
 		if (redirections->redir_type == REDIR_HEREDOC)

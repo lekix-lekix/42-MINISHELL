@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   msh_split.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 14:00:08 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/03 13:02:35 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 15:23:31 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	ft_count_words(char const *s, char sep)
+int	ft_count_words(char const *s, char sep)
 {
 	int	count;
 	int	i;
@@ -101,10 +101,10 @@ char	**msh_split(char const *s, char c, int mlc_list)
 		return (NULL);
 	str_arr = malloc(sizeof(char *) * (strs_count + 1));
 	if (!str_arr || gbg_coll(str_arr, mlc_list, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_exit_close(255), NULL);
 	while (++i <= strs_count)
 		str_arr[i] = NULL;
 	if (ft_fill_arr(str_arr, s, c, mlc_list) == -1)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_exit_close(255), NULL);
 	return (str_arr);
 }
