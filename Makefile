@@ -6,7 +6,7 @@
 #    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/09/11 21:04:20 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/09/11 22:41:05 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,7 +82,8 @@ SRCS = ./srcs/minishell.c \
 	./srcs/expanders/ft_asterisker.c \
 	./srcs/expanders/ft_globaler.c \
 	./srcs/signals.c \
-	./srcs/Builtins/ft_exit.c
+	./srcs/Builtins/ft_exit.c \
+	./srcs/expanders/ft_handle_money.c
 
 OBJ = $(SRCS:.c=.o)
 

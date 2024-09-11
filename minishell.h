@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/11 20:58:52 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 21:10:58 by kipouliq         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/09/11 22:40:55 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -345,6 +345,9 @@ char				**ft_globaler(char *str);
 size_t				get_arr_len(char **expanded);
 void				expand_redirections(t_redir **redirections);
 char				*ft_pre_expand(char *sr);
+char				*ft_handle_dollar(char *str, size_t *i);
+char			*ft_handle_dquote_str(char *str, size_t *i);
+char				*ft_check_squotes(char *sr, size_t *x);
 
 // Exec AST tools
 void				set_is_in_par(t_ast *root, int flag);
