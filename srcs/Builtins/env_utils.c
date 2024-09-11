@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/10 22:01:29 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 15:08:34 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,21 +34,21 @@ char	*ft_get_envlst_content(char *key, t_env **env_lst)
 	t_env	*envlst;
 
 	envlst = *env_lst;
-	while (1)
-	{
+	// while (1)
+	// {
 		while (envlst)
 		{
 			if (!ft_strcmp(key, envlst->field))
 				return (envlst->content);
 			envlst = envlst->next;
 		}
-		envlst = *env_lst;
-		if (!key[0] || ft_strlen(key) == 1)
-			break ;
-		key = msh_strtrim(key, &key[ft_strlen(key) - 1]);
-        ft_shell()->expand_chars_trimmed += 1;
-	}
-    ft_shell()->expand_chars_trimmed = 0;
+		// envlst = *env_lst;
+		// if (!key[0] || ft_strlen(key) == 1)
+			// // break ;
+		// // key = msh_strtrim(key, &key[ft_strlen(key) - 1]);
+        // // ft_shell()->expand_chars_trimmed += 1;
+	// }
+    // ft_shell()->expand_chars_trimmed = 0;
 	return (NULL);
 }
 

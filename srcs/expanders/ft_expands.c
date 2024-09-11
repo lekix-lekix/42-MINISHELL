@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/10 22:02:00 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 15:06:31 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,8 +195,8 @@ char	**ft_expand(char *sr)
     // printf("tmp = '%s'\n", tmp);
 	if (!tmp || !tmp[0])
 		return (NULL);
-	if (ft_shell()->expand_chars_trimmed != 0)
-		tmp = ft_join(tmp, sr + ft_shell()->expand_chars_trimmed + 1);
+	// if (ft_shell()->expand_chars_trimmed != 0)
+	// 	tmp = ft_join(tmp, sr + ft_shell()->expand_chars_trimmed + 1);
 	tmp = ft_clean_empty_chars(tmp);
 	// printf("THE CLEANED STR: %s\n", sr);
 	globaled = ft_globaler(tmp);

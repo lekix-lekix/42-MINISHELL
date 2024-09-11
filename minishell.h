@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/09/10 22:32:10 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 15:23:56 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,6 +253,7 @@ char				*get_next_word(char **input_str);
 char				**msh_split_spaces(char const *s, int mlc_list);
 char				**ft_concat_str_arr(char **arr, char **arr2);
 char				*empty_str(void);
+int					ft_count_words(char const *s, char sep);
 
 // paths utils
 // char				*ft_check_path(char **contents, char **env,

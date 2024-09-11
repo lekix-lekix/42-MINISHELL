@@ -6,13 +6,13 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 14:00:08 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/10 17:04:44 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 15:23:31 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	ft_count_words(char const *s, char sep)
+int	ft_count_words(char const *s, char sep)
 {
 	int	count;
 	int	i;
