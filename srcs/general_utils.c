@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:14:54 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/06 15:24:52 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/11 20:34:24 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	ft_print_err(char *str)
 	x = 0;
 	new_str = (char *)malloc(sizeof(char) * len + 1);
 	if (!new_str)
-		return ;
+		ft_exit_close(255);
 	while (str[x])
 	{
 		new_str[x] = str[x];
@@ -63,8 +63,7 @@ char	*ft_join(char *s1, char *s2)
 	total_len = (ft_strlen(s1) + ft_strlen(s2));
 	new_arr = (char *)malloc(sizeof(char) * (total_len + 1));
 	if (!new_arr || gbg_coll(new_arr, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
-			NULL);
+		return (ft_exit_close(255), NULL);
 	i = -1;
 	while (s1[++i])
 		new_arr[i] = s1[i];

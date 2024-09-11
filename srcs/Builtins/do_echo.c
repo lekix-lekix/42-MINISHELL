@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:07:00 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 15:44:21 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 22:28:22 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,17 @@ int	ft_exec_echo(char **args)
 
 	opt = 0;
 	arr_len = get_arr_len(args);
+    // dprintf(2, "arr len = %d\n", arr_len);
 	if (arr_len == 1)
 		return (printf("\n"), 0);
 	if (arr_len == 2 && ft_check_option(args[1]))
 		return (0);
 	i = 0;
-	while(ft_check_option(args[++i]))
+	while (args[++i] && ft_check_option(args[i]))
+    {
+        // printf("args %d = %s\n", i, args[i]);
 		opt = 1;
+    }
 	while (args[i] && i < arr_len - 1)
 	{
 		printf("%s ", args[i]);

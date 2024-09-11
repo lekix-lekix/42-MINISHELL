@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:15:37 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/11 17:59:24 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:29:08 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 int	set_pipe_stdout(int *after_par_pipe)
 {
 	if (dup2(after_par_pipe[1], STDOUT_FILENO) == -1)
-		return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL),
-			ft_close_fds(), exit(255), -1);
+		return (ft_exit_close(255), -1);
 	close(after_par_pipe[1]);
 	ft_close_fds();
 	return (0);

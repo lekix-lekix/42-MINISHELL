@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_redir_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 17:48:46 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/03 13:10:30 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:38:53 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ t_redir	*create_redir_node(t_token_type redir_type, char *filename)
 
 	redir_node = malloc(sizeof(t_redir));
 	if (!redir_node || gbg_coll(redir_node, PARSING, ADD))
-		return (gbg_coll(redir_node, PARSING, ADD), exit(255), NULL);
+		return (ft_exit_close(255), NULL);
 	redir_node->redir_type = redir_type;
 	redir_node->filename = msh_strdup(filename, PARSING);
 	redir_node->heredoc = 0;

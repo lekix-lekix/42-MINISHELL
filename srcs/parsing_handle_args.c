@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_handle_args.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 14:50:38 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/03 13:07:13 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:38:08 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	get_args_flags(t_token **lst)
 	nb_of_args = get_nb_of_args(lst);
 	cmd_node->contents = malloc(sizeof(char *) * (nb_of_args + 2));
 	if (!cmd_node->contents || gbg_coll(cmd_node->contents, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), -1);
+		return (ft_exit_close(255), -1);
 	cmd_node->contents[0] = msh_strdup(cmd_node->content, PARSING);
 	if (nb_of_args == 0)
 	{

@@ -6,7 +6,7 @@
 #    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/09/11 18:35:57 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/09/11 21:04:20 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,9 @@ SRCS = ./srcs/minishell.c \
 	./srcs/Builtins/do_echo.c \
 	./srcs/Builtins/do_pwd.c \
 	./srcs/Builtins/env_utils.c \
+	./srcs/Builtins/env_utils_bis.c \
 	./srcs/Builtins/ft_export.c \
+	./srcs/Builtins/ft_export_bis.c \
 	./srcs/Builtins/ft_unset.c \
 	./srcs/execs/exec_non_builtins.c \
 	./srcs/execs/start_exec.c \
@@ -44,6 +46,7 @@ SRCS = ./srcs/minishell.c \
 	./srcs/non_builtins/paths_checking.c \
 	./srcs/non_builtins/path_errors.c \
 	./srcs/tokenizer.c \
+	./srcs/token_create_nodes.c \
 	./srcs/token_lst_tools.c \
 	./srcs/parsing_tools.c \
 	./srcs/parsing_tools_bis.c \
@@ -62,6 +65,8 @@ SRCS = ./srcs/minishell.c \
 	./srcs/parsing_redir_utils.c \
 	./srcs/parsing_redir_utils_bis.c \
 	./srcs/parsing_split_token_content.c \
+	./srcs/parsing_word_utils.c \
+	./srcs/parsing_find_type.c \
 	./srcs/print_syntax_errors.c \
 	./srcs/ast_print.c \
 	./srcs/ast_par_utils.c \

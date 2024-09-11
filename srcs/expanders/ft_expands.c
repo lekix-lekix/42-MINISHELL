@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expands.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 19:22:38 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 22:28:46 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ char	*ft_check_squotes(char *sr, size_t *x)
 		(*x)++;
 	(*x)++;
 	res = ft_substr(sr, start, *x - start);
+    // dprintf(2, "res substr sq = %s x = %zu\n", res, *x);
 	if (!res || gbg_coll(res, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
 			NULL);
@@ -92,6 +93,7 @@ static char	*ft_handle_dquote_str(char *str, size_t *i)
 				+ 1]) || str[*i + 1] == '"'))
 		(*i)++;
 	res = ft_substr(str, start, *i - start);
+    // dprintf(2, "res substr dq = %s\n", res);
 	if (!res || gbg_coll(res, PARSING, ADD))
 		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
 			NULL);
@@ -103,6 +105,7 @@ char	*ft_check_dquotes(char *sr, size_t *k)
 	char	*res;
 	char	*final_res;
 
+    // dprintf(2, "dquotes\n");
 	res = msh_strdup("\"", PARSING);
 	(*k)++;
 	while (sr[*k] && sr[*k] != '"')
@@ -150,6 +153,7 @@ char	*ft_pre_expand(char *sr)
 	res = msh_strdup("", PARSING);
 	while (sr[x] && sr[x] != '\0')
 	{
+        // printf("x = %zu, sr = %s\n", x, sr);
 		if (sr[x] == '"')
 			res = ft_strjoin(res, ft_check_dquotes(sr, &x));
 		else if (sr[x] == '\'')
@@ -191,8 +195,9 @@ char	**ft_expand(char *sr)
 	size_t	x;
 
 	x = 0;
-	// printf("THE Incoming arg: %s\n", sr);
+	// dprintf(2, "THE Incoming arg: %s\n", sr);
 	tmp = ft_pre_expand(sr);
+    // dprintf(2, "tmp = %s\n", tmp);
 	if (!tmp || !tmp[0])
 		return (NULL);
 	// if (ft_shell()->expand_chars_trimmed != 0)

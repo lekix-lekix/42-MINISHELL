@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:23:03 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/11 18:29:59 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:32:33 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ t_lst	*create_lst_node(void *mem_addr)
 
 	lst_node = malloc(sizeof(t_lst));
 	if (!lst_node || gbg_coll(lst_node, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
-			NULL);
+		return (ft_exit_close(255), NULL);
 	lst_node->content = mem_addr;
 	lst_node->next = NULL;
 	return (lst_node);

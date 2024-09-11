@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh_strtrim.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 17:33:34 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/03 13:05:13 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:37:42 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	*empty_str(void)
 
 	empty_str = malloc(1);
 	if (!empty_str || gbg_coll(empty_str, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (ft_exit_close(255), NULL);
 	empty_str[0] = '\0';
 	return (empty_str);
 }
@@ -68,7 +68,7 @@ char	*msh_strtrim(char const *s1, char const *set)
 		return (empty_str());
 	final_str = malloc(sizeof(char) * str_size);
 	if (!final_str || gbg_coll(final_str, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (ft_exit_close(255), NULL);
 	j = 0;
 	while (s1[i] && j < str_size - 1)
 	{

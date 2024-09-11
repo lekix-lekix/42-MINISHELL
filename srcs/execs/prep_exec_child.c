@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:34:26 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/11 18:29:49 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:32:15 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,10 @@ int	exec_child(t_ast *node)
 
 	pid = malloc(sizeof(pid_t));
 	if (!pid || gbg_coll(pid, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255), -1);
+		return (ft_exit_close(255), -1);
 	*pid = fork();
 	if (*pid == -1)
-		return (perror("bash: fork: "), gbg_coll(NULL, ALL, FLUSH_ALL),
-			exit(255), -1);
+		return (perror("bash: fork: "), ft_exit_close(255), -1);
 	if (*pid == 0)
 	{
 		ft_shell()->signint_child = true;

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/09/11 18:35:36 by kipouliq         ###   ########.fr       */
+/*   Created: 2024/09/11 20:58:52 by kipouliq          #+#    #+#             */
+/*   Updated: 2024/09/11 21:10:58 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,10 @@ void				ft_close_fds(void);
 int					trim_token_fields(t_token **lst);
 t_token				*tokenize_input(char *input);
 char				*msh_strtrim_spaces(char const *s1);
+void				create_insert_token_nodes(t_token **lst, char **input,
+						char **operator);
+int					is_a_quote(char c);
+void				more_tokenization(t_token **lst);
 
 // Merge combined functions
 void				print_tree(t_ast **tree);
@@ -232,6 +236,9 @@ void				*ft_unset_cleaner(void *ptr, bool clean);
 int					ft_check_key(char *str);
 char				*ft_get_envlst_content(char *content, t_env **env_lst);
 char				*get_env_content(char *field);
+void				ft_export_list(t_env **envlst);
+int					check_and_update_envlst(char **args, int *exit_s, int i);
+t_env				*env_cpy_lst(t_env **envlst);
 
 // The non-builtins
 int					ft_exec_non_builtins(t_token *node);
@@ -306,9 +313,13 @@ t_token				*find_redir_node(t_token **lst, t_token *redir_node);
 int					is_a_redir_operator(t_token *node);
 void				print_redir_lst(t_redir **lst);
 void				add_front_redir_node(t_redir **lst, t_redir *node);
+t_redir				*get_redir_lst_par(t_token **redir_node_lst);
+
+// Parsing utils
+int					get_end_word_idx(char *str, int i);
 
 // print functions
-void				print_redir_lst(t_redir **lst);
+// void				print_redir_lst(t_redir **lst);
 
 void				find_operator_type(char *input, t_token *node);
 

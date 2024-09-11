@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 14:00:08 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 18:41:04 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:37:13 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ static char	*ft_malloc_cpy_spaces(char const *src, int n, int mlc_list)
 	i = -1;
 	final_str = malloc(sizeof(char) * (n + 1));
 	if (!final_str || gbg_coll(final_str, mlc_list, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
-			NULL);
+		return (ft_exit_close(255), NULL);
 	while (src[++i] && i < n)
 		final_str[i] = src[i];
 	final_str[i] = '\0';
@@ -102,10 +101,10 @@ char	**msh_split_spaces(char const *s, int mlc_list)
 		return (NULL);
 	str_arr = malloc(sizeof(char *) * (strs_count + 1));
 	if (!str_arr || gbg_coll(str_arr, mlc_list, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (ft_exit_close(255), NULL);
 	while (++i <= strs_count)
 		str_arr[i] = NULL;
 	if (ft_fill_arr(str_arr, s, mlc_list) == -1)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (ft_exit_close(255), NULL);
 	return (str_arr);
 }

@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 18:25:06 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 21:09:29 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,12 @@ char	**ft_concat_str_arr(char **arr, char **arr2)
 	char	**res;
 	int		x;
 	int		y;
-	int		total_len;
 
 	len1 = get_arr_len(arr);
 	len2 = get_arr_len(arr2);
-	total_len = len1 + len2;
-	res = (char **)malloc(sizeof(char *) * (total_len + 2));
+	res = (char **)malloc(sizeof(char *) * (len1 + len2 + 2));
 	if (!res || gbg_coll(res, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_exit_close(255), NULL);
+		return (ft_exit_close(255), NULL);
 	x = -1;
 	while (++x < len1)
 		res[x] = msh_strdup(arr[x], PARSING);

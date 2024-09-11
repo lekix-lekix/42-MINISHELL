@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:45:25 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/03 13:29:24 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 21:12:10 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,47 +22,36 @@ int	check_operator_len(char *str)
 	return (i);
 }
 
-t_token	*create_operator_node(char **input)
+char	*find_quote(char *input)
 {
-	t_token	*node;
-	int		operator_len;
-	char	*input_copy;
+	char	*str;
+	int		i;
 
-	input_copy = *input;
-	operator_len = check_operator_len(input_copy);
-	node = malloc(sizeof(t_token));
-	if (!node || gbg_coll(node, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-	find_operator_type(input_copy, node);
-	if ((node->type == PAR_LEFT || node->type == PAR_RIGHT) && operator_len > 1)
-		operator_len = 1;
-	node->content = malloc(sizeof(char) * (operator_len + 1));
-	if (!node->content || gbg_coll(node->content, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-	ft_strlcpy(node->content, input_copy, operator_len + 1);
-	node->filename = NULL;
-	node->redirections = NULL;
-	node->pipe_redir[0] = -1;
-	node->pipe_redir[1] = -1;
-	node->next = NULL;
-	node->contents = NULL;
-	node->original_token = NULL;
-	return (node);
+	i = -1;
+	while (input[++i])
+	{
+		if (input[i] == '\'' || input[i] == '\"')
+		{
+			str = ft_strchr(input + i + 1, input[i]);
+			return (str);
+		}
+	}
+	return (NULL);
 }
 
-t_token	*create_cmd_node(char *input, char *sep)
+t_token	*create_cmd_node_no_sep(char *input)
 {
 	t_token	*node;
-	int		cmd_len;
 
-	cmd_len = ft_strlen_sep(input, sep);
 	node = malloc(sizeof(t_token));
 	if (!node || gbg_coll(node, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-	node->content = malloc(sizeof(char) * (cmd_len + 1));
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
+			NULL);
+	node->content = malloc(sizeof(char) * (ft_strlen(input) + 1));
 	if (!node->content || gbg_coll(node->content, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
-	ft_strcpy_sep_ptr(node->content, input, sep);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
+			NULL);
+	ft_strlcpy(node->content, input, ft_strlen(input) + 1);
 	node->redirections = NULL;
 	node->pipe_redir[0] = -1;
 	node->pipe_redir[1] = -1;
@@ -74,48 +63,43 @@ t_token	*create_cmd_node(char *input, char *sep)
 	return (node);
 }
 
-void	create_insert_token_nodes(t_token **lst, char **input, char **operator)
+void	more_tokenization(t_token **lst)
 {
-	t_token	*op_node;
-	t_token	*cmd_node;
+	t_token	*current;
+	t_token	*new_cmd;
+	t_token	*prev;
+	char	*new_content;
 
-	op_node = create_operator_node(operator);
-	cmd_node = create_cmd_node(*input, *operator);
-	insert_node_lst(lst, cmd_node);
-	insert_node_lst(lst, op_node);
-	*input = *operator + ft_strlen(op_node->content);
-}
-
-char    *find_quote(char *input)
-{
-    char *str;
-    int i;
-
-    i = -1;
-    while (input[++i])
-    {
-        if (input[i] == '\'' || input[i] == '\"')
-        {
-            str = ft_strchr(input + i + 1, input[i]);
-            return (str);
-        }
-    }
-    return (NULL);
+	current = *lst;
+	while (current)
+	{
+		if (content_count_words(current->content) > 1)
+		{
+			new_content = get_next_word(&current->content);
+			new_cmd = create_cmd_node_no_sep(new_content);
+			new_cmd->next = current;
+			if (current == *lst)
+				*lst = new_cmd;
+			else
+				prev->next = new_cmd;
+			current = *lst;
+			continue ;
+		}
+		prev = current;
+		current = current->next;
+	}
 }
 
 t_token	*tokenize_input(char *input)
 {
 	t_token	*root;
 	t_token	*cmd_node;
-	// char	*tmp_input;
 	char	*operator;
 
 	root = NULL;
-    // tmp_input = NULL;
 	while (1)
 	{
-		operator = find_operator(input);
-        // printf("operator")
+		operator= find_operator(input);
 		if (!operator)
 		{
 			cmd_node = create_cmd_node(input, NULL);

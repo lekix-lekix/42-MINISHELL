@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 17:40:49 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/06/28 17:40:58 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 21:11:27 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,10 @@ void	remove_mem_node(t_lst **lst, void *mem_addr)
 	}
 	if (nullify)
 		*lst = NULL;
+}
+
+void	gbg_delete_node(t_token *node, int mlc_lst)
+{
+	gbg_coll(node->content, mlc_lst, FREE);
+	gbg_coll(node, mlc_lst, FREE);
 }

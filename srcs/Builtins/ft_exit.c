@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 17:18:16 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/09 19:56:34 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/11 20:04:43 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ static void	ft_err(char *sr_err)
 	ft_putstr_fd("minishell: exit: ", 2);
 	ft_putstr_fd(sr_err, 2);
 	ft_putstr_fd(": numeric argument required\n", 2);
-	// gbg_coll(NULL, ALL, FLUSH_ALL);
 }
 
 static bool	ft_isnumber(char *str)
@@ -78,13 +77,13 @@ void	ft_exit(char **args)
 		if (args[2] && ft_isnumber(args[1]))
 		{
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-            return ;
+			return ;
 		}
 		else
 			exit_s = ft_exittoi(args[1]);
 	}
-    close(ft_shell()->ft_stdin);
-    close(ft_shell()->ft_stdout);
-    gbg_coll(NULL, ALL, FLUSH_ALL);
+	close(ft_shell()->ft_stdin);
+	close(ft_shell()->ft_stdout);
+	gbg_coll(NULL, ALL, FLUSH_ALL);
 	exit(exit_s);
 }

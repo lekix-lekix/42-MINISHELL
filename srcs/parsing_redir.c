@@ -6,11 +6,23 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:13:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 19:23:30 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 19:45:31 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	add_empty_redir_node(t_token *filename_token, t_redir *new_redir)
+{
+	add_redirection_node(&filename_token->redirections, new_redir);
+	gbg_coll(filename_token->content, PARSING, FREE);
+	filename_token->content = malloc(sizeof(char));
+	if (!filename_token || gbg_coll(filename_token->content, PARSING, ADD))
+		return (ft_exit_close(255), -1);
+	filename_token->content[0] = '\0';
+	filename_token->type = CMD;
+	return (0);
+}
 
 int	handle_redirection(t_token **lst, t_token **redir_operator)
 {
@@ -23,60 +35,20 @@ int	handle_redirection(t_token **lst, t_token **redir_operator)
 		return (-1);
 	filename_token = (*redir_operator)->next;
 	if (content_count_words(filename_token->content) > 1)
-    {
-        // printf("nb of words = %d\n", content_count_words(filename_token->content));
 		filename_token->type = CMD;
-    }
 	filename = get_next_word(&filename_token->content);
-    // printf("filename token after gnw = %s\n", filename_token->content);
 	new_redir = create_redir_node((*redir_operator)->type, filename);
 	redir_cmd = find_redir_node(lst, *redir_operator);
-    // printf("redir cmd = %s\n", redir_cmd->content);
 	if (!redir_cmd)
-	{
-		add_redirection_node(&filename_token->redirections, new_redir);
-        gbg_coll(filename_token->content, PARSING, FREE);
-        filename_token->content = malloc(sizeof(char));
-        if (!filename_token || gbg_coll(filename_token->content, PARSING, ADD))
-            return (gbg_coll(NULL, ALL, FLUSH_ALL));
-        filename_token->content[0] = '\0';
-        filename_token->type = CMD;
-	}
+		add_empty_redir_node(filename_token, new_redir);
 	else
-    {
+	{
 		add_redirection_node(&redir_cmd->redirections, new_redir);
-        remove_token_node(lst, filename_token);
-    } 
+		remove_token_node(lst, filename_token);
+	}
 	remove_token_node(lst, *redir_operator);
 	*redir_operator = *lst;
 	return (0);
-}
-
-t_redir	*get_redir_lst_par(t_token **redir_node_lst)
-{
-	t_token	*current;
-	t_redir	*new_redir_node;
-	t_redir	*redir_lst;
-
-	current = *redir_node_lst;
-	redir_lst = NULL;
-	while (current && (is_a_redir_operator(current)
-			|| current->type == OUTFILE))
-	{
-		if (is_a_redir_operator(current) && current->next
-			&& current->next->type == OUTFILE)
-		{
-			new_redir_node = create_redir_node(REDIR_OUTPUT_APPEND,
-					current->next->content);
-			remove_token_node(redir_node_lst, current->next);
-			remove_token_node(redir_node_lst, current);
-			add_redirection_node(&redir_lst, new_redir_node);
-			current = *redir_node_lst;
-			continue ;
-		}
-		current = current->next;
-	}
-	return (redir_lst);
 }
 
 void	apply_redir_lst(t_token **lst, t_token *end_node, t_redir **redir_lst)

@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 15:05:08 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/26 17:03:58 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:58:06 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,6 @@ int	check_op_len(char *str, int *op_len)
 	return (1);
 }
 
-int	is_a_token_operator(t_token *node)
-{
-	return (node->type > ARGS_FLAGS && node->type < PAR_LEFT);
-}
-
 int	ft_strcpy_sep_ptr(char *dest, char *input, char *sep)
 {
 	int	i;
@@ -55,10 +50,10 @@ int	ft_strcpy_sep_ptr(char *dest, char *input, char *sep)
 	if (!sep)
 		return (ft_strlcpy(dest, input, ft_strlen(input) + 1));
 	while (input + i && input + i != sep)
-    {
-        dest[i] = input[i];
-        i++;
-    }
+	{
+		dest[i] = input[i];
+		i++;
+	}
 	dest[i] = '\0';
 	return (i);
 }

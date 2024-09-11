@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/11 18:02:51 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:29:41 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_check_cmds(t_token *token_node)
 	la_status = ft_check_redirections(token_node);
 	close_pipes_lst(&ft_shell()->pipes);
 	if (la_status != ENO_SUCCESS)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(la_status), -1);
+		return (ft_exit_close(255), -1);
 	if (ft_is_builtin(token_node->contents[0]))
 	{
 		la_status = ft_exec_builtins(token_node->contents);
@@ -40,8 +40,7 @@ int	exec_non_builtin_solo(t_token *node)
 
 	pid = fork();
 	if (pid == -1)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(),
-			perror("bash: fork"), exit(255), -1);
+		return (perror("bash: fork"), ft_exit_close(255), -1);
 	if (pid == 0)
 	{
 		(ft_shell())->signint_child = true;

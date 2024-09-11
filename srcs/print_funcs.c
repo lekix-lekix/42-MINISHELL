@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_funcs.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:55:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/06 15:30:48 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/11 21:18:34 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ int	print_env(t_env **lst)
 	{
 		printf("%s=", node->field);
 		if (node->content)
-            printf("%s\n", node->content);
-        else
-            printf("\n");
+			printf("%s\n", node->content);
+		else
+			printf("\n");
 		node = node->next;
 	}
 	return (0);
@@ -56,13 +56,14 @@ void	print_lst(t_token **lst)
 {
 	t_token	*root;
 	int		i;
+	int		j;
 
 	root = *lst;
 	while (root)
 	{
 		i = 0;
 		printf("--------\n");
-        // printf("node addr = %p\n", root);
+		// printf("node addr = %p\n", root);
 		if (root->content)
 			printf("content = '%s'\n", root->content);
 		if (root->contents)
@@ -70,9 +71,9 @@ void	print_lst(t_token **lst)
 			while (root->contents[i])
 			{
 				printf("contents[%d] = %s\n", i, root->contents[i]);
-                int j = -1;
-                while (root->contents[i][++j])
-                    printf("char %d = %d\n", i, root->contents[i][j]);
+				j = -1;
+				while (root->contents[i][++j])
+					printf("char %d = %d\n", i, root->contents[i][j]);
 				i++;
 			}
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_redir_bis.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:40:44 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/03 13:09:05 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:38:22 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*get_filename(t_token *node)
 	filename_len = ft_strlen_sep(node->content, " ");
 	filename = malloc(sizeof(char) * (filename_len + 1));
 	if (!filename || gbg_coll(filename, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (ft_exit_close(255), NULL);
 	ft_strlcpy(filename, node->content, filename_len);
 	i = -1;
 	while (node->content[++i] && i < filename_len)

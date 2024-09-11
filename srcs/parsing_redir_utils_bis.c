@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 17:56:28 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 19:15:15 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 19:45:00 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,31 @@ void	add_front_redir_node(t_redir **lst, t_redir *node)
 	}
 	node->next = current;
 	*lst = node;
+}
+
+t_redir	*get_redir_lst_par(t_token **redir_node_lst)
+{
+	t_token	*current;
+	t_redir	*new_redir_node;
+	t_redir	*redir_lst;
+
+	current = *redir_node_lst;
+	redir_lst = NULL;
+	while (current && (is_a_redir_operator(current)
+			|| current->type == OUTFILE))
+	{
+		if (is_a_redir_operator(current) && current->next
+			&& current->next->type == OUTFILE)
+		{
+			new_redir_node = create_redir_node(REDIR_OUTPUT_APPEND,
+					current->next->content);
+			remove_token_node(redir_node_lst, current->next);
+			remove_token_node(redir_node_lst, current);
+			add_redirection_node(&redir_lst, new_redir_node);
+			current = *redir_node_lst;
+			continue ;
+		}
+		current = current->next;
+	}
+	return (redir_lst);
 }

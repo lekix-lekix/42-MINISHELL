@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 05:35:30 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/10 15:34:43 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:41:42 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ static int	ft_heredoc_expand_writer(char *str, size_t i, int fd)
 	return (i);
 }
 
-
 void	ft_heredoc_expander(char *str, int fd)
 {
 	size_t	i;
@@ -44,7 +43,6 @@ void	ft_heredoc_expander(char *str, int fd)
 			i += ft_heredoc_expand_writer(str, i, fd);
 		else
 			i += (ft_putchar_fd(str[i], fd), 1);
-        // printf("str[%zu] = %c\n", i, str[i]);
 	}
 	ft_putchar_fd('\n', fd);
 }

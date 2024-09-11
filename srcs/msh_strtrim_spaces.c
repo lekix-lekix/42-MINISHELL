@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 17:33:34 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/11 19:14:26 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:37:29 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*msh_strtrim_spaces(char const *s1)
 		return (empty_str());
 	final_str = malloc(sizeof(char) * str_size);
 	if (!final_str || gbg_coll(final_str, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+		return (ft_exit_close(255), NULL);
 	trim_spaces(s1, final_str);
 	return (final_str);
 }

@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 19:27:43 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 22:29:39 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static void	ft_start_execution(t_ast **tree)
 	ft_shell()->pipes = NULL;
 	ft_shell()->end_exec = 0;
 	ft_shell()->exec_in_par = 0;
-    ft_shell()->expand_chars_trimmed = 0;
+	ft_shell()->expand_chars_trimmed = 0;
 	ft_shell()->full_exec_tree = *tree;
 	ft_shell()->ft_stdin = dup(STDIN_FILENO);
 	ft_shell()->ft_stdout = dup(STDOUT_FILENO);
@@ -97,12 +97,6 @@ static void	ft_start_execution(t_ast **tree)
 	}
 	tcsetattr(STDIN_FILENO, TCSANOW, &(ft_shell())->original_term);
 	ft_start_exec(&nodes);
-}
-
-void	gbg_delete_node(t_token *node, int mlc_lst)
-{
-	gbg_coll(node->content, mlc_lst, FREE);
-	gbg_coll(node, mlc_lst, FREE);
 }
 
 void	check_delete_global_par(t_token **lst)
@@ -120,57 +114,6 @@ void	check_delete_global_par(t_token **lst)
 			current = current->next;
 		}
 		prev->next = current;
-	}
-}
-
-t_token	*create_cmd_node_no_sep(char *input)
-{
-	t_token	*node;
-
-	node = malloc(sizeof(t_token));
-	if (!node || gbg_coll(node, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
-			NULL);
-	node->content = malloc(sizeof(char) * (ft_strlen(input) + 1));
-	if (!node->content || gbg_coll(node->content, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
-			NULL);
-	ft_strlcpy(node->content, input, ft_strlen(input) + 1);
-	node->redirections = NULL;
-	node->pipe_redir[0] = -1;
-	node->pipe_redir[1] = -1;
-	node->contents = NULL;
-	node->original_token = NULL;
-	node->type = CMD;
-	node->filename = NULL;
-	node->next = NULL;
-	return (node);
-}
-
-void	more_tokenization(t_token **lst)
-{
-	t_token	*current;
-	t_token	*new_cmd;
-	t_token	*prev;
-	char	*new_content;
-
-	current = *lst;
-	while (current)
-	{
-		if (content_count_words(current->content) > 1)
-		{
-			new_content = get_next_word(&current->content);
-			new_cmd = create_cmd_node_no_sep(new_content);
-			new_cmd->next = current;
-			if (current == *lst)
-				*lst = new_cmd;
-			else
-				prev->next = new_cmd;
-			current = *lst;
-			continue ;
-		}
-		prev = current;
-		current = current->next;
 	}
 }
 
@@ -193,7 +136,7 @@ int	expand_token_lst(t_token **lst)
 	char	**la_args;
 	char	**temp_contents;
 	int		idx;
-    
+
 	idx = -1;
 	temp_contents = NULL;
 	io = *lst;
@@ -202,23 +145,43 @@ int	expand_token_lst(t_token **lst)
 		while (io->type == CMD && io->contents[++idx])
 		{
 			la_args = ft_expand(io->contents[idx]);
-            if (!la_args)
-            {
-                io->contents[idx] = empty_str();
-                break ;
-            }
-            if (get_arr_len(la_args) == 1)
-                io->contents[idx] = la_args[0];
-            else
-            {
-                io->contents[idx] = NULL;
-                io->contents = ft_concat_str_arr(io->contents, la_args);
-            }
+            // printf("la args 0 = %s\n", la_args[0]);
+			if (!la_args)
+			{
+				io->contents[idx] = empty_str();
+				break ;
+			}
+			if (get_arr_len(la_args) == 1)
+				io->contents[idx] = la_args[0];
+			else
+			{
+				io->contents[idx] = NULL;
+				io->contents = ft_concat_str_arr(io->contents, la_args);
+			}
 		}
 		idx = 0;
 		io = io->next;
 	}
 	return (0);
+}
+
+void    print_token_lst(t_token **lst)
+{
+    int i;
+    t_token *current;
+
+    current = *lst;
+    while (current)
+    {
+        i = 0;
+        printf("=======\n");
+        while (current->contents[i])
+        {
+            printf("contents[%d] = %s\n", i, current->contents[i]);
+            i++;
+        }
+        current = current->next;
+    }
 }
 
 int	start_parsing(char *prompt)
@@ -244,8 +207,13 @@ int	start_parsing(char *prompt)
 	check_delete_global_par(&input);
 	set_par_lst(&input);
 	ft_shell()->les_token = lst_dup(&input, NULL);
+	// printf("BEFORE EXPAND====\n");
+	// print_token_lst(&input);
 	expand_token_lst(&input);
+	// print_token_lst(&input);
+	// printf("AFTER EXPAND====\n");
 	tree = build_ast(&input, NULL);
+	// print_tree(&tree);
 	if (tree && check_tree_syntax(&tree) == -1)
 		return (-1);
 	ft_shell()->exec_tree = tree;
@@ -255,8 +223,8 @@ int	start_parsing(char *prompt)
 
 int	main(int argc, char **argv, char **env)
 {
-    t_minishell	*data;
-    char *line;
+	t_minishell	*data;
+	char		*line;
 
 	data = ft_shell();
 	((void)argc, (void)argv);
