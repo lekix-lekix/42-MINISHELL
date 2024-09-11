@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 22:29:39 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/12 00:12:06 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,12 +145,13 @@ int	expand_token_lst(t_token **lst)
 		while (io->type == CMD && io->contents[++idx])
 		{
 			la_args = ft_expand(io->contents[idx]);
-            // printf("la args 0 = %s\n", la_args[0]);
 			if (!la_args)
 			{
 				io->contents[idx] = empty_str();
 				break ;
 			}
+			// if (get_arr_len(la_args) == 1 && str_contains_spaces(la_args[0]))
+			//     io->contents = msh_split_spaces(la_args[0], PARSING);
 			if (get_arr_len(la_args) == 1)
 				io->contents[idx] = la_args[0];
 			else
@@ -165,23 +166,23 @@ int	expand_token_lst(t_token **lst)
 	return (0);
 }
 
-void    print_token_lst(t_token **lst)
+void	print_token_lst(t_token **lst)
 {
-    int i;
-    t_token *current;
+	int		i;
+	t_token	*current;
 
-    current = *lst;
-    while (current)
-    {
-        i = 0;
-        printf("=======\n");
-        while (current->contents[i])
-        {
-            printf("contents[%d] = %s\n", i, current->contents[i]);
-            i++;
-        }
-        current = current->next;
-    }
+	current = *lst;
+	while (current)
+	{
+		i = 0;
+		printf("=======\n");
+		while (current->contents[i])
+		{
+			printf("contents[%d] = %s\n", i, current->contents[i]);
+			i++;
+		}
+		current = current->next;
+	}
 }
 
 int	start_parsing(char *prompt)
@@ -213,6 +214,8 @@ int	start_parsing(char *prompt)
 	// print_token_lst(&input);
 	// printf("AFTER EXPAND====\n");
 	tree = build_ast(&input, NULL);
+	if (!tree)
+		return (-1);
 	// print_tree(&tree);
 	if (tree && check_tree_syntax(&tree) == -1)
 		return (-1);
@@ -245,14 +248,12 @@ int	main(int argc, char **argv, char **env)
 			gbg_coll(NULL, ALL, FLUSH_ALL);
 			exit(ft_shell()->exit_status);
 		}
-		if (data->prompt || *data->prompt)
+		if (data->prompt && *data->prompt)
 		{
 			if (data->prompt[0])
 				add_history(data->prompt);
 			start_parsing(data->prompt);
 			gbg_coll(NULL, PARSING, FLUSH_ONE);
-			close(ft_shell()->ft_stdin);
-			close(ft_shell()->ft_stdout);
 			free(data->prompt);
 		}
 	}
