@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 23:41:51 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/12 17:30:53 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,13 @@ int	ft_exit_close(int exit_status)
 
 int	no_path_found(t_token *node)
 {
+    dprintf(2, "here\n");
 	close(ft_shell()->ft_stdin);
 	close(ft_shell()->ft_stdout);
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(node->contents[0], 2);
-	ft_putstr_fd(" :", 2);
-	return (ft_print_err(CMD_ERR), ft_exit_close(255), -1);
+	ft_putstr_fd(": ", 1);
+	return (ft_print_err(CMD_ERR), ft_exit_close(127), -1);
 }
 
 int	ft_exec_non_builtins(t_token *node)

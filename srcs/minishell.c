@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/12 15:38:06 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/12 18:08:37 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ char	*get_path(char **envp)
 	int		i;
 
 	i = -1;
+	if (!envp || !*envp)
+		return (NULL);
 	while (envp && envp[++i])
 	{
 		if (!ft_strncmp(envp[i], "PATH=", 5))
@@ -95,7 +97,7 @@ static void	ft_start_execution(t_ast **tree)
 		(ft_shell())->heredoc_sigint = false;
 		return ;
 	}
-	tcsetattr(STDIN_FILENO, TCSANOW, &(ft_shell())->original_term);
+	// tcsetattr(STDIN_FILENO, TCSANOW, &(ft_shell())->original_term);
 	ft_start_exec(&nodes);
 }
 
@@ -217,28 +219,28 @@ char	**dup_arr_join_empty_str(char **arr)
 		return (ft_exit_close(255), NULL);
 	i = 0;
 	while (arr && arr[i])
-    {
+	{
 		new_arr[i] = msh_strdup(arr[i], PARSING);
-        i++;
-    }
+		i++;
+	}
 	new_arr[i] = empty_str();
 	new_arr[i + 1] = NULL;
 	i = 0;
 	return (new_arr);
 }
 
-int str_contains_expand(char *str)
+int	str_contains_expand(char *str)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (str[i])
-    {
-        if(str[i] == '$' || str[i] == '*')
-            return (1);
-        i++;
-    }
-    return (0);
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '$' || str[i] == '*')
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 int	expand_token_lst(t_token **lst)
@@ -247,7 +249,7 @@ int	expand_token_lst(t_token **lst)
 	char	**la_args;
 	char	**tmp_contents;
 	int		idx;
-    int     words_nb;
+	int		words_nb;
 
 	idx = -1;
 	io = *lst;
@@ -258,19 +260,19 @@ int	expand_token_lst(t_token **lst)
 		{
 			la_args = ft_expand(io->contents[idx]);
 			if (!la_args)
-            {
+			{
 				tmp_contents = dup_arr_join_empty_str(tmp_contents);
-                continue ;
-            }
-            // printf("la args 0 = %s\n", la_args[0]);
-            if (str_contains_expand(io->contents[idx]))
-                words_nb = content_count_words(la_args[0]);
-            else
-                words_nb = content_count_words(io->contents[idx]);
-            // printf("count words = %d\n", words_nb);
-            if (get_arr_len(la_args) == 1 && words_nb > 1)
-                la_args = msh_split_spaces(la_args[0], PARSING);
-            tmp_contents = ft_concat_str_arr_idx(tmp_contents, la_args);
+				continue ;
+			}
+			// printf("la args 0 = %s\n", la_args[0]);
+			if (str_contains_expand(io->contents[idx]))
+				words_nb = content_count_words(la_args[0]);
+			else
+				words_nb = content_count_words(io->contents[idx]);
+			// printf("count words = %d\n", words_nb);
+			if (get_arr_len(la_args) == 1 && words_nb > 1)
+				la_args = msh_split_spaces(la_args[0], PARSING);
+			tmp_contents = ft_concat_str_arr_idx(tmp_contents, la_args);
 		}
 		idx = -1;
 		io->contents = tmp_contents;
@@ -293,6 +295,8 @@ void	print_token_lst(t_token **lst)
 			printf("contents[%d] = %s\n", i, current->contents[i]);
 			i++;
 		}
+		if (current && current->type != CMD)
+			printf("current->type = %d\n", current->type);
 		printf("=======\n");
 		current = current->next;
 	}

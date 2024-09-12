@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:07:00 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 23:02:19 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/12 15:44:53 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ static int	ft_check_option(char *sr)
 		return (0);
 	while (sr[x] == 'n')
 		x++;
-	if (ft_is_space(sr[x]) || !sr[x])
+	// if (ft_is_space(sr[x]) || !sr[x])
+	// 	return (1);
+	if (!sr[x])
 		return (1);
 	return (0);
 }
@@ -34,17 +36,17 @@ int	ft_exec_echo(char **args)
 
 	opt = 0;
 	arr_len = get_arr_len(args);
-    // dprintf(2, "arr len = %d\n", arr_len);
+	// dprintf(2, "arr len = %d\n", arr_len);
 	if (arr_len == 1)
 		return (printf("\n"), 0);
 	if (arr_len == 2 && ft_check_option(args[1]))
 		return (0);
 	i = 0;
 	while (args[++i] && ft_check_option(args[i]))
-    {
-        // printf("args %d = %s\n", i, args[i]);
+	{
+		// printf("args %d = %s\n", i, args[i]);
 		opt = 1;
-    }
+	}
 	while (args[i] && i < arr_len - 1)
 	{
 		printf("%s ", args[i]);

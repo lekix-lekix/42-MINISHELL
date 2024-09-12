@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 21:33:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/10 17:04:41 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/12 18:01:09 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,10 @@ void	ft_init_signals(void)
 	struct termios	term;
 
 	term = ft_shell()->original_term;
-	tcsetattr(STDIN_FILENO, TCSANOW, &term);
+	// tcsetattr(STDIN_FILENO, TCSANOW, &term);
 	ft_shell()->heredoc_sigint = false;
 	ft_shell()->signint_child = false;
 	signal(SIGINT, ft_sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 }
+    
