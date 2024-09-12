@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_funcs.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:55:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 21:18:34 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 23:04:55 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,13 @@ void	print_redir_lst(t_redir **lst)
 	}
 }
 
+void	ft_printf_stuff (t_token *root)
+{
+	printf("--------\n");
+	if (root->content)
+		printf("content = '%s'\n", root->content);
+}
+
 void	print_lst(t_token **lst)
 {
 	t_token	*root;
@@ -62,10 +69,7 @@ void	print_lst(t_token **lst)
 	while (root)
 	{
 		i = 0;
-		printf("--------\n");
-		// printf("node addr = %p\n", root);
-		if (root->content)
-			printf("content = '%s'\n", root->content);
+		ft_printf_stuff(root);
 		if (root->contents)
 		{
 			while (root->contents[i])

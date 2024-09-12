@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 19:52:19 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 22:26:51 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 22:51:35 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 char	*dollar_first_digit(size_t *i)
 {
-	char *res;
-	
+	char	*res;
+
 	res = msh_strdup("", PARSING);
 	if (!res || gbg_coll(res, PARSING, ADD))
 		return (ft_exit_close(255), NULL);
 	return ((*i)++, res);
 }
 
-char	*ft_dollar_explanation_mark (size_t *i)
+char	*ft_dollar_explanation_mark(size_t *i)
 {
 	char	*res;
-	
+
 	(*i)++;
 	res = ft_itoa(ft_shell()->exit_status);
 	if (!res || gbg_coll(res, PARSING, ADD))
@@ -33,7 +33,7 @@ char	*ft_dollar_explanation_mark (size_t *i)
 	return (res);
 }
 
-char	*ft_dollar_valid()
+char	*ft_dollar_valid(void)
 {
 	char	*res;
 
@@ -42,7 +42,6 @@ char	*ft_dollar_valid()
 		return (ft_exit_close(255), NULL);
 	return (res);
 }
-
 
 char	*ft_handle_dollar(char *str, size_t *i)
 {

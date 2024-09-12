@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_remove_quotes.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 14:36:19 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 21:10:22 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 23:04:23 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	parse_find_quotes(char *sr, char *tmp, int *is_diff)
 	while (sr[x])
 	{
 		if (((sr[x] == '\'' && sr[x + 1] == '\'') || (sr[x] == '"' && sr[x
-					+ 1] == '"')) && *is_diff)
+						+ 1] == '"')) && *is_diff)
 			x += 2;
 		else
 		{

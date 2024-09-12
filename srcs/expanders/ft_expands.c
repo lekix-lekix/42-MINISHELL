@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expands.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 22:40:07 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 23:12:14 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ char	*ft_check_dquotes(char *sr, size_t *k)
 	char	*res;
 	char	*final_res;
 
-    // dprintf(2, "dquotes\n");
 	res = msh_strdup("\"", PARSING);
 	(*k)++;
 	while (sr[*k] && sr[*k] != '"')
@@ -65,7 +64,6 @@ char	*ft_pre_expand(char *sr)
 	res = msh_strdup("", PARSING);
 	while (sr[x] && sr[x] != '\0')
 	{
-        // printf("x = %zu, sr = %s\n", x, sr);
 		if (sr[x] == '"')
 			res = ft_strjoin(res, ft_check_dquotes(sr, &x));
 		else if (sr[x] == '\'')
@@ -94,7 +92,6 @@ char	**ft_expand(char *sr)
 
 	x = 0;
 	tmp = ft_pre_expand(sr);
-    // dprintf(2, "tmp = %s\n", tmp);
 	if (!tmp || !tmp[0])
 		return (NULL);
 	tmp = ft_clean_empty_chars(tmp);

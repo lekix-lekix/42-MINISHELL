@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_create_nodes.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:43:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 20:45:23 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 23:00:18 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,5 @@ void	create_insert_token_nodes(t_token **lst, char **input, char **operator)
 	cmd_node = create_cmd_node(*input, *operator);
 	insert_node_lst(lst, cmd_node);
 	insert_node_lst(lst, op_node);
-	*input = *operator+ ft_strlen(op_node->content);
+	*input = *operator + ft_strlen(op_node->content);
 }

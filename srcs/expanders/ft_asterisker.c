@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 14:30:07 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/05 06:13:36 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/11 22:49:42 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	ft_handle_pattern_quotes(char **pattern, char *quotes)
 }
 
 static bool	ft_handle_stars(char **pattern, char **last_wildcard,
-			char **last_match, char *str)
+		char **last_match, char *str)
 {
 	while (**pattern == '*')
 		(*pattern)++;
@@ -42,7 +42,7 @@ static bool	ft_handle_stars(char **pattern, char **last_wildcard,
 }
 
 static bool	ft_pattern_match_exists(char **pattern, char **last_wildcard,
-			char **last_match, char **str)
+		char **last_match, char **str)
 {
 	if (**pattern == **str)
 	{
@@ -72,16 +72,15 @@ bool	ft_match_star(char *pattern, char *str)
 	while (*str)
 	{
 		ft_handle_pattern_quotes(&pattern, &quotes);
-		if (*pattern == '*' && !quotes
-			&& ft_handle_stars(&pattern, &last_wildcard, &last_match, str))
+		if (*pattern == '*' && !quotes && ft_handle_stars(&pattern,
+				&last_wildcard, &last_match, str))
 			return (true);
-		else if (!ft_pattern_match_exists(
-				&pattern, &last_wildcard, &last_match, &str))
+		else if (!ft_pattern_match_exists(&pattern, &last_wildcard, &last_match,
+				&str))
 			return (false);
 	}
 	if (*pattern == '*')
 		while (*pattern == '*')
 			pattern++;
-	// printf("THE PATTERN%s\n", pattern);
 	return (!*pattern);
 }
