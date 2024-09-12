@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/12 18:39:37 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/13 00:39:07 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,7 +263,7 @@ int	expand_token_lst(t_token **lst)
 			{
 				tmp_contents = dup_arr_join_empty_str(tmp_contents);
 				continue ;
-			}
+			} 
 			if (str_contains_expand(io->contents[idx]))
 				words_nb = content_count_words(la_args[0]);
 			else

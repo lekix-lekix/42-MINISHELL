@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_init_child.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/12 17:30:05 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/13 00:45:58 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	init_only_child_no_fork(t_token *node)
 	{
 		if (!node->redirections)
 		{
-			write(2, "minishell:     : command not found\n", 32);
+			write(2, "minishell: : command not found\n", 31);
 			return (ft_close_fds(), gbg_coll(NULL, PARSING, FLUSH_ONE),
 				ft_shell()->exit_status = 127);
 		}
