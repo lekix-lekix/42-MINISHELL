@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:07:00 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 22:28:22 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 23:02:19 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ int	ft_exec_echo(char **args)
 		printf("%s ", args[i]);
 		i++;
 	}
-	if (!opt)
+	if (args[i] && !opt)
 		printf("%s\n", args[i]);
-	else
+	else if (args[i])
 		printf("%s", args[i]);
 	return (0);
 }

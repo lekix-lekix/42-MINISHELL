@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/11 20:29:41 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 23:35:41 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,11 @@ int	init_only_child_no_fork(t_token *node)
 		false);
 	if (!node->contents || !node->contents[0] || !node->contents[0][0])
 	{
+        if (!node->redirections)
+        {
+            write(2, "bash: : command not found\n", 27);
+            return (ft_close_fds(), gbg_coll(NULL, PARSING, FLUSH_ONE), 0);
+        }
 		ft_shell()->exit_status = ft_check_redirections(node);
 		return (ft_reset_ports(false), ft_close_fds(), 0);
 	}
