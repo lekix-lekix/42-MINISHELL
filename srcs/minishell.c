@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/12 18:08:37 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/12 18:39:37 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,12 +264,10 @@ int	expand_token_lst(t_token **lst)
 				tmp_contents = dup_arr_join_empty_str(tmp_contents);
 				continue ;
 			}
-			// printf("la args 0 = %s\n", la_args[0]);
 			if (str_contains_expand(io->contents[idx]))
 				words_nb = content_count_words(la_args[0]);
 			else
 				words_nb = content_count_words(io->contents[idx]);
-			// printf("count words = %d\n", words_nb);
 			if (get_arr_len(la_args) == 1 && words_nb > 1)
 				la_args = msh_split_spaces(la_args[0], PARSING);
 			tmp_contents = ft_concat_str_arr_idx(tmp_contents, la_args);
@@ -302,6 +300,29 @@ void	print_token_lst(t_token **lst)
 	}
 }
 
+int     check_pipes_par_syntax(t_token **lst)
+{
+    t_token *current;
+    int open_par;
+
+    open_par = 0;
+    current = *lst;
+    while (current)
+    {
+        if (current->type == PAR_LEFT)
+            open_par = 1;
+        else if (current->type == PAR_RIGHT)
+            open_par = 0;
+        if (open_par && current->type == PIPE)
+        {
+            write(2, "minishell: syntax error near unexpected token `|'\n", 51);
+            return (-1);
+        }
+        current = current->next;
+    }
+    return (0);
+}
+
 int	start_parsing(char *prompt)
 {
 	t_token	*input;
@@ -319,7 +340,7 @@ int	start_parsing(char *prompt)
 	// print_lst(&input);
 	if (check_redir_syntax(&input) == -1 || check_par_syntax(&input) == -1)
 		return (ft_shell()->exit_status = 2, -1);
-	if (check_redirections(&input) == -1)
+	if (check_redirections(&input) == -1/*  || check_pipes_par_syntax(&input) */)
 		return (ft_shell()->exit_status = 2, -1);
 	join_cmd_args(&input);
 	clean_token_lst(&input);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_check_syntax.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 17:48:38 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/12 00:04:10 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/12 18:34:22 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ int	check_par_syntax(t_token **lst)
 	if (!current)
 		return (-1);
 	par = 0;
-	// if (current)
 	while (current)
 	{
 		if (current->type == PAR_LEFT)
