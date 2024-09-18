@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/09/11 22:45:47 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/18 14:02:40 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -346,8 +346,9 @@ size_t				get_arr_len(char **expanded);
 void				expand_redirections(t_redir **redirections);
 char				*ft_pre_expand(char *sr);
 char				*ft_handle_dollar(char *str, size_t *i);
-char			*ft_handle_dquote_str(char *str, size_t *i);
+char				*ft_handle_dquote_str(char *str, size_t *i);
 char				*ft_check_squotes(char *sr, size_t *x);
+int					expand_cmd(t_token *cmd);
 
 // Exec AST tools
 void				set_is_in_par(t_ast *root, int flag);
