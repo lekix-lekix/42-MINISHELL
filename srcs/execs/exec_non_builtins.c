@@ -6,11 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/09/18 14:51:33 by sabakar-         ###   ########.fr       */
-=======
-/*   Updated: 2024/09/11 23:41:51 by kipouliq         ###   ########.fr       */
->>>>>>> 9d05660b32baa079177eae842d43daf79794c2ab
+/*   Updated: 2024/09/19 12:03:36 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +16,7 @@ int	ft_exit_close(int exit_status)
 {
 	close(ft_shell()->ft_stdin);
 	close(ft_shell()->ft_stdout);
-<<<<<<< HEAD
 	rl_clear_history();
-=======
-    gbg_coll(NULL, ALL, FLUSH_ALL);
->>>>>>> 9d05660b32baa079177eae842d43daf79794c2ab
 	return (exit(exit_status), -1);
 }
 
