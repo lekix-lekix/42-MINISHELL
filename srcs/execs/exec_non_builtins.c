@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_non_builtins.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 22:38:50 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/18 14:51:33 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	ft_exit_close(int exit_status)
 {
 	close(ft_shell()->ft_stdin);
 	close(ft_shell()->ft_stdout);
+	rl_clear_history();
 	return (exit(exit_status), -1);
 }
 

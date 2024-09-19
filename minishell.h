@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/09/11 22:45:47 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/19 11:33:03 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,7 @@ typedef struct s_minishell
 	t_env			*expanded_env;
 	char			**expanded_args;
 	int				expand_chars_trimmed;
+	char	*tmp_file_path;
 	struct termios	original_term;
 }					t_minishell;
 
@@ -346,7 +347,7 @@ size_t				get_arr_len(char **expanded);
 void				expand_redirections(t_redir **redirections);
 char				*ft_pre_expand(char *sr);
 char				*ft_handle_dollar(char *str, size_t *i);
-char			*ft_handle_dquote_str(char *str, size_t *i);
+char				*ft_handle_dquote_str(char *str, size_t *i);
 char				*ft_check_squotes(char *sr, size_t *x);
 
 // Exec AST tools
