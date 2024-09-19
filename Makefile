@@ -6,7 +6,7 @@
 #    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/09/19 12:31:37 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/09/19 17:36:50 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -116,6 +116,7 @@ clean :
 	rm -f ./srcs/garbage_collector/*o
 	rm -f ./srcs/Builtins/*o
 	rm -f ./srcs/abstract_syntax_tree/*o
+	rm -f ./srcs/heredoc/*o
 	rm -f ./srcs/tokenizer/*o
 	rm -f ./srcs/utils/*o
 	rm -f ./srcs/parsing/*o
