@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 13:48:33 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/12 00:10:33 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/19 11:48:07 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,10 +110,9 @@ t_ast	*build_ast(t_token **lst, int *insert_node)
 {
 	t_ast	*tree;
 
-    (void) insert_node;
+	(void)insert_node;
 	tree = build_operator_tree(lst);
 	if (build_cmd_tree(&tree, lst) == -1)
-        return (NULL);
-		// *insert_node = 0;
+		return (NULL);
 	return (tree);
 }

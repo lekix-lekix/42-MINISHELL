@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/19 12:00:56 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/19 12:06:50 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ char	*get_path(char **envp)
 	int		i;
 
 	i = -1;
+	if (!envp || !*envp)
+		return (NULL);
 	while (envp && envp[++i])
 	{
 		if (!ft_strncmp(envp[i], "PATH=", 5))
@@ -96,7 +98,7 @@ static void	ft_start_execution(t_ast **tree)
 		(ft_shell())->heredoc_sigint = false;
 		return ;
 	}
-	tcsetattr(STDIN_FILENO, TCSANOW, &(ft_shell())->original_term);
+	// tcsetattr(STDIN_FILENO, TCSANOW, &(ft_shell())->original_term);
 	ft_start_exec(&nodes);
 }
 
@@ -105,9 +107,10 @@ int	check_delete_global_par(t_token **lst)
 	t_token	*current;
 	t_token	*prev;
 
-	if ((*lst) && (*lst)->type == PAR_LEFT && (*lst)->next->type == PAR_RIGHT)
+	if (((*lst) && (*lst)->type == PAR_LEFT && (*lst)->next->type == PAR_RIGHT))
 	{
-		printf("bash: syntax error near unexpected token `)'\n");
+		printf("minishell: syntax error near unexpected token `)'\n");
+		ft_shell()->exit_status = 2;
 		return (-1);
 	}
 	if ((*lst) && (*lst)->type == PAR_LEFT
@@ -151,33 +154,6 @@ int	str_contains_spaces(char *str)
 	return (0);
 }
 
-// char    **join_arrays(char **arr1, char **arr2)
-
-// char	**create_fill_split_arr(char **arr)
-// {
-// 	int		i;
-// 	char	**final_arr;
-// 	char	**tmp_arr;
-
-//     final_arr = malloc(sizeof(char *) * (get_arr_len(arr) + 1));
-//     if (!final_arr || gbg_coll(final_arr, PARSING, ADD))
-//         return (ft_exit_close(255), NULL);
-//     i = 0;
-// 	while (arr[i])
-// 	{
-// 		if (str_contains_spaces(arr[i]))
-//         {
-//             tmp_arr = msh_split_spaces(arr[i], PARSING);
-//             final_arr = ft_concat_str_arr(final_arr, tmp_arr);
-//         }
-//         else
-//             final_arr[i] = arr[i];
-//         i++;
-// 	}
-//     final_arr[i] = NULL;
-//     return (final_arr);
-// }
-
 char	**ft_concat_str_arr_idx(char **arr, char **arr2)
 {
 	int		len1;
@@ -218,28 +194,28 @@ char	**dup_arr_join_empty_str(char **arr)
 		return (ft_exit_close(255), NULL);
 	i = 0;
 	while (arr && arr[i])
-    {
+	{
 		new_arr[i] = msh_strdup(arr[i], PARSING);
-        i++;
-    }
+		i++;
+	}
 	new_arr[i] = empty_str();
 	new_arr[i + 1] = NULL;
 	i = 0;
 	return (new_arr);
 }
 
-int str_contains_expand(char *str)
+int	str_contains_expand(char *str)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (str[i])
-    {
-        if(str[i] == '$' || str[i] == '*')
-            return (1);
-        i++;
-    }
-    return (0);
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '$' || str[i] == '*')
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 int	expand_token_lst(t_token **lst)
@@ -248,7 +224,7 @@ int	expand_token_lst(t_token **lst)
 	char	**la_args;
 	char	**tmp_contents;
 	int		idx;
-    int     words_nb;
+	int		words_nb;
 
 	idx = -1;
 	io = *lst;
@@ -259,24 +235,51 @@ int	expand_token_lst(t_token **lst)
 		{
 			la_args = ft_expand(io->contents[idx]);
 			if (!la_args)
-            {
+			{
 				tmp_contents = dup_arr_join_empty_str(tmp_contents);
-                continue ;
-            }
-            // printf("la args 0 = %s\n", la_args[0]);
-            if (str_contains_expand(io->contents[idx]))
-                words_nb = content_count_words(la_args[0]);
-            else
-                words_nb = content_count_words(io->contents[idx]);
-            // printf("count words = %d\n", words_nb);
-            if (get_arr_len(la_args) == 1 && words_nb > 1)
-                la_args = msh_split_spaces(la_args[0], PARSING);
-            tmp_contents = ft_concat_str_arr_idx(tmp_contents, la_args);
+				continue ;
+			}
+			if (str_contains_expand(io->contents[idx]))
+				words_nb = content_count_words(la_args[0]);
+			else
+				words_nb = content_count_words(io->contents[idx]);
+			if (get_arr_len(la_args) == 1 && words_nb > 1)
+				la_args = msh_split_spaces(la_args[0], PARSING);
+			tmp_contents = ft_concat_str_arr_idx(tmp_contents, la_args);
 		}
 		idx = -1;
 		io->contents = tmp_contents;
 		io = io->next;
 	}
+	return (0);
+}
+
+int	expand_cmd(t_token *cmd)
+{
+	char	**la_args;
+	char	**tmp_contents;
+	int		idx;
+	int		words_nb;
+
+	idx = -1;
+	tmp_contents = NULL;
+	while (cmd->type == CMD && cmd->contents[++idx])
+	{
+		la_args = ft_expand(cmd->contents[idx]);
+		if (!la_args)
+		{
+			tmp_contents = dup_arr_join_empty_str(tmp_contents);
+			continue ;
+		}
+		if (str_contains_expand(cmd->contents[idx]))
+			words_nb = content_count_words(la_args[0]);
+		else
+			words_nb = content_count_words(cmd->contents[idx]);
+		if (get_arr_len(la_args) == 1 && words_nb > 1)
+			la_args = msh_split_spaces(la_args[0], PARSING);
+		tmp_contents = ft_concat_str_arr_idx(tmp_contents, la_args);
+	}
+	cmd->contents = tmp_contents;
 	return (0);
 }
 
@@ -294,9 +297,39 @@ void	print_token_lst(t_token **lst)
 			printf("contents[%d] = %s\n", i, current->contents[i]);
 			i++;
 		}
+		if (current && current->type != CMD)
+			printf("current->type = %d\n", current->type);
 		printf("=======\n");
 		current = current->next;
 	}
+}
+
+int	check_pipes_par_syntax(t_token **lst)
+{
+	t_token	*current;
+	int		open_par;
+
+	open_par = 0;
+	current = *lst;
+	if ((*lst)->type == PIPE)
+	{
+		write(2, "minishell: syntax error near unexpected token `|'\n", 51);
+		return (-1);
+	}
+	while (current)
+	{
+		if (current->type == PAR_LEFT)
+			open_par = 1;
+		else if (current->type == PAR_RIGHT)
+			open_par = 0;
+		if (open_par && current->type == PIPE)
+		{
+			write(2, "minishell: syntax error near unexpected token `|'\n", 51);
+			return (-1);
+		}
+		current = current->next;
+	}
+	return (0);
 }
 
 int	start_parsing(char *prompt)
@@ -313,10 +346,9 @@ int	start_parsing(char *prompt)
 	clean_token_lst(&input);
 	trim_contents(&input);
 	set_redir_lst(&input);
-	// print_lst(&input);
 	if (check_redir_syntax(&input) == -1 || check_par_syntax(&input) == -1)
 		return (ft_shell()->exit_status = 2, -1);
-	if (check_redirections(&input) == -1)
+	if (check_redirections(&input) == -1 || check_pipes_par_syntax(&input))
 		return (ft_shell()->exit_status = 2, -1);
 	join_cmd_args(&input);
 	clean_token_lst(&input);
@@ -324,15 +356,9 @@ int	start_parsing(char *prompt)
 		return (-1);
 	set_par_lst(&input);
 	ft_shell()->les_token = lst_dup(&input, NULL);
-	// printf("BEFORE EXPAND====\n");
-	// print_token_lst(&input);
-	expand_token_lst(&input);
-	// printf("AFTER EXPAND====\n");
-	// print_token_lst(&input);
 	tree = build_ast(&input, NULL);
 	if (!tree)
 		return (-1);
-	// print_tree(&tree);
 	if (tree && check_tree_syntax(&tree) == -1)
 		return (-1);
 	ft_shell()->exec_tree = tree;

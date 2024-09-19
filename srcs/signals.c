@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 21:33:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/19 10:40:43 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/19 12:06:58 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,13 @@ void	ft_sigquit_handler(int num)
 
 void	ft_init_signals(void)
 {
-	struct termios	term;
+	// struct termios	term;
 
-	term = ft_shell()->original_term;
-	tcsetattr(STDIN_FILENO, TCSANOW, &term);
+	// term = ft_shell()->original_term;
+	// tcsetattr(STDIN_FILENO, TCSANOW, &term);
 	ft_shell()->heredoc_sigint = false;
 	ft_shell()->signint_child = false;
 	signal(SIGINT, ft_sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 }
+    

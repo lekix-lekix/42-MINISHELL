@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/09/19 11:33:03 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/19 12:07:05 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,6 @@ int					is_a_quote(char c);
 void				more_tokenization(t_token **lst);
 
 // Merge combined functions
-void				print_tree(t_ast **tree);
 char				*find_operator(char *str);
 int					insert_cmd_node(t_ast **tree, t_ast *node);
 int					ft_strcpy_sep(char *dest, char *input, char *sep);
@@ -197,7 +196,6 @@ void				create_consume_insert_node(t_token **lst, t_token **node,
 						t_ast **tree, t_ast **tree_right);
 t_ast				*build_ast(t_token **lst, int *insert_node);
 void				insert_node_lst(t_token **lst, t_token *node);
-void				print_lst(t_token **lst);
 void				insert_operator_token_node(t_ast **tree, t_ast *node);
 t_ast				*handle_par(t_token **lst, t_ast **tree, int *insert_node);
 t_token				*lst_dup(t_token **lst, t_token *node);
@@ -325,7 +323,6 @@ int					get_end_word_idx(char *str, int i);
 void				find_operator_type(char *input, t_token *node);
 
 void				lst_env_add_back(t_env **lst, t_env *new);
-void				consume_node(t_token **lst, t_token *node);
 int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
 						int level);
 int					ft_check_redirections(t_token *node);
@@ -349,6 +346,7 @@ char				*ft_pre_expand(char *sr);
 char				*ft_handle_dollar(char *str, size_t *i);
 char				*ft_handle_dquote_str(char *str, size_t *i);
 char				*ft_check_squotes(char *sr, size_t *x);
+int					expand_cmd(t_token *cmd);
 
 // Exec AST tools
 void				set_is_in_par(t_ast *root, int flag);

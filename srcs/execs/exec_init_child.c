@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/11 23:35:41 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/19 11:50:18 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,13 @@ int	ft_check_cmds(t_token *token_node)
 	int	la_status;
 
 	la_status = ft_check_redirections(token_node);
+	if (token_node->redirections && (!token_node->contents
+			|| !token_node->contents[0][0]))
+		return (ft_exit_close(la_status));
 	close_pipes_lst(&ft_shell()->pipes);
 	if (la_status != ENO_SUCCESS)
-		return (ft_exit_close(255), -1);
+		return (ft_exit_close(la_status), -1);
+	expand_cmd(token_node);
 	if (ft_is_builtin(token_node->contents[0]))
 	{
 		la_status = ft_exec_builtins(token_node->contents);
@@ -54,21 +58,22 @@ int	exec_non_builtin_solo(t_token *node)
 
 int	init_only_child_no_fork(t_token *node)
 {
-	ft_update_envlst("_", node->contents[get_arr_len(node->contents) - 1],
-		false);
 	if (!node->contents || !node->contents[0] || !node->contents[0][0])
 	{
-        if (!node->redirections)
-        {
-            write(2, "bash: : command not found\n", 27);
-            return (ft_close_fds(), gbg_coll(NULL, PARSING, FLUSH_ONE), 0);
-        }
+		if (!node->redirections)
+		{
+			write(2, "minishell: : command not found\n", 32);
+			return (ft_close_fds(), gbg_coll(NULL, PARSING, FLUSH_ONE),
+				ft_shell()->exit_status = 127);
+		}
 		ft_shell()->exit_status = ft_check_redirections(node);
 		return (ft_reset_ports(false), ft_close_fds(), 0);
 	}
+	expand_cmd(node);
 	ft_shell()->exit_status = ft_check_redirections(node);
 	if (ft_shell()->exit_status != ENO_SUCCESS)
 		return (ft_reset_ports(false), ft_close_fds(), -1);
+	close_pipes_lst(&ft_shell()->pipes);
 	if (ft_is_builtin(node->contents[0]))
 	{
 		ft_shell()->exit_status = ft_exec_builtins(node->contents);

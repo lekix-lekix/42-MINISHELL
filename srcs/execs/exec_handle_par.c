@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:15:37 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/11 20:29:08 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/19 11:50:07 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,14 @@ int	prep_exec_par(t_ast *sub_tree, int *after_par_pipe)
 	{
 		pid = fork();
 		if (pid == -1)
-			return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
-				-1);
+			return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_exit_close(255), -1);
 		if (pid == 0)
 		{
 			(ft_shell())->signint_child = true;
 			set_pipe_stdout(after_par_pipe);
 			ft_start_exec(&sub_tree);
 			close_pipes_lst(&ft_shell()->pipes);
-			exit(0);
+			ft_exit_close(0);
 		}
 		return (pid);
 	}

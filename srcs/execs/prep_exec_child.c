@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prep_exec_child.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:34:26 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/11 22:59:33 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/19 11:50:34 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ int	*exec_child_next_not_par(t_ast *to_exec, int *pipe_fds)
 	set_pipe_redir_in(to_exec->next, pipe_fds[0]);
 	set_pipe_redir_out(to_exec, pipe_fds[1]);
 	exec_child(to_exec);
-	close_pipe_redir_in(to_exec);
 	close(pipe_fds[1]);
+	close_pipe_redir_in(to_exec);
 	return (NULL);
 }
 
