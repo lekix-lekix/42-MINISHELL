@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/09/19 12:07:05 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/19 17:21:20 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ typedef struct s_minishell
 	int				pids_num;
 	int				ft_stdin;
 	int				ft_stdout;
+    int             msh_stdout;
 	t_ast			*full_exec_tree;
 	t_ast			*exec_tree;
 	t_ast			*node;
@@ -164,7 +165,7 @@ typedef struct s_minishell
 	t_env			*expanded_env;
 	char			**expanded_args;
 	int				expand_chars_trimmed;
-	char	*tmp_file_path;
+	char			*tmp_file_path;
 	struct termios	original_term;
 }					t_minishell;
 
@@ -295,7 +296,6 @@ t_token				*find_right_par(t_token **lst);
 
 // garbage collector
 void				remove_mem_node(t_lst **lst, void *mem_addr);
-void				print_tree(t_ast **tree);
 
 // parsing redirections
 
@@ -310,7 +310,6 @@ char				*get_filename(t_token *node);
 int					check_redirections(t_token **lst);
 t_token				*find_redir_node(t_token **lst, t_token *redir_node);
 int					is_a_redir_operator(t_token *node);
-void				print_redir_lst(t_redir **lst);
 void				add_front_redir_node(t_redir **lst, t_redir *node);
 t_redir				*get_redir_lst_par(t_token **redir_node_lst);
 
@@ -327,7 +326,7 @@ int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
 						int level);
 int					ft_check_redirections(t_token *node);
 bool				ft_is_delimiter(char *delimiter, char *str);
-void				ft_init_tree(t_ast *data);
+int					ft_init_tree(t_ast *data);
 void				ft_reset_ports(bool piped);
 
 // Expanders
@@ -357,7 +356,6 @@ t_ast				*ast_lst_dup(t_ast **lst, t_ast *node);
 t_ast				*get_after_par_node(t_ast **lst);
 t_ast				*ast_find_one(t_ast **lst, t_ast *node);
 int					ast_list_size(t_ast **lst);
-void				print_ast_lst(t_ast **lst);
 
 // Exec pipe redirections
 int					handle_pipe_redirections(t_redir *redirection,
@@ -398,5 +396,6 @@ t_ast				*find_token_node(t_ast **lst, t_token *to_find);
 void				ft_init_signals(void);
 void				ft_sigquit_handler(int num);
 void				ft_exit(char **args);
+void				ft_sigint_handler_heredoc(int num);
 
 #endif
