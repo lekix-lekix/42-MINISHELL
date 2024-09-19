@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/19 11:58:14 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/19 12:00:56 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,35 +138,143 @@ void	trim_contents(t_token **lst)
 	}
 }
 
+int	str_contains_spaces(char *str)
+{
+	int	i;
+
+	i = -1;
+	while (str[++i])
+	{
+		if (ft_is_space(str[i]))
+			return (1);
+	}
+	return (0);
+}
+
+// char    **join_arrays(char **arr1, char **arr2)
+
+// char	**create_fill_split_arr(char **arr)
+// {
+// 	int		i;
+// 	char	**final_arr;
+// 	char	**tmp_arr;
+
+//     final_arr = malloc(sizeof(char *) * (get_arr_len(arr) + 1));
+//     if (!final_arr || gbg_coll(final_arr, PARSING, ADD))
+//         return (ft_exit_close(255), NULL);
+//     i = 0;
+// 	while (arr[i])
+// 	{
+// 		if (str_contains_spaces(arr[i]))
+//         {
+//             tmp_arr = msh_split_spaces(arr[i], PARSING);
+//             final_arr = ft_concat_str_arr(final_arr, tmp_arr);
+//         }
+//         else
+//             final_arr[i] = arr[i];
+//         i++;
+// 	}
+//     final_arr[i] = NULL;
+//     return (final_arr);
+// }
+
+char	**ft_concat_str_arr_idx(char **arr, char **arr2)
+{
+	int		len1;
+	int		len2;
+	char	**res;
+	int		x;
+	int		y;
+
+	len1 = get_arr_len(arr);
+	len2 = get_arr_len(arr2);
+	res = (char **)malloc(sizeof(char *) * (len1 + len2 + 2));
+	if (!res || gbg_coll(res, PARSING, ADD))
+		return (ft_exit_close(255), NULL);
+	x = -1;
+	y = 0;
+	while (arr && arr[++x])
+	{
+		res[y] = msh_strdup(arr[x], PARSING);
+		y++;
+	}
+	x = -1;
+	while (arr2 && arr2[++x])
+	{
+		res[y] = msh_strdup(arr2[x], PARSING);
+		y++;
+	}
+	res[y] = NULL;
+	return (res);
+}
+
+char	**dup_arr_join_empty_str(char **arr)
+{
+	char	**new_arr;
+	int		i;
+
+	new_arr = malloc(sizeof(char *) * (get_arr_len(arr) + 2));
+	if (!new_arr || gbg_coll(new_arr, PARSING, ADD))
+		return (ft_exit_close(255), NULL);
+	i = 0;
+	while (arr && arr[i])
+    {
+		new_arr[i] = msh_strdup(arr[i], PARSING);
+        i++;
+    }
+	new_arr[i] = empty_str();
+	new_arr[i + 1] = NULL;
+	i = 0;
+	return (new_arr);
+}
+
+int str_contains_expand(char *str)
+{
+    int i;
+
+    i = 0;
+    while (str[i])
+    {
+        if(str[i] == '$' || str[i] == '*')
+            return (1);
+        i++;
+    }
+    return (0);
+}
+
 int	expand_token_lst(t_token **lst)
 {
 	t_token	*io;
 	char	**la_args;
-	char	**temp_contents;
+	char	**tmp_contents;
 	int		idx;
+    int     words_nb;
 
 	idx = -1;
-	temp_contents = NULL;
 	io = *lst;
 	while (io)
 	{
+		tmp_contents = NULL;
 		while (io->type == CMD && io->contents[++idx])
 		{
 			la_args = ft_expand(io->contents[idx]);
 			if (!la_args)
-			{
-				io->contents[idx] = empty_str();
-				break ;
-			}
-			if (get_arr_len(la_args) == 1)
-				io->contents[idx] = la_args[0];
-			else
-			{
-				io->contents[idx] = NULL;
-				io->contents = ft_concat_str_arr(io->contents, la_args);
-			}
+            {
+				tmp_contents = dup_arr_join_empty_str(tmp_contents);
+                continue ;
+            }
+            // printf("la args 0 = %s\n", la_args[0]);
+            if (str_contains_expand(io->contents[idx]))
+                words_nb = content_count_words(la_args[0]);
+            else
+                words_nb = content_count_words(io->contents[idx]);
+            // printf("count words = %d\n", words_nb);
+            if (get_arr_len(la_args) == 1 && words_nb > 1)
+                la_args = msh_split_spaces(la_args[0], PARSING);
+            tmp_contents = ft_concat_str_arr_idx(tmp_contents, la_args);
 		}
-		idx = 0;
+		idx = -1;
+		io->contents = tmp_contents;
 		io = io->next;
 	}
 	return (0);
@@ -181,12 +289,12 @@ void	print_token_lst(t_token **lst)
 	while (current)
 	{
 		i = 0;
-		printf("=======\n");
-		while (current->contents[i])
+		while (current->contents && current->contents[i])
 		{
 			printf("contents[%d] = %s\n", i, current->contents[i]);
 			i++;
 		}
+		printf("=======\n");
 		current = current->next;
 	}
 }
@@ -219,15 +327,56 @@ int	start_parsing(char *prompt)
 	// printf("BEFORE EXPAND====\n");
 	// print_token_lst(&input);
 	expand_token_lst(&input);
-	// print_token_lst(&input);
 	// printf("AFTER EXPAND====\n");
+	// print_token_lst(&input);
 	tree = build_ast(&input, NULL);
+	if (!tree)
+		return (-1);
 	// print_tree(&tree);
 	if (tree && check_tree_syntax(&tree) == -1)
 		return (-1);
 	ft_shell()->exec_tree = tree;
 	(ft_start_execution(&tree), ft_close_fds());
 	return (0);
+}
+
+int	main(int argc, char **argv, char **env)
+{
+	t_minishell	*data;
+	char		*line;
+
+	data = ft_shell();
+	((void)argc, (void)argv);
+	init_data(data, env);
+	while (1)
+	{
+		ft_init_signals();
+		if (isatty(fileno(stdin)))
+			data->prompt = readline("minishell$ ");
+		else
+		{
+			line = get_next_line(fileno(stdin), 0);
+			data->prompt = ft_strtrim(line, "\n");
+			free(line);
+		}
+		if (!data->prompt)
+		{
+			gbg_coll(NULL, ALL, FLUSH_ALL);
+			exit(ft_shell()->exit_status);
+		}
+		if (data->prompt && *data->prompt)
+		{
+			if (data->prompt[0])
+				add_history(data->prompt);
+			start_parsing(data->prompt);
+			gbg_coll(NULL, PARSING, FLUSH_ONE);
+			free(data->prompt);
+		}
+	}
+	free(data->prompt);
+	gbg_coll(NULL, ENV, FLUSH_ALL);
+	gbg_coll(NULL, PARSING, FLUSH_ALL);
+	gbg_coll(NULL, ENV, FREE);
 }
 
 // int	main(int argc, char **argv, char **env)
@@ -270,50 +419,43 @@ int	start_parsing(char *prompt)
 //     gbg_coll(NULL, ENV, FREE);
 // }
 
-int	main(int argc, char **argv, char **env)
-{
-	t_minishell	*data;
+// int	main(int argc, char **argv, char **env)
+// {
+// 	t_minishell *data;
+// 	char *line;
 
-	data = ft_shell();
-	((void)argc, (void)argv);
-	init_data(data, env);
-	while (1)
-	{
-		ft_init_signals();
-		data->prompt = readline("minishell$ ");
-		if (data->prompt == NULL)
-		{
-			printf("27\n");
-			// Also we need to clean here if I'm not mistaking!
-			// printf("WE ARE HERE IN MAIN\n");
-			gbg_coll(NULL, ALL, FLUSH_ALL);
-			close(ft_shell()->ft_stdin);
-			close(ft_shell()->ft_stdout);
-			free(data->prompt);
-			gbg_coll(NULL, ENV, FLUSH_ALL);
-			gbg_coll(NULL, PARSING, FLUSH_ALL);
-			gbg_coll(NULL, ENV, FREE);
-			rl_clear_history();
-			ft_putstr_fd("exit\n", 1);
-			exit(ft_shell()->exit_status);
-		}
-		if (data->prompt && *data->prompt)
-		{
-			if (data->prompt[0])
-				add_history(data->prompt);
-			start_parsing(data->prompt);
-			gbg_coll(NULL, PARSING, FLUSH_ONE);
-			// close(ft_shell()->ft_stdin);
-			// close(ft_shell()->ft_stdout);
-			// gbg_coll(NULL, PARSING, FLUSH_ALL);
-			free(data->prompt);
-		}
-	}
-	free(data->prompt);
-	close(ft_shell()->ft_stdin);
-	close(ft_shell()->ft_stdout);
-	rl_clear_history();
-	gbg_coll(NULL, ENV, FLUSH_ALL);
-	gbg_coll(NULL, PARSING, FLUSH_ALL);
-	gbg_coll(NULL, ENV, FREE);
-}
+// 	data = ft_shell();
+// 	((void)argc, (void)argv);
+// 	init_data(data, env);
+// 	while (1)
+// 	{
+// 		ft_init_signals();
+// 		if (isatty(fileno(stdin)))
+// 			data->prompt = readline("minishell$ ");
+// 		else
+// 		{
+// 			line = get_next_line(fileno(stdin), 0);
+// 			data->prompt = ft_strtrim(line, "\n");
+// 			free(line);
+// 		}
+// 		if (!data->prompt)
+// 		{
+// 			gbg_coll(NULL, ALL, FLUSH_ALL);
+// 			exit(ft_shell()->exit_status);
+// 		}
+// 		if (data->prompt || *data->prompt)
+// 		{
+// 			if (data->prompt[0])
+// 				add_history(data->prompt);
+// 			start_parsing(data->prompt);
+// 			gbg_coll(NULL, PARSING, FLUSH_ONE);
+// 			// close(ft_shell()->ft_stdin);
+// 			// close(ft_shell()->ft_stdout);
+// 			free(data->prompt);
+// 		}
+// 	}
+// 	free(data->prompt);
+// 	gbg_coll(NULL, ENV, FLUSH_ALL);
+// 	gbg_coll(NULL, PARSING, FLUSH_ALL);
+// 	gbg_coll(NULL, ENV, FREE);
+// }
