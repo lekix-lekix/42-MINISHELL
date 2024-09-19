@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
+#    By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/09/11 22:41:05 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/09/19 11:48:43 by sabakar-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -84,6 +84,8 @@ SRCS = ./srcs/minishell.c \
 	./srcs/signals.c \
 	./srcs/Builtins/ft_exit.c \
 	./srcs/expanders/ft_handle_money.c
+
+	# ./srcs/execs/ft_heredoc.c \
 
 OBJ = $(SRCS:.c=.o)
 

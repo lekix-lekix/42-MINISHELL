@@ -6,7 +6,7 @@
 /*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/12 12:27:51 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/19 11:53:53 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ static void	ft_start_execution(t_ast **tree)
 	if ((ft_shell())->heredoc_sigint)
 	{
 		ft_close_fds();
+		printf("It's here 12\n");
 		gbg_coll(NULL, ALL, FLUSH_ALL);
 		(ft_shell())->heredoc_sigint = false;
 		return ;
@@ -231,42 +232,50 @@ int	start_parsing(char *prompt)
 
 int	main(int argc, char **argv, char **env)
 {
-    t_minishell	*data;
-    data = ft_shell();
-    ((void)argc, (void)argv);
-    init_data(data, env);
-    while (1)
-    {
-        ft_init_signals();
-        data->prompt = readline("minishell$ ");
-        if (data->prompt == NULL)
-        {
-            // Also we need to clean here if I'm not mistaking!
-            // printf("WE ARE HERE IN MAIN\n");
-            gbg_coll(NULL, ALL, FLUSH_ALL);
-            close(ft_shell()->ft_stdin);
-            close(ft_shell()->ft_stdout);
-            ft_putstr_fd("exit\n", 1);
-            exit(ft_shell()->exit_status);
-        }
-        if (data->prompt && *data->prompt)
-        {
-            if (data->prompt[0])
-                add_history(data->prompt);
-            start_parsing(data->prompt);
-            gbg_coll(NULL, PARSING, FLUSH_ONE);
-            // close(ft_shell()->ft_stdin);
-            // close(ft_shell()->ft_stdout);
-            // gbg_coll(NULL, PARSING, FLUSH_ALL);
-            free(data->prompt);
-        }
-    }
-    free(data->prompt);
-   	close(ft_shell()->ft_stdin);
-    close(ft_shell()->ft_stdout);
-    gbg_coll(NULL, ENV, FLUSH_ALL);
-    gbg_coll(NULL, PARSING, FLUSH_ALL);
-    gbg_coll(NULL, ENV, FREE);
+	t_minishell	*data;
+
+	data = ft_shell();
+	((void)argc, (void)argv);
+	init_data(data, env);
+	while (1)
+	{
+		ft_init_signals();
+		data->prompt = readline("minishell$ ");
+		if (data->prompt == NULL)
+		{
+			printf("27\n");
+			// Also we need to clean here if I'm not mistaking!
+			// printf("WE ARE HERE IN MAIN\n");
+			gbg_coll(NULL, ALL, FLUSH_ALL);
+			close(ft_shell()->ft_stdin);
+			close(ft_shell()->ft_stdout);
+			free(data->prompt);
+			gbg_coll(NULL, ENV, FLUSH_ALL);
+			gbg_coll(NULL, PARSING, FLUSH_ALL);
+			gbg_coll(NULL, ENV, FREE);
+			rl_clear_history();
+			ft_putstr_fd("exit\n", 1);
+			exit(ft_shell()->exit_status);
+		}
+		if (data->prompt && *data->prompt)
+		{
+			if (data->prompt[0])
+				add_history(data->prompt);
+			start_parsing(data->prompt);
+			gbg_coll(NULL, PARSING, FLUSH_ONE);
+			// close(ft_shell()->ft_stdin);
+			// close(ft_shell()->ft_stdout);
+			// gbg_coll(NULL, PARSING, FLUSH_ALL);
+			free(data->prompt);
+		}
+	}
+	free(data->prompt);
+	close(ft_shell()->ft_stdin);
+	close(ft_shell()->ft_stdout);
+	rl_clear_history();
+	gbg_coll(NULL, ENV, FLUSH_ALL);
+	gbg_coll(NULL, PARSING, FLUSH_ALL);
+	gbg_coll(NULL, ENV, FREE);
 }
 
 // int	main(int argc, char **argv, char **env)

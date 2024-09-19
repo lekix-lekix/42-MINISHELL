@@ -3,14 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   init_tree_heredoc.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 21:09:29 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/19 11:50:28 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+
+// static void	ft_heredoc_sigint_handler(int signum)
+// {
+// 	(void)signum;
+// 	printf("WE are here 15\n");
+// 	close(ft_shell()->ft_stdin);
+// 	close(ft_shell()->ft_stdout);
+// 	gbg_coll(NULL, PARSING, FLUSH_ALL);
+// 	// gbg_coll(NULL, ALL, FLUSH_ALL);
+// 	// ft_close_fds();
+// 	// (ft_shell())->is_ctrl_c = 23;
+// 	exit(130);
+// 	// return (1);
+// }
+
+// static volatile sig_atomic_t	g_signal_caught = 0;
+// static int sig_atomic_t g_signal_caught = 0;
+// signal(SIGINT, ft_heredoc_sigint_handler);
 
 int	ft_write_heredoc_fd(t_redir *redirection, int tmp_file_fd)
 {
