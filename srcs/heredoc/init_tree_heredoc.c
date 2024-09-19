@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/19 17:35:50 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/19 17:42:35 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,12 @@ int	ft_write_heredoc_fd(t_redir *redirection, int tmp_file_fd)
 		line = readline("> ");
 		if (ft_shell()->heredoc_sigint)
 		{            
-            // dup2(fd, STDIN_FILENO);
 			free(line);
 			line = NULL;
 			return (1);
 		}
-		// TO DO : FREE
 		if (!line)
 			break ;
-		// line[ft_strlen(line) - 1] = '\0';
 		if (ft_is_delimiter(redirection->filename, line))
 			break ;
 		else
