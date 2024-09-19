@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/18 16:14:03 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/19 11:50:54 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	ft_exit_close(int exit_status)
 {
 	close(ft_shell()->ft_stdin);
 	close(ft_shell()->ft_stdout);
-    gbg_coll(NULL, ALL, FLUSH_ALL);
+	gbg_coll(NULL, ALL, FLUSH_ALL);
 	return (exit(exit_status), -1);
 }
 

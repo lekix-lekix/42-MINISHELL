@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:15:37 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/18 15:48:23 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/19 11:50:07 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	prep_exec_par(t_ast *sub_tree, int *after_par_pipe)
 			set_pipe_stdout(after_par_pipe);
 			ft_start_exec(&sub_tree);
 			close_pipes_lst(&ft_shell()->pipes);
-            ft_exit_close(0);
+			ft_exit_close(0);
 		}
 		return (pid);
 	}

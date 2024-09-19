@@ -6,7 +6,7 @@
 #    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/09/11 23:53:14 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/09/19 12:04:21 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,12 +50,13 @@ SRCS = ./srcs/minishell.c \
 	./srcs/token_lst_tools.c \
 	./srcs/parsing_tools.c \
 	./srcs/parsing_tools_bis.c \
-	./srcs/ast_construction.c \
-	./srcs/ast_parenthesis.c \
-	./srcs/ast_insert_node.c \
-	./srcs/ast_check_syntax.c\
-	./srcs/ast_tools.c \
-	./srcs/ast_tools_bis.c \
+	./srcs/abstract_syntax_tree/ast_construction.c \
+	./srcs/abstract_syntax_tree/ast_parenthesis.c \
+	./srcs/abstract_syntax_tree/ast_insert_node.c \
+	./srcs/abstract_syntax_tree/ast_check_syntax.c\
+	./srcs/abstract_syntax_tree/ast_tools.c \
+	./srcs/abstract_syntax_tree/ast_tools_bis.c \
+	./srcs/abstract_syntax_tree/ast_par_utils.c \
 	./srcs/msh_strtrim.c \
 	./srcs/msh_split.c \
 	./srcs/msh_strtrim_spaces.c \
@@ -69,8 +70,6 @@ SRCS = ./srcs/minishell.c \
 	./srcs/parsing_word_utils.c \
 	./srcs/parsing_find_type.c \
 	./srcs/print_syntax_errors.c \
-	./srcs/ast_print.c \
-	./srcs/ast_par_utils.c \
 	./srcs/garbage_collector_bis.c \
 	./srcs/str_manipulation.c \
 	./srcs/parsing_clean_tokens.c \
@@ -115,6 +114,7 @@ clean :
 	make -sC $(PATH_LIBFT) clean
 	rm -f ./srcs/*o
 	rm -f ./srcs/Builtins/*o
+	rm -f ./srcs/abstract_syntax_tree/*o
 	rm -f ./srcs/execs/*o
 	rm -f ./srcs/non_builtins/*o
 	rm -f ./srcs/expanders/*o

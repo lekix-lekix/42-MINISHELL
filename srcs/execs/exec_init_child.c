@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/18 16:33:18 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/19 11:50:18 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ int	exec_non_builtin_solo(t_token *node)
 
 int	init_only_child_no_fork(t_token *node)
 {
-	// ft_update_envlst("_", node->contents[get_arr_len(node->contents) - 1],
-	// false);
 	if (!node->contents || !node->contents[0] || !node->contents[0][0])
 	{
 		if (!node->redirections)
