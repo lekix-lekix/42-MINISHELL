@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/20 14:20:14 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/20 16:47:57 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ int	ft_start_execution(t_ast **tree)
 	signal(SIGQUIT, ft_sigquit_handler);
 	nodes = *tree;
 	if (ft_init_tree(nodes) == -1)
+    {
+        ft_shell()->msh_stdout = open("/dev/stdout", O_RDONLY);
 		return (write(2, "\n", 1), ft_shell()->heredoc_sigint = false, -1);
+    }
 	ft_shell()->pids = NULL;
 	ft_shell()->pipes = NULL;
 	ft_shell()->end_exec = 0;
