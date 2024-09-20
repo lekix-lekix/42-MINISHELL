@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_tree_heredoc.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/19 11:50:28 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/19 17:35:50 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,23 @@ int	ft_write_heredoc_fd(t_redir *redirection, int tmp_file_fd)
 	char	*tmp;
 	char	*line;
 
+	// signal(SIGINT, SIG_DFL);
 	while (1)
 	{
+	    signal(SIGINT, ft_sigint_handler_heredoc);
+        signal(SIGQUIT, SIG_IGN);
 		line = readline("> ");
+		if (ft_shell()->heredoc_sigint)
+		{            
+            // dup2(fd, STDIN_FILENO);
+			free(line);
+			line = NULL;
+			return (1);
+		}
+		// TO DO : FREE
 		if (!line)
 			break ;
+		// line[ft_strlen(line) - 1] = '\0';
 		if (ft_is_delimiter(redirection->filename, line))
 			break ;
 		else
@@ -50,10 +62,11 @@ int	ft_write_heredoc_fd(t_redir *redirection, int tmp_file_fd)
 				return (ft_exit_close(255), -1);
 		}
 	}
+    ft_init_signals();
 	return (0);
 }
 
-void	ft_heredoc(t_redir *redirection, char *tmp_file_path)
+int	ft_heredoc(t_redir *redirection, char *tmp_file_path)
 {
 	int	tmp_file_fd;
 
@@ -63,9 +76,14 @@ void	ft_heredoc(t_redir *redirection, char *tmp_file_path)
 		perror("bash: open");
 		ft_exit_close(255);
 	}
-	ft_write_heredoc_fd(redirection, tmp_file_fd);
+	if (ft_write_heredoc_fd(redirection, tmp_file_fd))
+	{
+		close(tmp_file_fd);
+		return (1);
+	}
 	close(tmp_file_fd);
 	redirection->filename = tmp_file_path;
+	return (0);
 }
 
 char	**ft_concat_str_arr(char **arr, char **arr2)
@@ -94,7 +112,7 @@ char	**ft_concat_str_arr(char **arr, char **arr2)
 	return (res);
 }
 
-static void	ft_init_leaf(t_ast *node)
+static int	ft_init_leaf(t_ast *node)
 {
 	t_redir	*redirections;
 	char	*tmp_file_path;
@@ -105,18 +123,27 @@ static void	ft_init_leaf(t_ast *node)
 		if (redirections->redir_type == REDIR_HEREDOC)
 		{
 			tmp_file_path = create_random_filename();
-			ft_heredoc(redirections, tmp_file_path);
+			if (ft_heredoc(redirections, tmp_file_path))
+				return (-1);
 		}
 		redirections = redirections->next;
 	}
+    return (0);
 }
 
-void	ft_init_tree(t_ast *node)
+int	ft_init_tree(t_ast *node)
 {
 	if (node->left)
-		ft_init_tree(node->left);
+		if (ft_init_tree(node->left) == -1)
+			return (-1);
 	if (node->node_type == CMD)
-		ft_init_leaf(node);
+	{
+		if (ft_init_leaf(node))
+			return (-1);
+		return (0);
+	}
 	if (node->right)
-		ft_init_tree(node->right);
+		if (ft_init_tree(node->right) == -1)
+			return (-1);
+    return (0);
 }

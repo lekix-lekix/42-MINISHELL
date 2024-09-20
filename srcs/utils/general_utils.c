@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:14:54 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 20:34:24 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/19 17:33:29 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,4 +92,5 @@ void	ft_close_fds(void)
 {
 	close(ft_shell()->ft_stdin);
 	close(ft_shell()->ft_stdout);
+    close(ft_shell()->msh_stdout);
 }

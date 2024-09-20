@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 21:33:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/19 12:06:58 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/19 17:29:40 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,18 @@
 static void	ft_sigint_handler(int num)
 {
 	(void)num;
+    ft_shell()->exit_status = 130;
 	if (ft_shell()->signint_child)
 	{
-		printf("\n");
+		write(2, "\n", 1);
 		ft_shell()->signint_child = false;
-		ft_shell()->heredoc_sigint = true;
-	}
+    }
 	else
 	{
 		if (waitpid(-1, NULL, WNOHANG) == -1 && errno == ECHILD)
 		{
-			printf("\n");
+			// if (!ft_shell()->heredoc_sigint)
+			write(2, "\n", 1);
 			rl_replace_line("", 0);
 			rl_on_new_line();
 			rl_redisplay();
@@ -36,18 +37,24 @@ static void	ft_sigint_handler(int num)
 void	ft_sigquit_handler(int num)
 {
 	(void)num;
-	ft_putstr_fd("Quit: 3\n", 1);
+	write(2, "Quit (core dumped)\n", 19);
+    ft_shell()->exit_status = 131;
 }
 
 void	ft_init_signals(void)
 {
-	// struct termios	term;
-
-	// term = ft_shell()->original_term;
-	// tcsetattr(STDIN_FILENO, TCSANOW, &term);
 	ft_shell()->heredoc_sigint = false;
 	ft_shell()->signint_child = false;
 	signal(SIGINT, ft_sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 }
-    
+
+void	ft_sigint_handler_heredoc(int num)
+{
+	if (num == SIGINT)
+	{
+		close(STDIN_FILENO);
+		ft_shell()->heredoc_sigint = true;
+        ft_shell()->exit_status = 130;
+	}
+}

@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/19 12:06:50 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/19 17:33:15 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ char	*get_path(char **envp)
 		if (!ft_strncmp(envp[i], "PATH=", 5))
 		{
 			str = ft_strtrim(envp[i], "PATH=");
-			if (!str || gbg_coll(str, ENV, ADD) == -1)
-				return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(),
-					exit(255), NULL);
+			if (!str || gbg_coll(str, ENV, ADD))
+				return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_exit_close(255),
+					NULL);
 		}
 	}
 	return (str);
@@ -81,7 +81,12 @@ static void	ft_start_execution(t_ast **tree)
 
 	signal(SIGQUIT, ft_sigquit_handler);
 	nodes = *tree;
-	ft_init_tree(nodes);
+	if (ft_init_tree(nodes) == -1)
+	{
+		write(2, "\n", 1);
+		(ft_shell())->heredoc_sigint = false;
+		return ;
+	}
 	ft_shell()->pids = NULL;
 	ft_shell()->pipes = NULL;
 	ft_shell()->end_exec = 0;
@@ -93,12 +98,10 @@ static void	ft_start_execution(t_ast **tree)
 	if ((ft_shell())->heredoc_sigint)
 	{
 		ft_close_fds();
-		printf("It's here 12\n");
 		gbg_coll(NULL, ALL, FLUSH_ALL);
 		(ft_shell())->heredoc_sigint = false;
 		return ;
 	}
-	// tcsetattr(STDIN_FILENO, TCSANOW, &(ft_shell())->original_term);
 	ft_start_exec(&nodes);
 }
 
@@ -362,32 +365,72 @@ int	start_parsing(char *prompt)
 	if (tree && check_tree_syntax(&tree) == -1)
 		return (-1);
 	ft_shell()->exec_tree = tree;
-	(ft_start_execution(&tree), ft_close_fds());
+	ft_start_execution(&tree), ft_close_fds();
 	return (0);
 }
+
+// int	main(int argc, char **argv, char **env)
+// {
+// 	t_minishell	*data;
+// 	char		*line;
+
+// 	data = ft_shell();
+// 	((void)argc, (void)argv);
+// 	init_data(data, env);
+// 	while (1)
+// 	{
+//         dprintf(2, "test0\n"); //
+// 		ft_init_signals();
+//         dprintf(2, "test1\n"); //
+// 		if (isatty(fileno(stdin))) {
+//             dprintf(2, "test2\n"); //
+// 			data->prompt = readline("minishell$ ");
+//             dprintf(2, "test3\n"); //
+//         }
+// 		else
+// 		{
+// 			line = get_next_line(fileno(stdin), 0);
+// 			data->prompt = ft_strtrim(line, "\n");
+// 			free(line);
+// 		}
+// 		if (!data->prompt)
+// 		{
+//             dprintf(2, "test4\n"); //
+// 			gbg_coll(NULL, ALL, FLUSH_ALL);
+// 			exit(ft_shell()->exit_status);
+// 		}
+// 		if (data->prompt && *data->prompt)
+// 		{
+// 			if (data->prompt[0])
+// 				add_history(data->prompt);
+// 			start_parsing(data->prompt);
+// 			gbg_coll(NULL, PARSING, FLUSH_ONE);
+// 			free(data->prompt);
+// 		}
+// 	}
+// 	free(data->prompt);
+// 	gbg_coll(NULL, ENV, FLUSH_ALL);
+// 	gbg_coll(NULL, PARSING, FLUSH_ALL);
+// 	gbg_coll(NULL, ENV, FREE);
+// }
 
 int	main(int argc, char **argv, char **env)
 {
 	t_minishell	*data;
-	char		*line;
 
 	data = ft_shell();
 	((void)argc, (void)argv);
 	init_data(data, env);
+	// ft_shell()->heredoc_sigint = false;
 	while (1)
 	{
 		ft_init_signals();
-		if (isatty(fileno(stdin)))
-			data->prompt = readline("minishell$ ");
-		else
-		{
-			line = get_next_line(fileno(stdin), 0);
-			data->prompt = ft_strtrim(line, "\n");
-			free(line);
-		}
+		data->msh_stdout = open("/dev/stdout", O_RDONLY);
+		data->prompt = readline("minishell$ ");
 		if (!data->prompt)
 		{
 			gbg_coll(NULL, ALL, FLUSH_ALL);
+			close(data->msh_stdout);
 			exit(ft_shell()->exit_status);
 		}
 		if (data->prompt && *data->prompt)
@@ -397,8 +440,10 @@ int	main(int argc, char **argv, char **env)
 			start_parsing(data->prompt);
 			gbg_coll(NULL, PARSING, FLUSH_ONE);
 			free(data->prompt);
+			close(data->msh_stdout);
 		}
 	}
+	close(data->msh_stdout);
 	free(data->prompt);
 	gbg_coll(NULL, ENV, FLUSH_ALL);
 	gbg_coll(NULL, PARSING, FLUSH_ALL);
