@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 17:18:16 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 20:04:43 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/20 12:39:11 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ static bool	ft_isnumber(char *str)
 	int	i;
 
 	i = 0;
+	if (str[i] == '+' || str[i] == '-')
+		i++;
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
@@ -71,6 +73,7 @@ void	ft_exit(char **args)
 {
 	int	exit_s;
 
+	write(2, "exit\n", 5);
 	exit_s = (ft_shell())->exit_status;
 	if (args[1])
 	{
@@ -84,6 +87,7 @@ void	ft_exit(char **args)
 	}
 	close(ft_shell()->ft_stdin);
 	close(ft_shell()->ft_stdout);
+	close(ft_shell()->msh_stdout);
 	gbg_coll(NULL, ALL, FLUSH_ALL);
 	exit(exit_s);
 }

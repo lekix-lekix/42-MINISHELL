@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:50:13 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/27 17:47:10 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/20 14:05:30 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,30 @@ void	find_operator_type(char *input, t_token *node)
 		node->type = REDIR_OUTPUT_APPEND;
 	else
 		node->type = CMD;
+}
+
+int	check_delete_global_par(t_token **lst)
+{
+	t_token	*current;
+	t_token	*prev;
+
+	if (((*lst) && (*lst)->type == PAR_LEFT && (*lst)->next->type == PAR_RIGHT))
+	{
+		printf("minishell: syntax error near unexpected token `)'\n");
+		ft_shell()->exit_status = 2;
+		return (-1);
+	}
+	if ((*lst) && (*lst)->type == PAR_LEFT
+		&& find_closing_par(lst)->next == NULL)
+	{
+		*lst = (*lst)->next;
+		current = *lst;
+		while (current->next)
+		{
+			prev = current;
+			current = current->next;
+		}
+		prev->next = current;
+	}
+	return (0);
 }

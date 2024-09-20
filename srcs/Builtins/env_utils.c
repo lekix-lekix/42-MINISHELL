@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 20:03:11 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/20 13:26:55 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,12 @@ void	ft_update_envlst(char *field, char *content, bool create)
 		return ;
 	if (create)
 	{
-		lst_env_add_back(&envlst, ft_envlst_new(field, content));
 		if (content)
+		{
+			lst_env_add_back(&envlst, ft_envlst_new(field, content));
+			lst_env_add_back(&le_env, ft_envlst_new(field, content));
+		}
+		else
 			lst_env_add_back(&le_env, ft_envlst_new(field, content));
 	}
 }

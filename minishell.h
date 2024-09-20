@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/09/19 17:21:20 by kipouliq         ###   ########.fr       */
+/*   Created: 2024/09/20 11:51:14 by kipouliq          #+#    #+#             */
+/*   Updated: 2024/09/20 14:08:59 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ typedef struct s_minishell
 	int				pids_num;
 	int				ft_stdin;
 	int				ft_stdout;
-    int             msh_stdout;
+	int				msh_stdout;
 	t_ast			*full_exec_tree;
 	t_ast			*exec_tree;
 	t_ast			*node;
@@ -180,6 +180,10 @@ int					ft_strcpy_sep_ptr(char *dest, char *input, char *sep);
 //
 void				ft_close_fds(void);
 
+// Init data
+int					init_data(t_minishell *data, char **envp);
+char				*get_path(char **envp);
+
 // tokenization
 int					trim_token_fields(t_token **lst);
 t_token				*tokenize_input(char *input);
@@ -188,6 +192,7 @@ void				create_insert_token_nodes(t_token **lst, char **input,
 						char **operator);
 int					is_a_quote(char c);
 void				more_tokenization(t_token **lst);
+int					check_delete_global_par(t_token **lst);
 
 // Merge combined functions
 char				*find_operator(char *str);
@@ -262,6 +267,11 @@ char				**ft_concat_str_arr(char **arr, char **arr2);
 char				*empty_str(void);
 int					ft_count_words(char const *s, char sep);
 char				*create_random_filename(void);
+char				**dup_arr_join_empty_str(char **arr);
+char				**ft_concat_str_arr_idx(char **arr, char **arr2);
+int					str_contains_expand(char *str);
+int					str_contains_spaces(char *str);
+void				trim_contents(t_token **lst);
 
 // paths utils
 char				*ft_check_path(char **contents, char **env,
@@ -289,6 +299,7 @@ int					print_ast_syntax_error(t_ast *node);
 int					check_par_syntax(t_token **lst);
 int					check_quotes(char *str);
 int					check_redir_syntax(t_token **input);
+int					check_pipes_par_syntax(t_token **lst);
 
 // ast parenthesis
 t_token				*find_closing_par(t_token **lst);

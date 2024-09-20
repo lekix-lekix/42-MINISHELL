@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 21:34:34 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/12 15:37:21 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/20 13:47:54 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,13 @@ char	*ft_check_dquotes(char *sr, size_t *k)
 		else
 			res = ft_strjoin(res, ft_handle_dquote_str(sr, k));
 		if (!res || gbg_coll(res, PARSING, ADD))
-			return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
-				NULL);
+			return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_exit_close(255), NULL);
 	}
 	(*k)++;
 	final_res = msh_strdup("\"", PARSING);
 	final_res = ft_strjoin(res, final_res);
 	if (!final_res || gbg_coll(final_res, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
-			NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_exit_close(255), NULL);
 	return (final_res);
 }
 
@@ -49,8 +47,7 @@ char	*ft_handle_normal_str(char *sr, size_t *y)
 		(*y)++;
 	final_res = ft_substr(sr, start, *y - start);
 	if (!final_res || gbg_coll(final_res, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
-			NULL);
+		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_exit_close(255), NULL);
 	return (final_res);
 }
 

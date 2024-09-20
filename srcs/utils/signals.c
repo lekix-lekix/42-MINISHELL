@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 21:33:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/19 17:29:40 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/20 12:22:27 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,16 @@
 static void	ft_sigint_handler(int num)
 {
 	(void)num;
-    ft_shell()->exit_status = 130;
+	ft_shell()->exit_status = 130;
 	if (ft_shell()->signint_child)
 	{
 		write(2, "\n", 1);
 		ft_shell()->signint_child = false;
-    }
+	}
 	else
 	{
 		if (waitpid(-1, NULL, WNOHANG) == -1 && errno == ECHILD)
 		{
-			// if (!ft_shell()->heredoc_sigint)
 			write(2, "\n", 1);
 			rl_replace_line("", 0);
 			rl_on_new_line();
@@ -38,7 +37,7 @@ void	ft_sigquit_handler(int num)
 {
 	(void)num;
 	write(2, "Quit (core dumped)\n", 19);
-    ft_shell()->exit_status = 131;
+	ft_shell()->exit_status = 131;
 }
 
 void	ft_init_signals(void)
@@ -55,6 +54,6 @@ void	ft_sigint_handler_heredoc(int num)
 	{
 		close(STDIN_FILENO);
 		ft_shell()->heredoc_sigint = true;
-        ft_shell()->exit_status = 130;
+		ft_shell()->exit_status = 130;
 	}
 }

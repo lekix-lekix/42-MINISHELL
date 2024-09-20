@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_handle_money.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 19:52:19 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 22:51:35 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/20 13:48:05 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ char	*ft_dollar_valid(void)
 	char	*res;
 
 	res = msh_strdup("", PARSING);
-	if (!res || gbg_coll(res, PARSING, ADD))
-		return (ft_exit_close(255), NULL);
 	return (res);
 }
 

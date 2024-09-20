@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils_bis.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:00:22 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/19 19:11:58 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/20 14:07:53 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,25 @@ char	*ft_extract_content(char *str)
 		i++;
 	}
 	return (NULL);
+}
+
+char	*get_path(char **envp)
+{
+	char	*str;
+	int		i;
+
+	i = -1;
+	if (!envp || !*envp)
+		return (NULL);
+	while (envp && envp[++i])
+	{
+		if (!ft_strncmp(envp[i], "PATH=", 5))
+		{
+			str = ft_strtrim(envp[i], "PATH=");
+			if (!str || gbg_coll(str, ENV, ADD))
+				return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_exit_close(255),
+					NULL);
+		}
+	}
+	return (str);
 }

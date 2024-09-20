@@ -6,7 +6,7 @@
 #    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/09/19 17:36:50 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/09/20 14:08:32 by kipouliq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,10 +53,12 @@ SRCS = ./srcs/minishell.c \
 	./srcs/abstract_syntax_tree/ast_parenthesis.c \
 	./srcs/abstract_syntax_tree/ast_insert_node.c \
 	./srcs/abstract_syntax_tree/ast_check_syntax.c\
+	./srcs/abstract_syntax_tree/ast_check_syntax_bis.c \
 	./srcs/abstract_syntax_tree/ast_tools.c \
 	./srcs/abstract_syntax_tree/ast_tools_bis.c \
 	./srcs/abstract_syntax_tree/ast_par_utils.c \
 	./srcs/utils/general_utils.c \
+	./srcs/utils/general_utils_bis.c \
 	./srcs/utils/msh_strtrim.c \
 	./srcs/utils/msh_split.c \
 	./srcs/utils/msh_strtrim_spaces.c \
@@ -83,7 +85,9 @@ SRCS = ./srcs/minishell.c \
 	./srcs/expanders/expands_utils.c \
 	./srcs/expanders/ft_remove_quotes.c \
 	./srcs/expanders/ft_asterisker.c \
-	./srcs/expanders/ft_globaler.c
+	./srcs/expanders/ft_globaler.c \
+	./srcs/expanders/ft_expand_cmd.c \
+	./srcs/init_data.c
 
 OBJ = $(SRCS:.c=.o)
 

@@ -1,3 +1,0 @@
-$NOVAR
-| ls | ls
-syntax error pipe inside parenthesis

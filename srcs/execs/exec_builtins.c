@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:31:03 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 17:58:59 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/20 13:24:41 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	ft_env(char **args)
 		write(2, err, ft_strlen(err));
 		return (127);
 	}
-	print_env(&ft_shell()->env_lst);
+	print_env(&ft_shell()->expanded_env);
 	return (0);
 }
 

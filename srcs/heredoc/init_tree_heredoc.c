@@ -6,47 +6,24 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/19 17:42:35 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/20 11:54:14 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-
-// static void	ft_heredoc_sigint_handler(int signum)
-// {
-// 	(void)signum;
-// 	printf("WE are here 15\n");
-// 	close(ft_shell()->ft_stdin);
-// 	close(ft_shell()->ft_stdout);
-// 	gbg_coll(NULL, PARSING, FLUSH_ALL);
-// 	// gbg_coll(NULL, ALL, FLUSH_ALL);
-// 	// ft_close_fds();
-// 	// (ft_shell())->is_ctrl_c = 23;
-// 	exit(130);
-// 	// return (1);
-// }
-
-// static volatile sig_atomic_t	g_signal_caught = 0;
-// static int sig_atomic_t g_signal_caught = 0;
-// signal(SIGINT, ft_heredoc_sigint_handler);
 
 int	ft_write_heredoc_fd(t_redir *redirection, int tmp_file_fd)
 {
 	char	*tmp;
 	char	*line;
 
-	// signal(SIGINT, SIG_DFL);
 	while (1)
 	{
-	    signal(SIGINT, ft_sigint_handler_heredoc);
-        signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, ft_sigint_handler_heredoc);
+		signal(SIGQUIT, SIG_IGN);
 		line = readline("> ");
 		if (ft_shell()->heredoc_sigint)
-		{            
-			free(line);
-			line = NULL;
-			return (1);
-		}
+			return (free(line), line = NULL, 1);
 		if (!line)
 			break ;
 		if (ft_is_delimiter(redirection->filename, line))
@@ -59,7 +36,7 @@ int	ft_write_heredoc_fd(t_redir *redirection, int tmp_file_fd)
 				return (ft_exit_close(255), -1);
 		}
 	}
-    ft_init_signals();
+	ft_init_signals();
 	return (0);
 }
 
@@ -125,7 +102,7 @@ static int	ft_init_leaf(t_ast *node)
 		}
 		redirections = redirections->next;
 	}
-    return (0);
+	return (0);
 }
 
 int	ft_init_tree(t_ast *node)
@@ -142,5 +119,5 @@ int	ft_init_tree(t_ast *node)
 	if (node->right)
 		if (ft_init_tree(node->right) == -1)
 			return (-1);
-    return (0);
+	return (0);
 }
