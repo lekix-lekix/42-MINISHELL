@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:44:43 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 22:39:10 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/19 19:08:05 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	ft_change_cwd(void)
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd || gbg_coll(cwd, ENV, ADD))
-		return (ft_exit_close(255), -1);
+		return (dprintf(2, "bash: cd: ..: No such file or directory\n"), /* gbg_coll(NULL, ALL, FLUSH_ALL), */ -1);
 	return (ft_update_envlst("PWD", cwd, false), 0);
 }
 
