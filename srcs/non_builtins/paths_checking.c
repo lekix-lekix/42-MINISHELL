@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   paths_checking.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:19:27 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 23:35:17 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/20 17:37:39 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ char	**ft_get_paths(char **env)
 	x = 0;
 	while (env[x])
 	{
+		printf("env x = %s\n", env[x]);
 		if (ft_strncmp("PATH", env[x], 4) == 0)
 		{
 			path = msh_split(env[x] + 5, ':', PARSING);
@@ -71,6 +72,7 @@ char	*check_paths(char **paths, char *cmd)
 	{
 		tmp = ft_join(paths[x], "/");
 		fpath = ft_join(tmp, cmd);
+		dprintf(2, "fpath = %s\n", fpath);
 		if (access(fpath, F_OK | R_OK | X_OK) == 0)
 			return (fpath);
 	}
@@ -99,6 +101,7 @@ char	*ft_check_path(char **contents, char **env, int *exit_status, int *i)
 	paths = ft_get_paths(env);
 	if (!paths || paths[0] == NULL)
 		return (NULL);
+	dprintf(2, "ici\n");
 	fpath = check_paths(paths, cmd);
 	if (fpath != NULL)
 		return (fpath);

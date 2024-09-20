@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils_bis.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:00:22 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/20 14:07:53 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/20 17:03:51 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,28 +24,6 @@ char	*ft_get_envlst_content(char *key, t_env **env_lst)
 		envlst = envlst->next;
 	}
 	return (NULL);
-}
-
-char	*ft_extract_field(char *str)
-{
-	size_t	i;
-	char	*final_str;
-
-	i = 0;
-	final_str = NULL;
-	while (str[i])
-	{
-		if (str[i] == '=')
-		{
-			final_str = ft_substr(str, 0, i);
-			if (!final_str || gbg_coll(final_str, ENV, ADD))
-				return (ft_exit_close(255), NULL);
-			return (final_str);
-		}
-		i++;
-	}
-	final_str = msh_strdup(str, ENV);
-	return (final_str);
 }
 
 char	*ft_extract_content(char *str)
