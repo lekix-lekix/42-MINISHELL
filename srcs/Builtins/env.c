@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 17:31:49 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 20:36:21 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/20 17:45:54 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,17 @@ char	**env_lst_to_arr(t_env **lst)
 	int		i;
 
 	node = *lst;
-	env_arr = malloc(sizeof(char *) * (env_lst_size(lst) + 1));
+	env_arr = malloc(sizeof(char *) * (env_lst_size(lst) + 2));
 	if (!env_arr || gbg_coll(env_arr, ENV, ADD) == -1)
 		return (ft_exit_close(255), NULL);
 	i = 0;
 	while (node)
 	{
 		if (node->content)
-			env_arr[i] = ft_strjoin(node->field, node->content);
+        {
+            env_arr[i] = ft_strjoin(node->field, "=");
+			env_arr[i] = ft_strjoin(env_arr[i], node->content);
+        }
 		else
 			env_arr[i] = node->field;
 		if (!env_arr[i] || gbg_coll(env_arr[i], ENV, ADD) == -1)

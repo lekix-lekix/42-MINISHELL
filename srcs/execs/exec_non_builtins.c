@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/20 13:11:08 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/20 17:43:06 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,11 @@ int	ft_exec_non_builtins(t_token *node)
 
 	i = 0;
 	env_args = env_lst_to_arr(&ft_shell()->expanded_env);
+    while (env_args[i])
+    {
+        printf("env args = %s\n", env_args[i]);
+        i++;
+    }
 	la_path = ft_check_path(node->contents, env_args, &exit_status, &i);
 	if (!la_path)
 		return (no_path_found(node));
