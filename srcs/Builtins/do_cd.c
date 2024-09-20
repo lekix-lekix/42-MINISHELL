@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:44:43 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/19 17:56:05 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/20 11:32:15 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,7 @@ static int	ft_change_cwd(void)
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd || gbg_coll(cwd, ENV, ADD))
-    {
-        dprintf(2, "there\n");
-		return (ft_exit_close(255), -1);
-    }
+		return (dprintf(2, "bash: cd: ..: No such file or directory\n"), /* gbg_coll(NULL, ALL, FLUSH_ALL), */ -1);
 	return (ft_update_envlst("PWD", cwd, false), 0);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:20:35 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/11 22:39:20 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/19 18:32:02 by sabakar-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ int	ft_exec_pwd(char **args)
 		return (ft_export_err_msg(args[1]));
 	cwd = getcwd(cwd, 0);
 	if (!cwd)
-		return (1);
+		return (dprintf(2, "pwd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n"),
+			1);
 	ft_putstr_fd(cwd, 1);
 	ft_putstr_fd("\n", 1);
 	free(cwd);
