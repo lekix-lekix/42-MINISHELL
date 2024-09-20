@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:50:13 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/20 14:05:30 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/20 14:26:09 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int	check_delete_global_par(t_token **lst)
 
 	if (((*lst) && (*lst)->type == PAR_LEFT && (*lst)->next->type == PAR_RIGHT))
 	{
-		printf("minishell: syntax error near unexpected token `)'\n");
+		write(2, "minishell: syntax error near unexpected token `)'\n", 50);
 		ft_shell()->exit_status = 2;
 		return (-1);
 	}
