@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_non_builtins.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/20 17:41:50 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/21 11:02:35 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int	ft_exit_close(int exit_status)
 {
 	close(ft_shell()->ft_stdin);
 	close(ft_shell()->ft_stdout);
-	close(ft_shell()->msh_stdout);
 	gbg_coll(NULL, ALL, FLUSH_ALL);
 	rl_clear_history();
 	return (exit(exit_status), -1);
@@ -26,7 +25,6 @@ int	no_path_found(t_token *node)
 {
 	close(ft_shell()->ft_stdin);
 	close(ft_shell()->ft_stdout);
-	close(ft_shell()->msh_stdout);
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(node->contents[0], 2);
 	ft_putstr_fd(": ", 1);
@@ -42,19 +40,11 @@ int	ft_exec_non_builtins(t_token *node)
 
 	i = 0;
 	env_args = env_lst_to_arr(&ft_shell()->expanded_env);
-	// print_env(&ft_shell()->expanded_env);
-	while (env_args[i])
-	{
-		printf("env %d = %s\n", i, env_args[i]);
-		i++;
-	}
-	i = 0;
 	la_path = ft_check_path(node->contents, env_args, &exit_status, &i);
 	if (!la_path)
 		return (no_path_found(node));
 	close(ft_shell()->ft_stdin);
 	close(ft_shell()->ft_stdout);
-	close(ft_shell()->msh_stdout);
 	if (execve(la_path, node->contents + i, env_args) == -1)
 		return (perror("bash: execve: "), ft_exit_close(255), -1);
 	return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_handle_money.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 19:52:19 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/20 13:48:05 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/21 13:03:22 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ char	*dollar_first_digit(size_t *i)
 	char	*res;
 
 	res = msh_strdup("", PARSING);
-	if (!res || gbg_coll(res, PARSING, ADD))
-		return (ft_exit_close(255), NULL);
 	return ((*i)++, res);
 }
 
@@ -80,7 +78,6 @@ char	*ft_check_squotes(char *sr, size_t *x)
 	(*x)++;
 	res = ft_substr(sr, start, *x - start);
 	if (!res || gbg_coll(res, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_close_fds(), exit(255),
-			NULL);
+		return (ft_exit_close(255), NULL);
 	return (res);
 }

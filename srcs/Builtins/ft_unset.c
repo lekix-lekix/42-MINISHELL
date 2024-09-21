@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 09:06:23 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/20 17:18:16 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/21 11:11:25 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	ft_unset_helper(char *field, t_env **envlst)
 			if (prev)
 				prev->next = current->next;
 			else
-			{	
+			{
 				ft_shell()->expanded_env = current->next;
 				ft_shell()->env_lst = current->next;
 			}
@@ -78,7 +78,7 @@ char	*ft_extract_field(char *str)
 int	ft_exec_unset(char **args)
 {
 	int		i;
-	int	f;
+	int		f;
 	bool	err;
 	t_env	*le_env;
 	t_env	*envlst;

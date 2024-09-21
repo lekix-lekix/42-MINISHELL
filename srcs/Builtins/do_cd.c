@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   do_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:44:43 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/20 11:45:28 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/21 12:40:36 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ static int	ft_change_cwd(void)
 	cwd = getcwd(NULL, 0);
 	if (!cwd || gbg_coll(cwd, ENV, ADD))
 		return (write(2, "bash: cd: ..: No such file or directory\n", 40), 1);
-	return (ft_update_envlst("PWD", cwd, false), 0);
+	ft_update_envlst("PWD", cwd, &ft_shell()->env_lst, false);
+	ft_update_envlst("PWD", cwd, &ft_shell()->expanded_env, false);
+	return (0);
 }
 
 static int	ft_cdhome(void)
@@ -27,12 +29,18 @@ static int	ft_cdhome(void)
 	char	*home;
 
 	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD",
-			&ft_shell()->env_lst), false);
+			&ft_shell()->env_lst), &ft_shell()->env_lst, false);
+	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD",
+			&ft_shell()->expanded_env), &ft_shell()->expanded_env, false);
 	home = ft_get_envlst_content("HOME", &ft_shell()->env_lst);
 	if (!home)
 		return (ft_putstr_fd("minishell: cd: HOME not set\n", 2), 1);
 	if (chdir(home) == ENO_SUCCESS)
-		return (ft_update_envlst("PWD", home, false), 0);
+	{
+		ft_update_envlst("PWD", home, &ft_shell()->env_lst, false);
+		ft_update_envlst("PWD", home, &ft_shell()->expanded_env, false);
+		return (0);
+	}
 	return (1);
 }
 
@@ -54,7 +62,9 @@ int	ft_do_cd(char **path)
 		return (1);
 	}
 	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD",
-			&ft_shell()->env_lst), false);
+			&ft_shell()->env_lst), &ft_shell()->env_lst, false);
+	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD",
+			&ft_shell()->expanded_env), &ft_shell()->expanded_env, false);
 	return (ft_change_cwd());
 }
 

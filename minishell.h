@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 11:51:14 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/20 14:08:59 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/21 12:51:49 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,6 @@ typedef struct s_minishell
 	t_env			*expanded_env;
 	char			**expanded_args;
 	int				expand_chars_trimmed;
-	char			*tmp_file_path;
 	struct termios	original_term;
 }					t_minishell;
 
@@ -227,7 +226,8 @@ char				*msh_strdup(const char *s, int mlc_lst);
 int					ft_exec_echo(char **args);
 int					ft_exec_pwd(char **args);
 int					ft_do_cd(char **path);
-void				ft_update_envlst(char *field, char *content, bool create);
+void				ft_update_envlst(char *field, char *content, t_env **lst,
+						bool create);
 int					print_env(t_env **lst);
 int					ft_exec_export(char **args);
 int					ft_exec_builtins(char **args);
@@ -235,7 +235,7 @@ char				*ft_extract_field(char *str);
 char				*ft_extract_content(char *str);
 int					ft_strcmp(const char *s1, const char *s2);
 bool				ft_is_builtin(char *arg);
-bool				ft_env_entry_exists(char *content);
+bool				ft_env_entry_exists(char *field, t_env **lst_to_check);
 int					ft_exec_unset(char **args);
 void				*ft_unset_cleaner(void *ptr, bool clean);
 int					ft_check_key(char *str);
@@ -281,7 +281,7 @@ void				consume_node(t_token **lst, t_token *node);
 int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
 						int level);
 int					print_msh_error(char *err, char *cmd);
-char				*dot_error(void);
+void				check_dot_errors(char *cmd);
 
 // print syntax errors
 int					print_newline_syntax_error(void);

@@ -3,14 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   init_tree_heredoc.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/20 11:54:14 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/21 13:05:56 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+
+static int	ft_reopen_stdin(char *line)
+{
+	free(line);
+	line = NULL;
+	open("/dev/stdout", O_RDONLY);
+	return (1);
+}
 
 int	ft_write_heredoc_fd(t_redir *redirection, int tmp_file_fd)
 {
@@ -23,7 +31,7 @@ int	ft_write_heredoc_fd(t_redir *redirection, int tmp_file_fd)
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("> ");
 		if (ft_shell()->heredoc_sigint)
-			return (free(line), line = NULL, 1);
+			return (ft_reopen_stdin(line));
 		if (!line)
 			break ;
 		if (ft_is_delimiter(redirection->filename, line))
@@ -58,32 +66,6 @@ int	ft_heredoc(t_redir *redirection, char *tmp_file_path)
 	close(tmp_file_fd);
 	redirection->filename = tmp_file_path;
 	return (0);
-}
-
-char	**ft_concat_str_arr(char **arr, char **arr2)
-{
-	int		len1;
-	int		len2;
-	char	**res;
-	int		x;
-	int		y;
-
-	len1 = get_arr_len(arr);
-	len2 = get_arr_len(arr2);
-	res = (char **)malloc(sizeof(char *) * (len1 + len2 + 2));
-	if (!res || gbg_coll(res, PARSING, ADD))
-		return (ft_exit_close(255), NULL);
-	x = -1;
-	while (++x < len1)
-		res[x] = msh_strdup(arr[x], PARSING);
-	y = -1;
-	while (++y < len2)
-	{
-		res[x] = msh_strdup(arr2[y], PARSING);
-		x++;
-	}
-	res[x] = NULL;
-	return (res);
 }
 
 static int	ft_init_leaf(t_ast *node)

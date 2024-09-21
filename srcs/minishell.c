@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/20 16:47:57 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/21 13:04:38 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,7 @@ int	ft_start_execution(t_ast **tree)
 	signal(SIGQUIT, ft_sigquit_handler);
 	nodes = *tree;
 	if (ft_init_tree(nodes) == -1)
-    {
-        ft_shell()->msh_stdout = open("/dev/stdout", O_RDONLY);
 		return (write(2, "\n", 1), ft_shell()->heredoc_sigint = false, -1);
-    }
 	ft_shell()->pids = NULL;
 	ft_shell()->pipes = NULL;
 	ft_shell()->end_exec = 0;
@@ -80,7 +77,6 @@ int	start_parsing(char *prompt)
 		return (-1);
 	ft_shell()->exec_tree = tree;
 	ft_start_execution(&tree);
-	ft_close_fds();
 	return (0);
 }
 
@@ -91,7 +87,6 @@ void	start_all(t_minishell *data)
 	start_parsing(data->prompt);
 	gbg_coll(NULL, PARSING, FLUSH_ONE);
 	free(data->prompt);
-	close(data->msh_stdout);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -104,18 +99,15 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		ft_init_signals();
-		data->msh_stdout = open("/dev/stdout", O_RDONLY);
 		data->prompt = readline("minishell$ ");
 		if (!data->prompt)
 		{
 			gbg_coll(NULL, ALL, FLUSH_ALL);
-			close(data->msh_stdout);
 			exit(ft_shell()->exit_status);
 		}
 		if (data->prompt && *data->prompt)
 			start_all(data);
 	}
-	close(data->msh_stdout);
 	free(data->prompt);
 	gbg_coll(NULL, ENV, FLUSH_ALL);
 	gbg_coll(NULL, PARSING, FLUSH_ALL);

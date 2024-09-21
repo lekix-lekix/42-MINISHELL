@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:12:40 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/20 13:26:55 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/21 12:34:04 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,24 +62,10 @@ char	*get_env_content(char *field)
 	return (NULL);
 }
 
-void	ft_update_envlst(char *field, char *content, bool create)
+void	ft_update_envlst(char *field, char *content, t_env **lst, bool create)
 {
-	t_env	*le_env;
-	t_env	*envlst;
-
-	envlst = ft_shell()->expanded_env;
-	le_env = ft_shell()->env_lst;
-	if (ft_loop_and_update(&le_env, content, field)
-		&& ft_loop_and_update(&envlst, content, field))
+	if (ft_loop_and_update(lst, content, field))
 		return ;
 	if (create)
-	{
-		if (content)
-		{
-			lst_env_add_back(&envlst, ft_envlst_new(field, content));
-			lst_env_add_back(&le_env, ft_envlst_new(field, content));
-		}
-		else
-			lst_env_add_back(&le_env, ft_envlst_new(field, content));
-	}
+		lst_env_add_back(lst, ft_envlst_new(field, content));
 }

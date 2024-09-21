@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:02:12 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/20 13:27:50 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/21 12:33:48 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,12 @@ int	check_export_concat(char *field, char **args)
 	{
 		content_args = ft_extract_content(args[1]);
 		field[field_length - 1] = '\0';
-		if (!ft_env_entry_exists(field))
-			ft_update_envlst(field, content_args, true);
+		if (!ft_env_entry_exists(field, &ft_shell()->env_lst))
+			ft_update_envlst(field, content_args, &ft_shell()->env_lst, true);
 		else
 		{
 			new_content = ft_join(get_env_content(field), content_args);
-			ft_update_envlst(field, new_content, false);
+			ft_update_envlst(field, new_content, &ft_shell()->env_lst, false);
 		}
 		return (1);
 	}
@@ -71,14 +71,20 @@ int	check_export_concat(char *field, char **args)
 int	check_and_update_envlst(char **args, int *exit_s, int i)
 {
 	char	*field;
+	char	*content;
 
+	content = ft_extract_content(args[i]);
 	field = ft_extract_field(args[i]);
 	if (check_export_concat(field, args))
 		return (*exit_s);
-	if (ft_env_entry_exists(field))
-		ft_update_envlst(field, ft_extract_content(args[i]), false);
+	if (ft_env_entry_exists(field, &ft_shell()->env_lst))
+		ft_update_envlst(field, content, &ft_shell()->env_lst, false);
 	else
-		ft_update_envlst(field, ft_extract_content(args[i]), true);
+		ft_update_envlst(field, content, &ft_shell()->env_lst, true);
+	if (ft_env_entry_exists(field, &ft_shell()->expanded_env))
+		ft_update_envlst(field, content, &ft_shell()->expanded_env, false);
+	else if (!ft_env_entry_exists(field, &ft_shell()->expanded_env) && content)
+		ft_update_envlst(field, content, &ft_shell()->expanded_env, true);
 	return (0);
 }
 

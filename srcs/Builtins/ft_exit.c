@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 17:18:16 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/20 12:39:11 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/21 13:05:22 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ void	ft_exit(char **args)
 	}
 	close(ft_shell()->ft_stdin);
 	close(ft_shell()->ft_stdout);
-	close(ft_shell()->msh_stdout);
 	gbg_coll(NULL, ALL, FLUSH_ALL);
 	exit(exit_s);
 }

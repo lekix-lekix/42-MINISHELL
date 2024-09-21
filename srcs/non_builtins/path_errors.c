@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path_errors.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:34:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 20:33:24 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/21 12:52:04 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,17 @@ int	print_msh_error(char *err, char *cmd)
 	return (0);
 }
 
-char	*dot_error(void)
+void	check_dot_errors(char *cmd)
 {
-	write(2, "bash: .: filename argument required\n", 37);
-	write(2, ".: usage: . filename [arguments]\n", 34);
-	return (ft_exit_close(127), NULL);
+	if (cmd[0] == '.' && ft_strlen(cmd) == 1)
+	{
+		write(2, "bash: .: filename argument required\n", 37);
+		write(2, ".: usage: . filename [arguments]\n", 34);
+		ft_exit_close(2);
+	}
+	if (cmd[0] == '.' && cmd[1] == '.' && ft_strlen(cmd) == 2)
+	{
+		print_msh_error(CMD_ERR, cmd);
+		ft_exit_close(127);
+	}
 }
