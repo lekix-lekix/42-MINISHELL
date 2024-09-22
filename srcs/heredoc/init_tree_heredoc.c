@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:56:13 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/21 13:05:56 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/22 15:53:16 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	ft_write_heredoc_fd(t_redir *redirection, int tmp_file_fd)
 		else
 		{
 			tmp = ft_pre_expand(line);
-			line = ft_join(tmp, "\n");
+			line = ft_join(tmp, "\n", PARSING);
 			if (write(tmp_file_fd, line, ft_strlen(line)) == -1)
 				return (ft_exit_close(255), -1);
 		}

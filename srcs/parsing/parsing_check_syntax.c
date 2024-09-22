@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_check_syntax.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:27:58 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 23:54:47 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/22 15:52:46 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@ int	check_quotes(char *str)
 			str = ft_strchr(str + i + 1, c);
 			if (!str)
 			{
-				err = ft_join("bash: syntax error near unexpected token `", &c);
-				err = ft_join(err, "'\n");
+				err = ft_join("bash: syntax error near unexpected token `", &c,
+						PARSING);
+				err = ft_join(err, "'\n", PARSING);
 				write(2, err, ft_strlen(err));
 				return (-1);
 			}

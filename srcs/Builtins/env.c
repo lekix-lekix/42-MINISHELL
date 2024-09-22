@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 17:31:49 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/11 20:36:21 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/22 15:54:03 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,12 @@ char	**env_lst_to_arr(t_env **lst)
 	while (node)
 	{
 		if (node->content)
-			env_arr[i] = ft_strjoin(node->field, node->content);
+		{
+			env_arr[i] = ft_join(node->field, "=", ENV);
+			env_arr[i] = ft_join(env_arr[i], node->content, ENV);
+		}
 		else
 			env_arr[i] = node->field;
-		if (!env_arr[i] || gbg_coll(env_arr[i], ENV, ADD) == -1)
-			return (ft_exit_close(255), NULL);
 		node = node->next;
 		i++;
 	}

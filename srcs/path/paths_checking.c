@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:19:27 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/21 12:51:29 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/22 15:52:55 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ char	**ft_get_paths(char **env)
 		if (ft_strncmp("PATH", env[x], 4) == 0)
 		{
 			if (ft_strchr(env[x], ':'))
-				path = msh_split(env[x] + 4, ':', PARSING);
+				path = msh_split(env[x] + 5, ':', PARSING);
 			else
 			{
 				path = malloc(sizeof(char *) * 2);
 				if (!path || gbg_coll(path, ENV, ADD))
 					return (ft_exit_close(255), NULL);
-				path[0] = msh_strdup(env[x] + 4, ENV);
+				path[0] = msh_strdup(env[x] + 5, ENV);
 				path[1] = NULL;
 			}
 			return (path);
@@ -78,8 +78,8 @@ char	*check_paths(char **paths, char *cmd)
 	x = -1;
 	while (paths && paths[++x])
 	{
-		tmp = ft_join(paths[x], "/");
-		fpath = ft_join(tmp, cmd);
+		tmp = ft_join(paths[x], "/", PARSING);
+		fpath = ft_join(tmp, cmd, PARSING);
 		if (access(fpath, F_OK | R_OK | X_OK) == 0)
 			return (fpath);
 	}

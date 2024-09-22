@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/21 13:04:38 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/22 17:09:42 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	start_parsing(char *prompt)
 	if (!prompt[0])
 		return (-1);
 	if (check_quotes(prompt))
-		return (-1);
+		return (ft_shell()->exit_status = 2, -1);
 	input = tokenize_input(prompt);
 	if (do_parsing_and_checks(&input) == -1)
 		return (-1);
@@ -103,12 +103,15 @@ int	main(int argc, char **argv, char **env)
 		if (!data->prompt)
 		{
 			gbg_coll(NULL, ALL, FLUSH_ALL);
+			rl_clear_history();
+			write(2, "exit\n", 5);
 			exit(ft_shell()->exit_status);
 		}
 		if (data->prompt && *data->prompt)
 			start_all(data);
 	}
 	free(data->prompt);
+	rl_clear_history();
 	gbg_coll(NULL, ENV, FLUSH_ALL);
 	gbg_coll(NULL, PARSING, FLUSH_ALL);
 	gbg_coll(NULL, ENV, FREE);

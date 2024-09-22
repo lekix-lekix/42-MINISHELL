@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
+#    By: lekix <lekix@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/09/20 14:08:32 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/09/22 16:59:45 by lekix            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRCS = ./srcs/minishell.c \
 	./srcs/Builtins/env_utils_bis.c \
 	./srcs/Builtins/ft_export.c \
 	./srcs/Builtins/ft_export_bis.c \
+	./srcs/Builtins/ft_export_concat.c \
 	./srcs/Builtins/ft_unset.c \
 	./srcs/Builtins/ft_exit.c \
 	./srcs/execs/exec_builtins.c \
@@ -44,8 +45,8 @@ SRCS = ./srcs/minishell.c \
 	./srcs/execs/set_close_pipes_bis.c \
 	./srcs/execs/exec_handle_par_utils.c \
 	./srcs/execs/exec_handle_par_utils_bis.c \
-	./srcs/non_builtins/paths_checking.c \
-	./srcs/non_builtins/path_errors.c \
+	./srcs/path/paths_checking.c \
+	./srcs/path/path_errors.c \
 	./srcs/tokenizer/tokenizer.c \
 	./srcs/tokenizer/token_create_nodes.c \
 	./srcs/tokenizer/token_lst_tools.c \

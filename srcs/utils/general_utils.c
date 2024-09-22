@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:14:54 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/21 12:14:39 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/22 15:52:00 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	ft_free(char **arr)
 	arr = NULL;
 }
 
-char	*ft_join(char *s1, char *s2)
+char	*ft_join(char *s1, char *s2, int gbg_lst)
 {
 	char	*new_arr;
 	int		i;
@@ -62,7 +62,7 @@ char	*ft_join(char *s1, char *s2)
 	s_len = ft_strlen(s1);
 	total_len = (ft_strlen(s1) + ft_strlen(s2));
 	new_arr = (char *)malloc(sizeof(char) * (total_len + 1));
-	if (!new_arr || gbg_coll(new_arr, PARSING, ADD))
+	if (!new_arr || gbg_coll(new_arr, gbg_lst, ADD))
 		return (ft_exit_close(255), NULL);
 	i = -1;
 	while (s1[++i])

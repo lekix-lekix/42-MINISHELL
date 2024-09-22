@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 18:02:12 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/21 12:33:48 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/22 17:22:33 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,30 +42,6 @@ int	ft_check_key(char *str)
 		i++;
 	}
 	return (1);
-}
-
-int	check_export_concat(char *field, char **args)
-{
-	int		field_length;
-	char	*content_args;
-	char	*new_content;
-
-	field_length = ft_strlen(field);
-	if (field[field_length - 1] == '+' && (ft_isalnum(field[field_length - 2])
-			|| field[field_length - 2] == '_'))
-	{
-		content_args = ft_extract_content(args[1]);
-		field[field_length - 1] = '\0';
-		if (!ft_env_entry_exists(field, &ft_shell()->env_lst))
-			ft_update_envlst(field, content_args, &ft_shell()->env_lst, true);
-		else
-		{
-			new_content = ft_join(get_env_content(field), content_args);
-			ft_update_envlst(field, new_content, &ft_shell()->env_lst, false);
-		}
-		return (1);
-	}
-	return (0);
 }
 
 int	check_and_update_envlst(char **args, int *exit_s, int i)

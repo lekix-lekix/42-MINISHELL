@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:31:03 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/20 13:24:41 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/22 15:53:41 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ int	ft_env(char **args)
 
 	if (get_arr_len(args) > 1)
 	{
-		err = ft_join("env: ‘", args[1]);
-		err = ft_join(err, "’: No such file or directory\n");
+		err = ft_join("env: ‘", args[1], PARSING);
+		err = ft_join(err, "’: No such file or directory\n", PARSING);
 		write(2, err, ft_strlen(err));
 		return (127);
 	}

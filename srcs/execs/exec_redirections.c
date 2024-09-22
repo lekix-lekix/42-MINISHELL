@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/12 16:28:44 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/22 15:53:33 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_append(t_redir *redirections, int *le_status)
 	fd = open(redirections->filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (fd == -1)
 	{
-		err = ft_join("minishell: ", redirections->filename);
+		err = ft_join("minishell: ", redirections->filename, PARSING);
 		perror(err);
 		*le_status = 1;
 		return (1);
@@ -40,7 +40,7 @@ int	ft_in(t_redir *redirections, int *le_status)
 	fd = open(redirections->filename, O_RDONLY);
 	if (fd == -1)
 	{
-		err = ft_join("minishell: ", redirections->filename);
+		err = ft_join("minishell: ", redirections->filename, PARSING);
 		perror(err);
 		*le_status = 1;
 		return (1);
@@ -60,7 +60,7 @@ int	ft_out(t_redir *redirections, int *status)
 	fd = open(redirections->filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd == -1)
 	{
-		err = ft_join("minishell: ", redirections->filename);
+		err = ft_join("minishell: ", redirections->filename, PARSING);
 		perror(err);
 		*status = 1;
 		return (1);

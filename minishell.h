@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 11:51:14 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/21 12:51:49 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/22 16:58:56 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,10 +240,11 @@ int					ft_exec_unset(char **args);
 void				*ft_unset_cleaner(void *ptr, bool clean);
 int					ft_check_key(char *str);
 char				*ft_get_envlst_content(char *content, t_env **env_lst);
-char				*get_env_content(char *field);
+char				*get_env_content(char *field, t_env **lst);
 void				ft_export_list(t_env **envlst);
 int					check_and_update_envlst(char **args, int *exit_s, int i);
 t_env				*env_cpy_lst(t_env **envlst);
+int					check_export_concat(char *field, char **args);
 
 // The non-builtins
 int					ft_exec_non_builtins(t_token *node);
@@ -255,7 +256,7 @@ int					ft_start_exec(t_ast **tree);
 void				ft_free(char **arr);
 void				ft_print_err(char *str);
 char				**env_lst_to_arr(t_env **lst);
-char				*ft_join(char *s1, char *s2);
+char				*ft_join(char *s1, char *s2, int gbg_lst);
 int					check_operator_len(char *str);
 char				*skip_spaces(char *str);
 int					print_env(t_env **lst);

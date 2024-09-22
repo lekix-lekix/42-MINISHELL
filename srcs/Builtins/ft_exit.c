@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 17:18:16 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/21 13:05:22 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/22 14:59:21 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static int	ft_exittoi(char *sr)
 	{
 		result = (result * 10) + (sr[i] - '0');
 		if (result > LONG_MAX)
-			(ft_err(sr));
+			return (ft_err(sr), 2);
 		i++;
 	}
 	return ((result * sign) % 256);

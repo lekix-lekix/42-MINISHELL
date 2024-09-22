@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:44:43 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/21 12:40:36 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/22 15:54:14 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	ft_do_cd(char **path)
 	}
 	if (chdir(path[1]) != ENO_SUCCESS)
 	{
-		err = ft_join("minishell: cd: ", path[1]);
+		err = ft_join("minishell: cd: ", path[1], PARSING);
 		perror(err);
 		return (1);
 	}
