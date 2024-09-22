@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/21 13:04:55 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/22 18:54:42 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,17 @@ int	exec_non_builtin_solo(t_token *node)
 		return (perror("bash: fork"), ft_exit_close(255), -1);
 	if (pid == 0)
 	{
+		ft_shell()->exit_status = ft_check_redirections(node);
+		if (ft_shell()->exit_status != ENO_SUCCESS)
+			return (ft_reset_ports(false), ft_close_fds(), -1);
 		(ft_shell())->signint_child = true;
+		ft_close_fds();
 		status = ft_exec_non_builtins(node);
 	}
-	(ft_reset_ports(false), ft_close_fds(), waitpid(pid, &status, WUNTRACED));
+	waitpid(pid, &status, WUNTRACED);
 	if (WIFEXITED(status))
 		ft_shell()->exit_status = WEXITSTATUS(status);
+	ft_close_fds();
 	return (0);
 }
 
@@ -70,14 +75,40 @@ int	init_only_child_no_fork(t_token *node)
 		return (ft_reset_ports(false), ft_close_fds(), 0);
 	}
 	expand_cmd(node);
-	ft_shell()->exit_status = ft_check_redirections(node);
-	if (ft_shell()->exit_status != ENO_SUCCESS)
-		return (ft_reset_ports(false), ft_close_fds(), -1);
 	close_pipes_lst(&ft_shell()->pipes);
 	if (ft_is_builtin(node->contents[0]))
 	{
+		ft_shell()->exit_status = ft_check_redirections(node);
+		if (ft_shell()->exit_status != ENO_SUCCESS)
+			return (ft_reset_ports(false), ft_close_fds(), -1);
 		ft_shell()->exit_status = ft_exec_builtins(node->contents);
 		return (ft_reset_ports(false), ft_close_fds(), 0);
 	}
 	return (exec_non_builtin_solo(node));
 }
+
+// int	init_only_child_no_fork(t_token *node)
+// {
+// 	if (!node->contents || !node->contents[0] || !node->contents[0][0])
+// 	{
+// 		if (!node->redirections)
+// 		{
+// 			write(2, "minishell: : command not found\n", 32);
+// 			return (ft_close_fds(), gbg_coll(NULL, PARSING, FLUSH_ONE),
+// 				ft_shell()->exit_status = 127);
+// 		}
+// 		ft_shell()->exit_status = ft_check_redirections(node);
+// 		return (ft_reset_ports(false), ft_close_fds(), 0);
+// 	}
+// 	expand_cmd(node);
+// 	ft_shell()->exit_status = ft_check_redirections(node);
+// 	if (ft_shell()->exit_status != ENO_SUCCESS)
+// 		return (ft_reset_ports(false), ft_close_fds(), -1);
+// 	close_pipes_lst(&ft_shell()->pipes);
+// 	if (ft_is_builtin(node->contents[0]))
+// 	{
+// 		ft_shell()->exit_status = ft_exec_builtins(node->contents);
+// 		return (ft_reset_ports(false), ft_close_fds(), 0);
+// 	}
+// 	return (exec_non_builtin_solo(node));
+// }

@@ -6,7 +6,7 @@
 /*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/22 15:53:33 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/22 18:06:16 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,9 @@ int	ft_check_redirections(t_token *node)
 		else if (redirections->redir_type == REDIR_OUTPUT_APPEND
 			&& ft_append(redirections, &le_status) != ENO_SUCCESS)
 			return (le_status);
-		else if (redirections->redir_type == REDIR_HEREDOC)
-			return (ft_redir_heredoc(redirections, &le_status));
+		else if (redirections->redir_type == REDIR_HEREDOC
+			&& ft_redir_heredoc(redirections, &le_status) != ENO_SUCCESS)
+			return (le_status);
 		redirections = redirections->next;
 	}
 	return (ENO_SUCCESS);
