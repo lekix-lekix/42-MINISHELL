@@ -6,7 +6,7 @@
 #    By: lekix <lekix@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/09/22 16:59:45 by lekix            ###   ########.fr        #
+#    Updated: 2024/09/22 17:26:21 by lekix            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -126,7 +126,7 @@ clean :
 	rm -f ./srcs/utils/*o
 	rm -f ./srcs/parsing/*o
 	rm -f ./srcs/execs/*o
-	rm -f ./srcs/non_builtins/*o
+	rm -f ./srcs/path/*o
 	rm -f ./srcs/expanders/*o
 	
 fclean : clean
