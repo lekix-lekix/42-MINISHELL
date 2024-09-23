@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_init_child.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/22 18:54:42 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/23 18:18:21 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,12 @@ int	exec_non_builtin_solo(t_token *node)
 		ft_shell()->exit_status = ft_check_redirections(node);
 		if (ft_shell()->exit_status != ENO_SUCCESS)
 			return (ft_reset_ports(false), ft_close_fds(), -1);
+		close_pipes_lst(&ft_shell()->pipes);
 		(ft_shell())->signint_child = true;
 		ft_close_fds();
 		status = ft_exec_non_builtins(node);
 	}
+	close_pipes_lst(&ft_shell()->pipes);
 	waitpid(pid, &status, WUNTRACED);
 	if (WIFEXITED(status))
 		ft_shell()->exit_status = WEXITSTATUS(status);
@@ -63,6 +65,7 @@ int	exec_non_builtin_solo(t_token *node)
 
 int	init_only_child_no_fork(t_token *node)
 {
+	dprintf(2, "solo command\n");
 	if (!node->contents || !node->contents[0] || !node->contents[0][0])
 	{
 		if (!node->redirections)
@@ -75,14 +78,16 @@ int	init_only_child_no_fork(t_token *node)
 		return (ft_reset_ports(false), ft_close_fds(), 0);
 	}
 	expand_cmd(node);
-	close_pipes_lst(&ft_shell()->pipes);
 	if (ft_is_builtin(node->contents[0]))
 	{
+        dprintf(2, "is builtin solo contents = %s\n", node->contents[1]);
 		ft_shell()->exit_status = ft_check_redirections(node);
 		if (ft_shell()->exit_status != ENO_SUCCESS)
 			return (ft_reset_ports(false), ft_close_fds(), -1);
 		ft_shell()->exit_status = ft_exec_builtins(node->contents);
+		close_pipes_lst(&ft_shell()->pipes);
 		return (ft_reset_ports(false), ft_close_fds(), 0);
+        // return (0);
 	}
 	return (exec_non_builtin_solo(node));
 }

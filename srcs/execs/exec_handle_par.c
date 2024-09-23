@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:15:37 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/23 12:30:27 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/23 18:15:39 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,39 @@ void	create_ast_exec_lst(t_token **lst, t_ast **exec_lst)
 	}
 }
 
+void	print_redir_lst(t_redir **lst, t_token *node)
+{
+	t_redir	*current;
+
+	current = *lst;
+	printf("====== REDIRS ======\n");
+	while (current)
+	{
+		dprintf(2, "node %s %s redir type = %d\n", node->contents[0],
+			node->contents[1], current->redir_type);
+		if (current->filename)
+			printf("filename = %s\n", current->filename);
+		current = current->next;
+	}
+}
+
+void	print_tree(t_ast *tree)
+{
+	if (tree->left)
+		print_tree(tree->left);
+	if (tree->token_node->type == CMD)
+	{
+		printf("tree node = %s %s\n", tree->token_node->contents[0],
+			tree->token_node->contents[1]);
+		if (tree->redirections)
+			print_redir_lst(&tree->token_node->redirections, tree->token_node);
+	}
+	else
+		printf("operator node type = %d\n", tree->node_type);
+	if (tree->right)
+		print_tree(tree->right);
+}
+
 int	build_run_sub_exec(t_token **par_lst)
 {
 	t_token	*after_par_lst;
@@ -76,6 +109,7 @@ int	build_run_sub_exec(t_token **par_lst)
 	delete_begin_end_par_nodes(par_lst);
 	set_par_lst(par_lst);
 	par_sub_tree = build_ast(par_lst, NULL);
+	print_tree(par_sub_tree);
 	set_next_null(par_sub_tree);
 	par_exec_pid = prep_exec_par(par_sub_tree, after_par_pipe);
 	if (after_par_lst)
@@ -92,6 +126,7 @@ int	handle_par_exec(t_ast **current)
 	t_token	*par_lst;
 	t_token	*left_par;
 	t_token	*original_token;
+	t_token	*curr;
 
 	left_par = find_left_par_original_token(&ft_shell()->les_token,
 			find_original_token_lst(&ft_shell()->les_token,
@@ -99,6 +134,15 @@ int	handle_par_exec(t_ast **current)
 	original_token = find_original_token_lst(&ft_shell()->les_token,
 			(*current)->token_node);
 	par_lst = lst_dup(&left_par, NULL);
+	curr = par_lst;
+	while (curr)
+	{
+		if (curr->type == CMD)
+			printf("curr = %s %s\n", curr->contents[0], curr->contents[1]);
+		else
+			printf("operator node type = %d\n", curr->type);
+		curr = curr->next;
+	}
 	set_back_redir(current, &par_lst);
 	return (build_run_sub_exec(&par_lst));
 }

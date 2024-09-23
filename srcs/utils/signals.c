@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 21:33:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/20 12:22:27 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/23 17:06:52 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,12 @@ static void	ft_sigint_handler(int num)
 	}
 }
 
+static void    ft_sigpipe_handler(int num)
+{
+    (void) num;
+    ft_exit_close(0);
+}
+
 void	ft_sigquit_handler(int num)
 {
 	(void)num;
@@ -45,6 +51,7 @@ void	ft_init_signals(void)
 	ft_shell()->heredoc_sigint = false;
 	ft_shell()->signint_child = false;
 	signal(SIGINT, ft_sigint_handler);
+    signal(SIGPIPE, ft_sigpipe_handler);
 	signal(SIGQUIT, SIG_IGN);
 }
 
