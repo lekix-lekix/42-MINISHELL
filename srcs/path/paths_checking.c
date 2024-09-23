@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   paths_checking.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 07:19:27 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/22 15:52:55 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/23 16:09:07 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,9 @@ char	**ft_get_paths(char **env)
 int	is_abs_path(char *str)
 {
 	if (str && str[0] && str[0] == '.' && str[1] && str[1] == '/')
+		return (1);
+	else if (str && str[0] && str[1] && str[2] && str[0] == '.' && str[1] == '.'
+		&& str[2] == '/')
 		return (1);
 	else if (str && str[0] && str[0] == '/')
 		return (1);

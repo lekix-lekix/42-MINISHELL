@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_non_builtins.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 04:49:38 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/21 11:02:35 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/23 16:00:15 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	ft_exec_non_builtins(t_token *node)
 		return (no_path_found(node));
 	close(ft_shell()->ft_stdin);
 	close(ft_shell()->ft_stdout);
+    printf("node->contents + %d = %s\n", i, *node->contents + i);
 	if (execve(la_path, node->contents + i, env_args) == -1)
 		return (perror("bash: execve: "), ft_exit_close(255), -1);
 	return (0);
