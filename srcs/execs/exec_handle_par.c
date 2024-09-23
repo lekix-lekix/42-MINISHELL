@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:15:37 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/19 11:50:07 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:30:27 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,13 @@ int	handle_par_exec(t_ast **current)
 {
 	t_token	*par_lst;
 	t_token	*left_par;
+	t_token	*original_token;
 
 	left_par = find_left_par_original_token(&ft_shell()->les_token,
 			find_original_token_lst(&ft_shell()->les_token,
 				(*current)->token_node));
+	original_token = find_original_token_lst(&ft_shell()->les_token,
+			(*current)->token_node);
 	par_lst = lst_dup(&left_par, NULL);
 	set_back_redir(current, &par_lst);
 	return (build_run_sub_exec(&par_lst));
