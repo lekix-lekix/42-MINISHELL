@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/22 14:03:24 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:31:14 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	iterate_exec_ast_lst(t_ast **lst)
 	cmd_nb = ast_list_size(lst);
 	if (!cmd_nb)
 		return (0);
+	if (cmd_nb == 1)
+		return (init_only_child_no_fork(current->token_node));
 	while (current)
 	{
 		if (current->is_in_par)

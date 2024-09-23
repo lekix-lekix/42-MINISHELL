@@ -3,34 +3,41 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+         #
+#    By: lekix <lekix@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/18 14:55:41 by sabakar-          #+#    #+#              #
-#    Updated: 2024/08/20 16:43:08 by kipouliq         ###   ########.fr        #
+#    Updated: 2024/09/22 17:26:21 by lekix            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 SRCS = ./srcs/minishell.c \
-	./srcs/garbage_collector.c \
-	./srcs/env.c \
-	./srcs/execs/exec_builtins.c \
+	./srcs/garbage_collector/garbage_collector.c \
+	./srcs/garbage_collector/garbage_collector_bis.c \
+	./srcs/Builtins/env.c \
 	./srcs/Builtins/do_cd.c \
 	./srcs/Builtins/do_echo.c \
 	./srcs/Builtins/do_pwd.c \
 	./srcs/Builtins/env_utils.c \
+	./srcs/Builtins/env_utils_bis.c \
 	./srcs/Builtins/ft_export.c \
+	./srcs/Builtins/ft_export_bis.c \
+	./srcs/Builtins/ft_export_concat.c \
 	./srcs/Builtins/ft_unset.c \
+	./srcs/Builtins/ft_exit.c \
+	./srcs/execs/exec_builtins.c \
 	./srcs/execs/exec_non_builtins.c \
 	./srcs/execs/start_exec.c \
 	./srcs/execs/exec_ast_tools.c \
 	./srcs/execs/exec_ast_tools_bis.c \
 	./srcs/execs/exec_handle_par.c \
 	./srcs/execs/exec_init_child.c \
-	./srcs/execs/init_tree.c \
+	./srcs/heredoc/init_tree_heredoc.c \
+	./srcs/heredoc/heredoc_filename.c \
 	./srcs/execs/exec_redirections.c \
 	./srcs/execs/exec_utils.c \
+	./srcs/execs/exec_utils_bis.c \
 	./srcs/execs/exec_pipe_redirections.c \
 	./srcs/execs/exec_traverse_tree.c \
 	./srcs/execs/prep_exec_child.c \
@@ -38,41 +45,50 @@ SRCS = ./srcs/minishell.c \
 	./srcs/execs/set_close_pipes_bis.c \
 	./srcs/execs/exec_handle_par_utils.c \
 	./srcs/execs/exec_handle_par_utils_bis.c \
-	./srcs/general_utils.c \
-	./srcs/non_builtins/paths_utils.c \
-	./srcs/tokenizer.c \
-	./srcs/token_lst_tools.c \
-	./srcs/parsing_tools.c \
-	./srcs/parsing_tools_bis.c \
-	./srcs/ast_construction.c \
-	./srcs/ast_parenthesis.c \
-	./srcs/ast_insert_node.c \
-	./srcs/ast_check_syntax.c\
-	./srcs/ast_tools.c \
-	./srcs/ast_tools_bis.c \
-	./srcs/msh_strtrim.c \
-	./srcs/msh_split.c \
+	./srcs/path/paths_checking.c \
+	./srcs/path/path_errors.c \
+	./srcs/tokenizer/tokenizer.c \
+	./srcs/tokenizer/token_create_nodes.c \
+	./srcs/tokenizer/token_lst_tools.c \
+	./srcs/abstract_syntax_tree/ast_construction.c \
+	./srcs/abstract_syntax_tree/ast_parenthesis.c \
+	./srcs/abstract_syntax_tree/ast_insert_node.c \
+	./srcs/abstract_syntax_tree/ast_check_syntax.c\
+	./srcs/abstract_syntax_tree/ast_check_syntax_bis.c \
+	./srcs/abstract_syntax_tree/ast_tools.c \
+	./srcs/abstract_syntax_tree/ast_tools_bis.c \
+	./srcs/abstract_syntax_tree/ast_par_utils.c \
+	./srcs/utils/general_utils.c \
+	./srcs/utils/general_utils_bis.c \
+	./srcs/utils/msh_strtrim.c \
+	./srcs/utils/msh_split.c \
+	./srcs/utils/msh_strtrim_spaces.c \
+	./srcs/utils/msh_split_spaces.c \
+	./srcs/utils/print_syntax_errors.c \
+	./srcs/utils/print_funcs.c \
+	./srcs/utils/str_manipulation.c \
+	./srcs/utils/signals.c \
+	./srcs/parsing/parsing_redir_bis.c \
+	./srcs/parsing/parsing_redir_utils.c \
+	./srcs/parsing/parsing_redir_utils_bis.c \
+	./srcs/parsing/parsing_split_token_content.c \
+	./srcs/parsing/parsing_word_utils.c \
+	./srcs/parsing/parsing_find_type.c \
+	./srcs/parsing/parsing_clean_tokens.c \
+	./srcs/parsing/parsing_check_syntax.c \
+	./srcs/parsing/parsing_tools.c \
+	./srcs/parsing/parsing_redir.c \
+	./srcs/parsing/parsing_tools_bis.c \
+	./srcs/parsing/parsing_handle_args.c \
 	./srcs/expanders/heredoc_expander.c \
-	./srcs/parsing_redir.c \
-	./srcs/parsing_redir_bis.c \
-	./srcs/parsing_redir_utils.c \
-	./srcs/parsing_redir_utils_bis.c \
-	./srcs/print_syntax_errors.c \
-	./srcs/ast_print.c \
-	./srcs/ast_par_utils.c \
-	./srcs/garbage_collector_bis.c \
-	./srcs/str_manipulation.c \
-	./srcs/parsing_clean_tokens.c \
-	./srcs/parsing_check_syntax.c \
-	./srcs/print_funcs.c \
-	./srcs/parsing_handle_args.c \
+	./srcs/expanders/ft_handle_money.c \
 	./srcs/expanders/ft_expands.c \
 	./srcs/expanders/expands_utils.c \
 	./srcs/expanders/ft_remove_quotes.c \
 	./srcs/expanders/ft_asterisker.c \
 	./srcs/expanders/ft_globaler.c \
-	./srcs/signals.c \
-	./srcs/Builtins/ft_exit.c
+	./srcs/expanders/ft_expand_cmd.c \
+	./srcs/init_data.c
 
 OBJ = $(SRCS:.c=.o)
 
@@ -102,9 +118,15 @@ $(NAME) : $(OBJ)
 clean :
 	make -sC $(PATH_LIBFT) clean
 	rm -f ./srcs/*o
+	rm -f ./srcs/garbage_collector/*o
 	rm -f ./srcs/Builtins/*o
+	rm -f ./srcs/abstract_syntax_tree/*o
+	rm -f ./srcs/heredoc/*o
+	rm -f ./srcs/tokenizer/*o
+	rm -f ./srcs/utils/*o
+	rm -f ./srcs/parsing/*o
 	rm -f ./srcs/execs/*o
-	rm -f ./srcs/non_builtins/*o
+	rm -f ./srcs/path/*o
 	rm -f ./srcs/expanders/*o
 	
 fclean : clean

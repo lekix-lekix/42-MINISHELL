@@ -3,39 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 09:40:20 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/22 14:12:13 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/22 18:06:16 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int	ft_errmsg(void)
-{
-	printf("There was an error\n");
-	return (1);
-}
-
 int	ft_append(t_redir *redirections, int *le_status)
 {
-	int	fd;
+	int		fd;
+	char	*err;
 
-	if (!redirections->filename)
-	{
-		*le_status = ft_errmsg();
-		return (*le_status);
-	}
 	fd = open(redirections->filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (fd == -1)
 	{
-		printf("There was a problem opening the file\n");
-		*le_status = ft_errmsg();
-		return (*le_status);
+		err = ft_join("minishell: ", redirections->filename, PARSING);
+		perror(err);
+		*le_status = 1;
+		return (1);
 	}
 	if (dup2(fd, STDOUT_FILENO) == -1)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
+		return (ft_exit_close(255), -1);
 	close(fd);
 	*le_status = 0;
 	return (0);
@@ -43,23 +34,19 @@ int	ft_append(t_redir *redirections, int *le_status)
 
 int	ft_in(t_redir *redirections, int *le_status)
 {
-	int	fd;
+	int		fd;
+	char	*err;
 
-	if (!redirections->filename)
-	{
-		// printf("There wasn't a filename\n");
-		*le_status = ft_errmsg();
-		return (*le_status);
-	}
 	fd = open(redirections->filename, O_RDONLY);
 	if (fd == -1)
 	{
-		// printf("There was a problem opening the file\n");
-		*le_status = ft_errmsg();
-		return (*le_status);
+		err = ft_join("minishell: ", redirections->filename, PARSING);
+		perror(err);
+		*le_status = 1;
+		return (1);
 	}
 	if (dup2(fd, STDIN_FILENO) == -1)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL));
+		return (ft_exit_close(255), -1);
 	close(fd);
 	*le_status = 0;
 	return (*le_status);
@@ -67,24 +54,40 @@ int	ft_in(t_redir *redirections, int *le_status)
 
 int	ft_out(t_redir *redirections, int *status)
 {
-	int	fd;
+	int		fd;
+	char	*err;
 
-	if (!redirections->filename)
-	{
-		*status = ft_errmsg();
-		return (*status);
-	}
 	fd = open(redirections->filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd == -1)
 	{
-		*status = ft_errmsg();
-		return (*status);
+		err = ft_join("minishell: ", redirections->filename, PARSING);
+		perror(err);
+		*status = 1;
+		return (1);
 	}
 	if (dup2(fd, STDOUT_FILENO) == -1)
-		return (gbg_coll(NULL, ALL, FLUSH_ALL));
+		return (ft_exit_close(255), -1);
 	close(fd);
 	*status = 0;
 	return (*status);
+}
+
+int	ft_redir_heredoc(t_redir *redirection, int *le_status)
+{
+	int	heredoc_fd;
+
+	heredoc_fd = open(redirection->filename, O_RDONLY);
+	if (heredoc_fd == -1)
+	{
+		perror("minishell: open");
+		ft_exit_close(255);
+	}
+	if (dup2(heredoc_fd, STDIN_FILENO) == -1)
+		return (ft_exit_close(255), -1);
+	close(heredoc_fd);
+	unlink(redirection->filename);
+	*le_status = 0;
+	return (*le_status);
 }
 
 int	ft_check_redirections(t_token *node)
@@ -93,6 +96,7 @@ int	ft_check_redirections(t_token *node)
 	int		le_status;
 
 	redirections = node->redirections;
+	expand_redirections(&redirections);
 	while (redirections)
 	{
 		if (ft_strcmp(redirections->filename, "pipe") == 0)
@@ -106,8 +110,9 @@ int	ft_check_redirections(t_token *node)
 		else if (redirections->redir_type == REDIR_OUTPUT_APPEND
 			&& ft_append(redirections, &le_status) != ENO_SUCCESS)
 			return (le_status);
-		else if (redirections->redir_type == REDIR_HEREDOC)
-			(dup2(redirections->heredoc, 0), close(redirections->heredoc));
+		else if (redirections->redir_type == REDIR_HEREDOC
+			&& ft_redir_heredoc(redirections, &le_status) != ENO_SUCCESS)
+			return (le_status);
 		redirections = redirections->next;
 	}
 	return (ENO_SUCCESS);

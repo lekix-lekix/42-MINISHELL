@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 15:34:26 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/22 14:04:14 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/19 11:50:34 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,17 @@ int	exec_child(t_ast *node)
 	pid_t	*pid;
 	t_lst	*pid_node;
 
-	(ft_shell())->signint_child = true;
 	pid = malloc(sizeof(pid_t));
 	if (!pid || gbg_coll(pid, PARSING, ADD))
-		return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
+		return (ft_exit_close(255), -1);
 	*pid = fork();
 	if (*pid == -1)
-		return (perror("bash: fork: "), gbg_coll(NULL, ALL, FLUSH_ALL),
-			exit(255), -1);
+		return (perror("bash: fork: "), ft_exit_close(255), -1);
 	if (*pid == 0)
+	{
+		ft_shell()->signint_child = true;
 		ft_check_cmds(node->token_node);
+	}
 	pid_node = create_lst_node(pid);
 	ft_lstadd_back(&ft_shell()->pids, pid_node);
 	return (0);
@@ -37,8 +38,8 @@ int	*exec_child_next_not_par(t_ast *to_exec, int *pipe_fds)
 	set_pipe_redir_in(to_exec->next, pipe_fds[0]);
 	set_pipe_redir_out(to_exec, pipe_fds[1]);
 	exec_child(to_exec);
-	close_pipe_redir_in(to_exec);
 	close(pipe_fds[1]);
+	close_pipe_redir_in(to_exec);
 	return (NULL);
 }
 

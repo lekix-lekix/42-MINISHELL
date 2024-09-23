@@ -3,30 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 09:06:23 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/23 17:25:31 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/21 11:11:25 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static void	ft_unset_helper(char *key)
+static void	ft_unset_helper(char *field, t_env **envlst)
 {
 	t_env	*current;
 	t_env	*prev;
 
 	prev = NULL;
-	current = ft_shell()->env_lst;
+	current = *envlst;
 	while (current)
 	{
-		if (!ft_strncmp(key, current->field, ft_strlen(key)))
+		if (!ft_strcmp(field, current->field))
 		{
 			if (prev)
 				prev->next = current->next;
 			else
+			{
+				ft_shell()->expanded_env = current->next;
 				ft_shell()->env_lst = current->next;
+			}
 			return ;
 		}
 		prev = current;
@@ -50,27 +53,46 @@ int	ft_check_key_unset(char *str)
 	return (1);
 }
 
+char	*ft_extract_field(char *str)
+{
+	size_t	i;
+	char	*final_str;
+
+	i = 0;
+	final_str = NULL;
+	while (str[i])
+	{
+		if (str[i] == '=')
+		{
+			final_str = ft_substr(str, 0, i);
+			if (!final_str || gbg_coll(final_str, ENV, ADD))
+				return (ft_exit_close(255), NULL);
+			return (final_str);
+		}
+		i++;
+	}
+	final_str = msh_strdup(str, ENV);
+	return (final_str);
+}
+
 int	ft_exec_unset(char **args)
 {
 	int		i;
+	int		f;
 	bool	err;
+	t_env	*le_env;
+	t_env	*envlst;
 
-	i = 1;
+	i = 0;
+	f = 0;
+	le_env = (ft_shell())->env_lst;
+	envlst = (ft_shell())->expanded_env;
 	if (!args[1])
 		return (0);
 	err = false;
-	while (args[i])
-	{
-		if (!ft_check_key_unset(args[i]))
-		{
-			ft_putstr_fd("minishell: unset: `", 2);
-			ft_putstr_fd(args[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-			err = true;
-		}
-		else
-			ft_unset_helper(ft_extract_val(args[i]));
-		i++;
-	}
+	while (args[++i])
+		ft_unset_helper(ft_extract_field(args[i]), &envlst);
+	while (args[++f])
+		ft_unset_helper(ft_extract_field(args[f]), &le_env);
 	return (err);
 }

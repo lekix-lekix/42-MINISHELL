@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:15:37 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/21 13:46:36 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:30:27 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 int	set_pipe_stdout(int *after_par_pipe)
 {
 	if (dup2(after_par_pipe[1], STDOUT_FILENO) == -1)
-		return (perror("bash: dup2"), gbg_coll(NULL, ALL, FLUSH_ALL), exit(255),
-			-1);
+		return (ft_exit_close(255), -1);
 	close(after_par_pipe[1]);
+	ft_close_fds();
 	return (0);
 }
 
@@ -29,13 +29,14 @@ int	prep_exec_par(t_ast *sub_tree, int *after_par_pipe)
 	{
 		pid = fork();
 		if (pid == -1)
-			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), -1);
+			return (gbg_coll(NULL, ALL, FLUSH_ALL), ft_exit_close(255), -1);
 		if (pid == 0)
 		{
+			(ft_shell())->signint_child = true;
 			set_pipe_stdout(after_par_pipe);
 			ft_start_exec(&sub_tree);
 			close_pipes_lst(&ft_shell()->pipes);
-			exit(0);
+			ft_exit_close(0);
 		}
 		return (pid);
 	}
@@ -89,15 +90,14 @@ int	build_run_sub_exec(t_token **par_lst)
 int	handle_par_exec(t_ast **current)
 {
 	t_token	*par_lst;
-	t_ast	*after_par_ast_lst;
 	t_token	*left_par;
-	int		par_exec_pid;
+	t_token	*original_token;
 
-	after_par_ast_lst = NULL;
-	par_exec_pid = -1;
 	left_par = find_left_par_original_token(&ft_shell()->les_token,
 			find_original_token_lst(&ft_shell()->les_token,
 				(*current)->token_node));
+	original_token = find_original_token_lst(&ft_shell()->les_token,
+			(*current)->token_node);
 	par_lst = lst_dup(&left_par, NULL);
 	set_back_redir(current, &par_lst);
 	return (build_run_sub_exec(&par_lst));

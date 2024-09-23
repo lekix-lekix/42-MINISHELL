@@ -3,57 +3,68 @@
 /*                                                        :::      ::::::::   */
 /*   do_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:44:43 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/20 09:50:36 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/22 15:54:14 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-
-static int	ft_cdhome(t_minishell *data);
-static int	ft_change_cwd(void);
-static int	ft_cderr_msg(char *err_msg);
 
 static int	ft_change_cwd(void)
 {
 	char	*cwd;
 
 	cwd = getcwd(NULL, 0);
-	if (!cwd)
-		return (1);
-	return (ft_update_envlst("PWD", cwd, false), 0);
+	if (!cwd || gbg_coll(cwd, ENV, ADD))
+		return (write(2, "bash: cd: ..: No such file or directory\n", 40), 1);
+	ft_update_envlst("PWD", cwd, &ft_shell()->env_lst, false);
+	ft_update_envlst("PWD", cwd, &ft_shell()->expanded_env, false);
+	return (0);
 }
 
-static int	ft_cdhome(t_minishell *data)
+static int	ft_cdhome(void)
 {
 	char	*home;
 
-	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD", data), false);
-	home = ft_get_envlst_content("HOME", data);
+	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD",
+			&ft_shell()->env_lst), &ft_shell()->env_lst, false);
+	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD",
+			&ft_shell()->expanded_env), &ft_shell()->expanded_env, false);
+	home = ft_get_envlst_content("HOME", &ft_shell()->env_lst);
 	if (!home)
 		return (ft_putstr_fd("minishell: cd: HOME not set\n", 2), 1);
 	if (chdir(home) == ENO_SUCCESS)
-		return (ft_update_envlst("PWD", home, false), 0);
+	{
+		ft_update_envlst("PWD", home, &ft_shell()->env_lst, false);
+		ft_update_envlst("PWD", home, &ft_shell()->expanded_env, false);
+		return (0);
+	}
 	return (1);
 }
 
-static int	ft_cderr_msg(char *err_msg)
+int	ft_do_cd(char **path)
 {
-	ft_putstr_fd("minishell: cd: `", 2);
-	ft_putstr_fd(err_msg, 2);
-	ft_putstr_fd("' can't cd!\n", 2);
-	return (1);
-}
+	char	*err;
 
-int	ft_do_cd(char **path, t_minishell *data)
-{
 	if (!path[1])
-		return (ft_cdhome(data));
+		return (ft_cdhome());
+	if (get_arr_len(path) > 2)
+	{
+		write(2, "minishell: cd: too many arguments\n", 35);
+		return (1);
+	}
 	if (chdir(path[1]) != ENO_SUCCESS)
-		return (ft_cderr_msg(path[1]));
-	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD", data), false);
+	{
+		err = ft_join("minishell: cd: ", path[1], PARSING);
+		perror(err);
+		return (1);
+	}
+	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD",
+			&ft_shell()->env_lst), &ft_shell()->env_lst, false);
+	ft_update_envlst("OLDPWD", ft_get_envlst_content("PWD",
+			&ft_shell()->expanded_env), &ft_shell()->expanded_env, false);
 	return (ft_change_cwd());
 }
 

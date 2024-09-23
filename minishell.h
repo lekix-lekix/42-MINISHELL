@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/07 16:26:11 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/08/23 15:33:16 by kipouliq         ###   ########.fr       */
+/*   Created: 2024/09/20 11:51:14 by kipouliq          #+#    #+#             */
+/*   Updated: 2024/09/22 16:58:56 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,14 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
-# include <sys/types.h>
 # include <sys/stat.h>
+# include <sys/types.h>
 # include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h>
 
 # define PER_ERR "Permission denied"
+# define NOT_FOUND_ERR "No such file or directory"
 # define CMD_ERR "command not found"
 # define OPEN_ERR "Error opening file"
 # define IS_DIR_ERR "Is a directory"
@@ -152,8 +153,9 @@ typedef struct s_minishell
 	int				end_exec;
 	int				exec_in_par;
 	int				pids_num;
-	int				stdin;
-	int				stdout;
+	int				ft_stdin;
+	int				ft_stdout;
+	int				msh_stdout;
 	t_ast			*full_exec_tree;
 	t_ast			*exec_tree;
 	t_ast			*node;
@@ -162,21 +164,36 @@ typedef struct s_minishell
 	char			**env_args;
 	t_env			*expanded_env;
 	char			**expanded_args;
+	int				expand_chars_trimmed;
 	struct termios	original_term;
 }					t_minishell;
 
 t_minishell			*ft_shell(void);
-
+int					init_data(t_minishell *data, char **envp);
+int					start_parsing(char *prompt);
 int					gbg_coll(void *mem_addr, int which_list, int rule);
 t_env				*get_env_lst(char **envp);
 int					ft_strlen_sep(char *str, char *sep);
+int					ft_strcpy_sep_ptr(char *dest, char *input, char *sep);
+
+//
+void				ft_close_fds(void);
+
+// Init data
+int					init_data(t_minishell *data, char **envp);
+char				*get_path(char **envp);
 
 // tokenization
 int					trim_token_fields(t_token **lst);
 t_token				*tokenize_input(char *input);
+char				*msh_strtrim_spaces(char const *s1);
+void				create_insert_token_nodes(t_token **lst, char **input,
+						char **operator);
+int					is_a_quote(char c);
+void				more_tokenization(t_token **lst);
+int					check_delete_global_par(t_token **lst);
 
 // Merge combined functions
-void				print_tree(t_ast **tree);
 char				*find_operator(char *str);
 int					insert_cmd_node(t_ast **tree, t_ast *node);
 int					ft_strcpy_sep(char *dest, char *input, char *sep);
@@ -184,7 +201,6 @@ void				create_consume_insert_node(t_token **lst, t_token **node,
 						t_ast **tree, t_ast **tree_right);
 t_ast				*build_ast(t_token **lst, int *insert_node);
 void				insert_node_lst(t_token **lst, t_token *node);
-void				print_lst(t_token **lst);
 void				insert_operator_token_node(t_ast **tree, t_ast *node);
 t_ast				*handle_par(t_token **lst, t_ast **tree, int *insert_node);
 t_token				*lst_dup(t_token **lst, t_token *node);
@@ -202,27 +218,33 @@ void				remove_token_node(t_token **lst, t_token *node);
 int					only_spaces(char *str);
 void				gbg_delete_node(t_token *node, int mlc_lst);
 int					clean_token_lst(t_token **lst);
-void				split_lst_contents(t_token **lst);
+int					split_lst_contents(t_token **lst);
 int					is_a_token_operator(t_token *node);
 char				*msh_strdup(const char *s, int mlc_lst);
 
 // The builtins
 int					ft_exec_echo(char **args);
 int					ft_exec_pwd(char **args);
-int					ft_do_cd(char **path, t_minishell *data);
-void				ft_update_envlst(char *field, char *content, bool create);
+int					ft_do_cd(char **path);
+void				ft_update_envlst(char *field, char *content, t_env **lst,
+						bool create);
 int					print_env(t_env **lst);
 int					ft_exec_export(char **args);
-int					ft_exec_builtins(char **args, t_minishell *data);
-char				*ft_extract_val(char *str);
-char				*ft_extract_key(char *str);
+int					ft_exec_builtins(char **args);
+char				*ft_extract_field(char *str);
+char				*ft_extract_content(char *str);
 int					ft_strcmp(const char *s1, const char *s2);
 bool				ft_is_builtin(char *arg);
-bool				ft_env_entry_exists(char *content);
+bool				ft_env_entry_exists(char *field, t_env **lst_to_check);
 int					ft_exec_unset(char **args);
 void				*ft_unset_cleaner(void *ptr, bool clean);
 int					ft_check_key(char *str);
-char				*ft_get_envlst_content(char *content, t_minishell *data);
+char				*ft_get_envlst_content(char *content, t_env **env_lst);
+char				*get_env_content(char *field, t_env **lst);
+void				ft_export_list(t_env **envlst);
+int					check_and_update_envlst(char **args, int *exit_s, int i);
+t_env				*env_cpy_lst(t_env **envlst);
+int					check_export_concat(char *field, char **args);
 
 // The non-builtins
 int					ft_exec_non_builtins(t_token *node);
@@ -234,18 +256,34 @@ int					ft_start_exec(t_ast **tree);
 void				ft_free(char **arr);
 void				ft_print_err(char *str);
 char				**env_lst_to_arr(t_env **lst);
-char				*ft_join(char *s1, char *s2);
+char				*ft_join(char *s1, char *s2, int gbg_lst);
 int					check_operator_len(char *str);
 char				*skip_spaces(char *str);
 int					print_env(t_env **lst);
 char				*msh_strdup(const char *s, int mlc_lst);
+int					content_count_words(char *str);
+char				*get_next_word(char **input_str);
+char				**msh_split_spaces(char const *s, int mlc_list);
+char				**ft_concat_str_arr(char **arr, char **arr2);
+char				*empty_str(void);
+int					ft_count_words(char const *s, char sep);
+char				*create_random_filename(void);
+char				**dup_arr_join_empty_str(char **arr);
+char				**ft_concat_str_arr_idx(char **arr, char **arr2);
+int					str_contains_expand(char *str);
+int					str_contains_spaces(char *str);
+void				trim_contents(t_token **lst);
 
 // paths utils
-char				*ft_check_path(char *cmd, char **env, int *exit_status);
+char				*ft_check_path(char **contents, char **env,
+						int *exit_status, int *i);
 void				lst_env_add_back(t_env **lst, t_env *new);
 void				consume_node(t_token **lst, t_token *node);
 int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
 						int level);
+int					print_msh_error(char *err, char *cmd);
+void				check_dot_errors(char *cmd);
+
 // print syntax errors
 int					print_newline_syntax_error(void);
 int					print_char_syntax_error(char *str);
@@ -262,6 +300,7 @@ int					print_ast_syntax_error(t_ast *node);
 int					check_par_syntax(t_token **lst);
 int					check_quotes(char *str);
 int					check_redir_syntax(t_token **input);
+int					check_pipes_par_syntax(t_token **lst);
 
 // ast parenthesis
 t_token				*find_closing_par(t_token **lst);
@@ -269,7 +308,6 @@ t_token				*find_right_par(t_token **lst);
 
 // garbage collector
 void				remove_mem_node(t_lst **lst, void *mem_addr);
-void				print_tree(t_ast **tree);
 
 // parsing redirections
 
@@ -284,27 +322,27 @@ char				*get_filename(t_token *node);
 int					check_redirections(t_token **lst);
 t_token				*find_redir_node(t_token **lst, t_token *redir_node);
 int					is_a_redir_operator(t_token *node);
-void				print_redir_lst(t_redir **lst);
 void				add_front_redir_node(t_redir **lst, t_redir *node);
+t_redir				*get_redir_lst_par(t_token **redir_node_lst);
+
+// Parsing utils
+int					get_end_word_idx(char *str, int i);
 
 // print functions
-void				print_redir_lst(t_redir **lst);
+// void				print_redir_lst(t_redir **lst);
 
 void				find_operator_type(char *input, t_token *node);
 
 void				lst_env_add_back(t_env **lst, t_env *new);
-void				consume_node(t_token **lst, t_token *node);
 int					parse_insert_cmd_node(t_ast *root, t_ast *cmd_node,
 						int level);
 int					ft_check_redirections(t_token *node);
 bool				ft_is_delimiter(char *delimiter, char *str);
-void				ft_init_tree(t_ast *data);
+int					ft_init_tree(t_ast *data);
 void				ft_reset_ports(bool piped);
 
 // Expanders
 void				ft_heredoc_expander(char *str, int fd);
-// int					ft_exec_non_builtins_single_cmd(char **args,
-// 						t_redir *redirections);
 bool				ft_is_valid_var_char(char c);
 char				**ft_expand(char *sr);
 char				*ft_strip_quotes(char *str);
@@ -314,6 +352,12 @@ size_t				ft_count_match(char *pattern);
 bool				ft_match_star(char *pattern, char *str);
 char				**ft_globaler(char *str);
 size_t				get_arr_len(char **expanded);
+void				expand_redirections(t_redir **redirections);
+char				*ft_pre_expand(char *sr);
+char				*ft_handle_dollar(char *str, size_t *i);
+char				*ft_handle_dquote_str(char *str, size_t *i);
+char				*ft_check_squotes(char *sr, size_t *x);
+int					expand_cmd(t_token *cmd);
 
 // Exec AST tools
 void				set_is_in_par(t_ast *root, int flag);
@@ -324,7 +368,6 @@ t_ast				*ast_lst_dup(t_ast **lst, t_ast *node);
 t_ast				*get_after_par_node(t_ast **lst);
 t_ast				*ast_find_one(t_ast **lst, t_ast *node);
 int					ast_list_size(t_ast **lst);
-void				print_ast_lst(t_ast **lst);
 
 // Exec pipe redirections
 int					handle_pipe_redirections(t_redir *redirection,
@@ -346,6 +389,7 @@ int					close_wait(int par_pid);
 void				ft_start_exec_tree(t_ast *root, t_ast **exec_lst,
 						t_ast **last_op);
 int					iterate_exec_ast_lst(t_ast **lst);
+int					ft_exit_close(int exit_status);
 
 // Exec parenthesis
 int					prep_exec_par(t_ast *sub_tree, int *after_par_pipe);
@@ -364,5 +408,6 @@ t_ast				*find_token_node(t_ast **lst, t_token *to_find);
 void				ft_init_signals(void);
 void				ft_sigquit_handler(int num);
 void				ft_exit(char **args);
+void				ft_sigint_handler_heredoc(int num);
 
 #endif

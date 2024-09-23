@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 17:18:16 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/08/19 05:07:31 by sabakar-         ###   ########.fr       */
+/*   Updated: 2024/09/22 14:59:21 by lekix            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static void	ft_err(char *sr_err)
 {
-	gbg_coll(NULL, ALL, FLUSH_ALL);
 	ft_putstr_fd("minishell: exit: ", 2);
 	ft_putstr_fd(sr_err, 2);
 	ft_putstr_fd(": numeric argument required\n", 2);
@@ -25,6 +24,8 @@ static bool	ft_isnumber(char *str)
 	int	i;
 
 	i = 0;
+	if (str[i] == '+' || str[i] == '-')
+		i++;
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
@@ -55,16 +56,14 @@ static int	ft_exittoi(char *sr)
 	i = 0;
 	sign = 1;
 	ft_skip_spaces_and_get_sign(sr, &i, &sign);
-	if (!ft_isnumber(sr + i))
-	{	
-		(ft_err(sr));
-	}
+	if (!ft_isnumber(sr + i) || !sr[i])
+		return (ft_err(sr), 2);
 	result = 0;
 	while (sr[i])
 	{
 		result = (result * 10) + (sr[i] - '0');
 		if (result > LONG_MAX)
-			(ft_err(sr));
+			return (ft_err(sr), 2);
 		i++;
 	}
 	return ((result * sign) % 256);
@@ -74,17 +73,20 @@ void	ft_exit(char **args)
 {
 	int	exit_s;
 
+	write(2, "exit\n", 5);
 	exit_s = (ft_shell())->exit_status;
 	if (args[1])
 	{
 		if (args[2] && ft_isnumber(args[1]))
 		{
-			gbg_coll(NULL, ALL, FLUSH_ALL);
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-			// exit(ENO_GENERAL);
+			return ;
 		}
 		else
 			exit_s = ft_exittoi(args[1]);
 	}
-	// exit(exit_s);
+	close(ft_shell()->ft_stdin);
+	close(ft_shell()->ft_stdout);
+	gbg_coll(NULL, ALL, FLUSH_ALL);
+	exit(exit_s);
 }

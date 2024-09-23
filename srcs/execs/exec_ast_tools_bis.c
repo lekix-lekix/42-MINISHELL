@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:10:07 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/22 14:04:49 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:28:27 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_ast	*ast_lst_dup(t_ast **lst, t_ast *node)
 	{
 		current_cpy = malloc(sizeof(t_ast));
 		if (!current_cpy || gbg_coll(current_cpy, PARSING, ADD))
-			return (gbg_coll(NULL, ALL, FLUSH_ALL), exit(255), NULL);
+			return (ft_exit_close(255), NULL);
 		current_cpy->token_node = current->token_node;
 		current_cpy->node_type = current->node_type;
 		current_cpy->redirections = current->redirections;
