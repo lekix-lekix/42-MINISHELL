@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 11:51:14 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/22 16:58:56 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/24 14:24:58 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,6 +305,8 @@ int					check_pipes_par_syntax(t_token **lst);
 // ast parenthesis
 t_token				*find_closing_par(t_token **lst);
 t_token				*find_right_par(t_token **lst);
+void				copy_token_attributes(t_token *current,
+						t_token *current_cpy);
 
 // garbage collector
 void				remove_mem_node(t_lst **lst, void *mem_addr);

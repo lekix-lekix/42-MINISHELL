@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:17:42 by lekix             #+#    #+#             */
-/*   Updated: 2024/09/23 18:18:21 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/24 11:28:03 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	exec_non_builtin_solo(t_token *node)
 
 int	init_only_child_no_fork(t_token *node)
 {
-	dprintf(2, "solo command\n");
+	dprintf(2, "solo command : %s\n", node->contents[1]);
 	if (!node->contents || !node->contents[0] || !node->contents[0][0])
 	{
 		if (!node->redirections)
@@ -80,7 +80,7 @@ int	init_only_child_no_fork(t_token *node)
 	expand_cmd(node);
 	if (ft_is_builtin(node->contents[0]))
 	{
-        dprintf(2, "is builtin solo contents = %s\n", node->contents[1]);
+        dprintf(2, "is builtin solo contents = %s is in par ? %d \n", node->contents[1], node->is_in_par);
 		ft_shell()->exit_status = ft_check_redirections(node);
 		if (ft_shell()->exit_status != ENO_SUCCESS)
 			return (ft_reset_ports(false), ft_close_fds(), -1);

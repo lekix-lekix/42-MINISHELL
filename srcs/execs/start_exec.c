@@ -6,11 +6,25 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 05:02:14 by sabakar-          #+#    #+#             */
-/*   Updated: 2024/09/23 12:31:14 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/24 13:49:47 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+// t_ast *get_next_node(t_ast **lst)
+// {
+//     t_ast *current;
+
+//     current = *lst;
+//     while (current)
+//     {
+//         if (current->node_type == PAR_RIGHT)
+//             return (current->next);
+//         current = current->next;
+//     }
+//     return (NULL);
+// }
 
 int	iterate_exec_ast_lst(t_ast **lst)
 {
@@ -27,11 +41,18 @@ int	iterate_exec_ast_lst(t_ast **lst)
 		return (init_only_child_no_fork(current->token_node));
 	while (current)
 	{
+		// printf("current before exec par = %s\n",
+			// current->token_node->contents[0]);
 		if (current->is_in_par)
 		{
+			dprintf(2, "first current node par = %s %s\n",
+				current->token_node->contents[0],
+				current->token_node->contents[1]);
 			par_pid = handle_par_exec(&current);
 			ft_lstadd_back(&ft_shell()->pids, create_lst_node(&par_pid));
-			current = NULL;
+			// current = get_next_node(&current);
+			// current = current->next;
+            current = NULL;
 			continue ;
 		}
 		prep_exec_child(current);

@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:19:53 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/12 00:09:05 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/24 18:46:11 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ t_token	*create_par_lst(t_token **lst)
 	par = find_closing_par(lst);
 	if (!par)
 		par = find_right_par(lst);
+    dprintf(2, "OTHER LST DUP ===\n");
 	dup_lst = lst_dup(&dup_lst, par);
+    dprintf(2, "=========\n");
 	return (dup_lst);
 }
 

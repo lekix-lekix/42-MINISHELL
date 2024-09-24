@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lekix <lekix@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 16:27:00 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/22 17:09:42 by lekix            ###   ########.fr       */
+/*   Updated: 2024/09/24 18:45:01 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,25 @@ int	do_parsing_and_checks(t_token **input)
 	return (0);
 }
 
+void    set_original_token(t_token **input)
+{
+    t_token *current;
+    t_token *ft_shell_curr;
+
+    current = *input;
+    ft_shell_curr = ft_shell()->les_token;
+    while (current)
+    {
+        current->original_token = ft_shell_curr;
+        current = current->next;
+        ft_shell_curr = ft_shell_curr->next;
+    }
+}
+
 int	start_parsing(char *prompt)
 {
 	t_token	*input;
+	t_token	*current;
 	t_ast	*tree;
 
 	if (!prompt[0])
@@ -69,7 +85,22 @@ int	start_parsing(char *prompt)
 	if (check_delete_global_par(&input) == -1)
 		return (-1);
 	set_par_lst(&input);
+	dprintf(2, "lst dup ====\n");
 	(ft_shell())->les_token = lst_dup(&input, NULL);
+	dprintf(2, "===== ====\n");
+    set_original_token(&input);
+	current = input;
+	while (current)
+	{
+		if (current->type == CMD)
+			printf("current = %s %s\n", current->contents[0],
+				current->contents[1]);
+		else
+			printf("current op node = %d\n", current->type);
+        if (current->original_token)
+            printf("ORIGINAL FOUND\n");
+        current = current->next;
+	}
 	tree = build_ast(&input, NULL);
 	if (!tree)
 		return (-1);

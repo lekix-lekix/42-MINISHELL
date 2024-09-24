@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_traverse_tree.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabakar- <sabakar-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 17:20:09 by lekix             #+#    #+#             */
-/*   Updated: 2024/08/20 15:47:29 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/24 13:55:37 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,18 @@ void	ft_start_exec_tree(t_ast *root, t_ast **exec_lst, t_ast **last_op)
 		ft_start_exec_tree(root->left, exec_lst, last_op);
 	if (root->is_in_par && (root->node_type == AND || root->node_type == OR
 			|| root->node_type == PIPE) && check_last_operator(last_op))
+	{
+		if (root->node_type == CMD)
+			dprintf(2, "addind node %s %s\n", root->token_node->contents[0],
+				root->token_node->contents[1]);
 		add_ast_lst(exec_lst, root);
+	}
 	if (root->node_type == CMD)
+	{
+		dprintf(2, "addind node %s %s\n", root->token_node->contents[0],
+			root->token_node->contents[1]);
 		add_ast_lst(exec_lst, root);
+	}
 	if (root->node_type == AND || root->node_type == OR)
 		check_operator_exec(root, exec_lst, last_op);
 	if (root->right)
