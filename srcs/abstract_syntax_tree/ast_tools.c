@@ -6,7 +6,7 @@
 /*   By: kipouliq <kipouliq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 17:27:57 by kipouliq          #+#    #+#             */
-/*   Updated: 2024/09/24 18:28:24 by kipouliq         ###   ########.fr       */
+/*   Updated: 2024/09/25 14:15:00 by kipouliq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 
 void	copy_token_attributes(t_token *current, t_token *current_cpy)
 {
-	// if (current->type == CMD)
-	//     printf("current = %s %s\n", current->contents[0],
-	// current->contents[1]);
-	// printf("current->type = %d\n", current->type);
 	current_cpy->type = current->type;
 	current_cpy->content = current->content;
 	if (current->type != CMD)
@@ -31,12 +27,7 @@ void	copy_token_attributes(t_token *current, t_token *current_cpy)
 	if (current->original_token)
 		current_cpy->original_token = current->original_token;
 	else
-    {
-        dprintf(2, "NO original\n");
-        if (current->type == CMD)
-            printf("no original cmd = %s %s\n", current->contents[0], current->contents[1]);
 		current_cpy->original_token = current;
-    }
 	current_cpy->is_in_par = current->is_in_par;
 }
 
